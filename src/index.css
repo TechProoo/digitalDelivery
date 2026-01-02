@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+:root {
+  --brand-primary: #082f3e;
+  --brand-primary-soft: #0d3f52;
+  --brand-primary-muted: #123f52;
+
+  --bg-primary: #061f29;
+  --bg-secondary: #082f3e;
+  --bg-tertiary: #0d3f52;
+  --bg-overlay: rgba(6, 31, 41, 0.92);
+
+  --text-primary: #e6f1f5;
+  --text-secondary: #b4d1db;
+  --text-tertiary: #7fa6b4;
+  --text-inverse: #061f29;
+
+  --accent-amber: #f4a261;
+  --accent-coral: #e76f51;
+  --accent-teal: #2ec4b6;
+  --accent-sky: #4ea8de;
+
+  --status-pending: #f4a261;
+  --status-in-transit: #4ea8de;
+  --status-delivered: #2ec4b6;
+  --status-failed: #e63946;
+  --status-neutral: #8da9b4;
+
+  --border-soft: rgba(255, 255, 255, 0.06);
+  --border-medium: rgba(255, 255, 255, 0.12);
+  --border-accent: rgba(244, 162, 97, 0.45);
+
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-strong: 0 16px 48px rgba(0, 0, 0, 0.55);
+  --glow-primary: 0 0 28px rgba(78, 168, 222, 0.25);
+  --glow-accent: 0 0 28px rgba(244, 162, 97, 0.3);
+
+  --gradient-primary: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+  --brand-primary: #082f3e;
+  --brand-primary-soft: #0d3f52;
+  --brand-primary-muted: #123f52;
+
+  --bg-primary: #061f29;
+  --bg-secondary: #082f3e;
+  --bg-tertiary: #0d3f52;
+  --bg-overlay: rgba(6, 31, 41, 0.92);
+
+  --text-primary: #e6f1f5;
+  --text-secondary: #b4d1db;
+  --text-tertiary: #7fa6b4;
+  --text-inverse: #061f29;
+
+  --accent-amber: #f4a261;
+  --accent-coral: #e76f51;
+  --accent-teal: #2ec4b6;
+  --accent-sky: #4ea8de;
+
+  --status-pending: #f4a261;
+  --status-in-transit: #4ea8de;
+  --status-delivered: #2ec4b6;
+  --status-failed: #e63946;
+  --status-neutral: #8da9b4;
+
+  --border-soft: rgba(255, 255, 255, 0.06);
+  --border-medium: rgba(255, 255, 255, 0.12);
+  --border-accent: rgba(244, 162, 97, 0.45);
+
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-strong: 0 16px 48px rgba(0, 0, 0, 0.55);
+  --glow-primary: 0 0 28px rgba(78, 168, 222, 0.25);
+  --glow-accent: 0 0 28px rgba(244, 162, 97, 0.3);
+
+  --gradient-primary: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+
+  --gradient-surface: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.01)
+  );
+
+  --gradient-brand: linear-gradient(135deg, #082f3e, #0d3f52);
+
+  --focus-ring: 0 0 0 2px rgba(244, 162, 97, 0.6);
+  --hover-overlay: rgba(255, 255, 255, 0.04);
+  --focus-ring: 0 0 0 2px rgba(244, 162, 97, 0.6);
+  --hover-overlay: rgba(255, 255, 255, 0.04);
+}
