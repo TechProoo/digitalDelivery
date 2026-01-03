@@ -36,8 +36,8 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="border-t border-[var(--border-soft)] mt-6">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between text-sm text-[var(--text-tertiary)]">
+      <div className="border-t border-(--border-soft) mt-6">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between text-sm text-(--text-tertiary)">
           <div>
             © {new Date().getFullYear()} Digital Delivery. All rights reserved.
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Search, Truck, Box } from "lucide-react";
 
 const mockStatuses = [
@@ -71,12 +71,12 @@ export default function TrackPackage() {
                   value={trackingNumber}
                   onChange={(e) => setTrackingNumber(e.target.value)}
                   placeholder="Enter tracking number e.g. VL-2024-8847521"
-                  className="w-full p-3 rounded-lg bg-(--bg-primary) border border-[var(--border-soft)] text-(--text-primary)"
+                  className="w-full p-3 rounded-lg bg-(--bg-primary) border border-(--border-soft) text-(--text-primary)"
                 />
               </div>
               <button
                 onClick={startMockTracking}
-                className="px-4 py-2 rounded-lg bg-[var(--accent-amber)] text-[var(--text-inverse)] font-semibold flex items-center gap-2"
+                className="px-4 py-2 rounded-lg bg-(--accent-amber) text-(--text-inverse) font-semibold flex items-center gap-2"
                 aria-label="Track"
               >
                 <Search className="w-4 h-4" />
@@ -84,7 +84,7 @@ export default function TrackPackage() {
               </button>
               <button
                 onClick={clear}
-                className="px-3 py-2 rounded-lg bg-transparent border border-[var(--border-soft)] text-(--text-secondary)"
+                className="px-3 py-2 rounded-lg bg-transparent border border-(--border-soft) text-(--text-secondary)"
               >
                 Clear
               </button>
@@ -94,13 +94,11 @@ export default function TrackPackage() {
           <div className="md:col-span-1">
             <div className="bg-(--bg-primary) p-4 rounded-xl">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-md bg-[var(--accent-teal)]/10">
-                  <Truck className="w-6 h-6 text-[var(--accent-teal)]" />
+                <div className="p-2 rounded-md bg-(--accent-teal)/10">
+                  <Truck className="w-6 h-6 text-(--accent-teal)" />
                 </div>
                 <div>
-                  <div className="text-xs text-[var(--text-tertiary)]">
-                    Status
-                  </div>
+                  <div className="text-xs text-(--text-tertiary)">Status</div>
                   <div className="text-sm font-semibold text-(--text-primary)">
                     {statusIndex === null
                       ? "No tracking"
@@ -109,10 +107,10 @@ export default function TrackPackage() {
                 </div>
               </div>
 
-              <div className="mt-4">
+                  <div className="mt-4">
                 <div className="h-2 bg-(--bg-primary) rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-[var(--accent-amber)] via-[var(--accent-teal)] to-[var(--accent-sky)] transition-width duration-700"
+                    className="h-full bg-linear-to-r from-(--accent-amber) via-(--accent-teal) to-(--accent-sky) transition-width duration-700"
                     style={{
                       width: `${
                         statusIndex === null
@@ -122,7 +120,7 @@ export default function TrackPackage() {
                     }}
                   />
                 </div>
-                <div className="mt-2 text-xs text-[var(--text-tertiary)]">
+                <div className="mt-2 text-xs text-(--text-tertiary)">
                   {loading
                     ? "Updating..."
                     : statusIndex === null
@@ -146,10 +144,10 @@ export default function TrackPackage() {
               >
                 <div
                   className={`p-2 rounded-full ${
-                    idx <= (statusIndex ?? -1)
-                      ? "bg-[var(--accent-teal)]"
-                      : "bg-(--bg-secondary)"
-                  }`}
+                      idx <= (statusIndex ?? -1)
+                        ? "bg-(--accent-teal)"
+                        : "bg-(--bg-secondary)"
+                    }`}
                 >
                   <Box className="w-4 h-4 text-(--text-primary)" />
                 </div>
@@ -157,7 +155,7 @@ export default function TrackPackage() {
                   <div className="text-sm font-medium text-(--text-primary)">
                     {s.label}
                   </div>
-                  <div className="text-xs text-[var(--text-tertiary)]">
+                  <div className="text-xs text-(--text-tertiary)">
                     {idx <= (statusIndex ?? -1) ? "Completed" : "Pending"}
                   </div>
                 </div>

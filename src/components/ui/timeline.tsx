@@ -38,7 +38,7 @@ const timelineItemVariants = cva("relative flex gap-3 pb-2", {
 
 // add smooth transition for connector color changes
 const timelineConnectorVariants = cva(
-  "bg-[var(--border-soft)] transition-colors duration-300",
+  "bg-(--border-soft) transition-colors duration-300",
   {
     variants: {
       orientation: {
@@ -46,11 +46,11 @@ const timelineConnectorVariants = cva(
         horizontal: "absolute top-3 left-8 w-full h-px",
       },
       status: {
-        default: "bg-[var(--border-soft)]",
-        completed: "bg-[var(--accent-teal)]",
-        active: "bg-[var(--accent-sky)]",
-        pending: "bg-[var(--text-tertiary)]/30",
-        error: "bg-[var(--status-failed)]",
+        default: "bg-(--border-soft)",
+        completed: "bg-(--accent-teal)",
+        active: "bg-(--accent-sky)",
+        pending: "bg-(--text-tertiary)/30",
+        error: "bg-(--status-failed)",
       },
     },
     defaultVariants: {
@@ -66,14 +66,14 @@ const timelineIconVariants = cva(
   {
     variants: {
       status: {
-        default: "border-[var(--border-soft)] text-[var(--text-tertiary)]",
+        default: "border-(--border-soft) text-(--text-tertiary)",
         completed:
-          "border-[var(--accent-teal)] bg-[var(--accent-teal)] text-[var(--bg-primary)]",
+          "border-(--accent-teal) bg-(--accent-teal) text-(--bg-primary)",
         active:
-          "border-[var(--accent-sky)] bg-(--bg-primary) text-[var(--accent-sky)] animate-pulse",
-        pending: "border-[var(--text-tertiary)]/30 text-[var(--text-tertiary)]",
+          "border-(--accent-sky) bg-(--bg-primary) text-(--accent-sky) animate-pulse",
+        pending: "border-(--text-tertiary)/30 text-(--text-tertiary)",
         error:
-          "border-[var(--status-failed)] bg-[var(--status-failed)] text-[var(--bg-primary)]",
+          "border-(--status-failed) bg-(--status-failed) text-(--bg-primary)",
       },
     },
     defaultVariants: {
@@ -192,12 +192,11 @@ export function Timeline({
             {showTimestamps &&
               timestampPosition === "top" &&
               item.timestamp && (
-                <time className="text-xs text-[var(--text-tertiary)]">
+                <time className="text-xs text-(--text-tertiary)">
                   {formatTimestamp(item.timestamp)}
                 </time>
               )}
 
-            {/* Title and Inline Timestamp */}
             <div className="flex items-start justify-between gap-2">
               <h3 className="font-medium leading-tight text-(--text-primary)">
                 {item.title}
@@ -205,7 +204,7 @@ export function Timeline({
               {showTimestamps &&
                 timestampPosition === "inline" &&
                 item.timestamp && (
-                  <time className="shrink-0 text-xs text-[var(--text-tertiary)]">
+                  <time className="shrink-0 text-xs text-(--text-tertiary)">
                     {formatTimestamp(item.timestamp)}
                   </time>
                 )}
@@ -225,7 +224,7 @@ export function Timeline({
             {showTimestamps &&
               timestampPosition === "bottom" &&
               item.timestamp && (
-                <time className="text-xs text-[var(--text-tertiary)]">
+                <time className="text-xs text-(--text-tertiary)">
                   {formatTimestamp(item.timestamp)}
                 </time>
               )}

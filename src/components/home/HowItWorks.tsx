@@ -36,7 +36,7 @@ const HowItWorks = () => {
 
             <div className="mt-8">
               <div className="inline-flex items-center gap-4 bg-(--bg-secondary)/60 p-6 rounded-2xl shadow-md">
-                <div className="w-14 h-14 rounded-xl bg-[var(--bg-tertiary)] flex items-center justify-center">
+                <div className="w-14 h-14 rounded-xl bg-(--bg-tertiary) flex items-center justify-center">
                   <img
                     src={BoxImg}
                     alt="tracking"
@@ -44,7 +44,7 @@ const HowItWorks = () => {
                   />
                 </div>
                 <div>
-                  <div className="text-sm text-[var(--text-tertiary)]">
+                  <div className="text-sm text-(--text-tertiary)">
                     Tracking ID
                   </div>
                   <div className="font-semibold text-lg text-(--text-primary)">
@@ -60,7 +60,7 @@ const HowItWorks = () => {
         <div className="lg:col-span-7 px-4 col-span-12">
           <div className="bg-(--bg-secondary) rounded-2xl p-8 shadow-strong">
             <div className="flex items-center justify-end mb-4">
-              <div className="text-sm text-[var(--text-tertiary)]">
+              <div className="text-sm text-(--text-tertiary)">
                 Live updates • Estimated times
               </div>
             </div>

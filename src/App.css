@@ -86,7 +86,7 @@
 
 body {
   background-color: var(--bg-primary);
-  padding: 25px;
+
   font-family: "Alegreya", serif;
 }
 
@@ -251,19 +251,27 @@ body {
   color: var(--text-secondary);
 }
 
+.hero_button a,
 .hero_button button {
   width: 200px;
   padding: 5px 0;
   border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
 }
 
+.hero_button a:nth-child(1),
 .hero_button button:nth-child(1) {
   border: 1px solid var(--text-primary);
   color: var(--text-primary);
 }
 
+.hero_button a:nth-child(2),
 .hero_button button:nth-child(2) {
   border: 1px solid var(--text-primary);
   background-color: var(--text-primary);
@@ -411,6 +419,53 @@ body {
   color: var(--text-secondary);
 }
 
-.hiw_content h1{
+.hiw_content h1 {
   color: var(--text-primary);
+}
+
+.signup_img {
+  background-image: url("./assets/signup.jpg");
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 90% 60%;
+  position: sticky;
+  top: 0;
+  background-color: #123f5247;
+  background-blend-mode: darken;
+}
+
+.login_img {
+  background-image: url("./assets/login.jpg");
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: sticky;
+  top: 0;
+  background-color: #123f5247;
+  background-blend-mode: darken;
+}
+
+.signup_logo h1 {
+  color: var(--text-primary);
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+  overflow: -moz-hidden-un scroll; /* fallback */
+}
+.no-scrollbar::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important; /* Chrome, Safari, Opera */
+}
+.no-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent !important;
+}
+.no-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
 }

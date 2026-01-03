@@ -1,4 +1,5 @@
 import { MoveRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Cta = () => {
   return (
@@ -14,13 +15,18 @@ const Cta = () => {
         </div>
 
         <div className="hero_button mt-5 sm:flex  gap-5">
-          <button className="flex justify-center items-center gap-2 group">
-            <span>Get Started</span>{" "}
+          <Link
+            to="/signup"
+            className="flex justify-center items-center gap-2 group"
+          >
+            <span>Get Started</span>
             <span className="transition-transform duration-300 group-hover:translate-x-2">
               <MoveRight />
             </span>
-          </button>
-          <button className="mt-2">Start Your Delivery Now</button>
+          </Link>
+          <Link to="/signup" className="mt-2 inline-block">
+            Start Your Delivery Now
+          </Link>
         </div>
       </div>
     </section>
