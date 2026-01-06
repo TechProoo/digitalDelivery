@@ -9,7 +9,7 @@ export default function DashboardLayout({
 }) {
   return (
     <Sidebar>
-      {children} <BottomNav />
+      {children} 
     </Sidebar>
   );
 }

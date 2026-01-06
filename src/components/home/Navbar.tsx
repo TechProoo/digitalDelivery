@@ -1,7 +1,6 @@
 import Logo from "../../assets/logo.png";
 import { MoveRight } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import BottomNav from "../dashboard/bottom-nav";
 
 const Navbar = () => {
   const navLinks = [
@@ -42,8 +41,7 @@ const Navbar = () => {
             </ul>
           </div>
         </div>
-      </div>
-      <BottomNav />
+      </div>{" "}
     </div>
   );
 };
