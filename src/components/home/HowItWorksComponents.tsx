@@ -1,6 +1,5 @@
 import DemoTimeline from "../ui/demo-timeline";
 import BoxImg from "../../assets/box.png";
-import { Globe, Link, Star, Users, Zap } from "lucide-react";
 
 const HowItWorksComponents = () => {
   return (

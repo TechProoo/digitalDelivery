@@ -14,6 +14,7 @@ import {
   ArrowLeft,
   MessageCircle,
 } from "lucide-react";
+import BottomNav from "../components/dashboard/bottom-nav";
 
 type PackageType = "parcel" | "pallet" | "container" | "full-freight";
 type ServiceLevel = "standard" | "express" | "priority";
@@ -107,43 +108,48 @@ export default function NewDelivery() {
   return (
     <Sidebar>
       <div
-        className="min-h-screen p-6"
+        className="min-h-screen p-4 sm:p-6 lg:p-8"
         style={{ background: "var(--bg-primary)" }}
       >
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <div className="flex items-center gap-3 mb-2">
             <div
-              className="p-3 rounded-xl"
+              className="p-2.5 sm:p-3 rounded-xl"
               style={{
                 background: "var(--gradient-surface)",
                 border: "1px solid var(--border-soft)",
               }}
             >
               <Truck
-                className="h-6 w-6"
+                className="h-5 w-5 sm:h-6 sm:w-6"
                 style={{ color: "var(--accent-teal)" }}
               />
             </div>
             <div>
               <h1
-                className="text-2xl font-bold"
+                className="text-xl sm:text-2xl font-bold"
                 style={{ color: "var(--text-primary)" }}
               >
                 DigitalDelivery
               </h1>
-              <p style={{ color: "var(--text-secondary)" }}>New Shipment</p>
+              <p
+                className="text-sm sm:text-base"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                New Shipment
+              </p>
             </div>
           </div>
         </div>
 
         {/* Stepper */}
-        <div className="mb-8 flex items-center justify-center gap-4 max-w-3xl mx-auto">
+        <div className="mb-6 sm:mb-8 flex items-center justify-center gap-2 sm:gap-4 max-w-3xl mx-auto overflow-x-auto pb-2">
           {[1, 2, 3].map((step, idx) => (
-            <div key={step} className="flex items-center gap-4">
-              <div className="flex flex-col items-center gap-2">
+            <div key={step} className="flex items-center gap-2 sm:gap-4">
+              <div className="flex flex-col items-center gap-1 sm:gap-2">
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all"
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-base sm:text-lg font-bold transition-all shrink-0"
                   style={{
                     background:
                       currentStep >= step
@@ -162,7 +168,7 @@ export default function NewDelivery() {
                   {step}
                 </div>
                 <span
-                  className="text-sm font-medium"
+                  className="text-xs sm:text-sm font-medium whitespace-nowrap"
                   style={{
                     color:
                       currentStep >= step
@@ -175,7 +181,7 @@ export default function NewDelivery() {
               </div>
               {idx < 2 && (
                 <div
-                  className="h-0.5 w-24 sm:w-32"
+                  className="h-0.5 w-12 sm:w-24 lg:w-32 shrink-0"
                   style={{
                     background:
                       currentStep > step
@@ -191,7 +197,7 @@ export default function NewDelivery() {
         {/* Form Container */}
         <div className="max-w-4xl mx-auto">
           <div
-            className="rounded-2xl p-6 sm:p-8"
+            className="rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8"
             style={{
               background: "var(--gradient-surface)",
               border: "1px solid var(--border-soft)",
@@ -203,35 +209,38 @@ export default function NewDelivery() {
             {currentStep === 1 && (
               <div>
                 <h2
-                  className="text-2xl font-bold mb-2"
+                  className="text-xl sm:text-2xl font-bold mb-2"
                   style={{ color: "var(--text-primary)" }}
                 >
                   Shipment Route
                 </h2>
-                <p className="mb-6" style={{ color: "var(--text-secondary)" }}>
+                <p
+                  className="mb-4 sm:mb-6 text-sm sm:text-base"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   Enter origin and destination details
                 </p>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                   {/* Origin */}
                   <div>
-                    <div className="flex items-center gap-2 mb-4">
+                    <div className="flex items-center gap-2 mb-3 sm:mb-4">
                       <MapPin
-                        className="h-5 w-5"
+                        className="h-4 w-4 sm:h-5 sm:w-5"
                         style={{ color: "var(--accent-teal)" }}
                       />
                       <h3
-                        className="text-lg font-semibold uppercase"
+                        className="text-base sm:text-lg font-semibold uppercase"
                         style={{ color: "var(--accent-teal)" }}
                       >
                         Origin
                       </h3>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       <div>
                         <label
-                          className="block text-sm font-medium mb-2 uppercase"
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
                           style={{ color: "var(--text-secondary)" }}
                         >
                           City
@@ -243,7 +252,7 @@ export default function NewDelivery() {
                           onChange={(e) =>
                             updateFormData("originCity", e.target.value)
                           }
-                          className="w-full px-4 py-3 rounded-lg outline-none transition-all"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
                           style={{
                             background: "rgba(0,0,0,0.3)",
                             border: "1px solid var(--border-soft)",
@@ -254,7 +263,7 @@ export default function NewDelivery() {
 
                       <div>
                         <label
-                          className="block text-sm font-medium mb-2 uppercase"
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
                           style={{ color: "var(--text-secondary)" }}
                         >
                           Country
@@ -266,7 +275,7 @@ export default function NewDelivery() {
                           onChange={(e) =>
                             updateFormData("originCountry", e.target.value)
                           }
-                          className="w-full px-4 py-3 rounded-lg outline-none transition-all"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
                           style={{
                             background: "rgba(0,0,0,0.3)",
                             border: "1px solid var(--border-soft)",
@@ -279,23 +288,23 @@ export default function NewDelivery() {
 
                   {/* Destination */}
                   <div>
-                    <div className="flex items-center gap-2 mb-4">
+                    <div className="flex items-center gap-2 mb-3 sm:mb-4">
                       <MapPin
-                        className="h-5 w-5"
+                        className="h-4 w-4 sm:h-5 sm:w-5"
                         style={{ color: "var(--accent-amber)" }}
                       />
                       <h3
-                        className="text-lg font-semibold uppercase"
+                        className="text-base sm:text-lg font-semibold uppercase"
                         style={{ color: "var(--accent-amber)" }}
                       >
                         Destination
                       </h3>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       <div>
                         <label
-                          className="block text-sm font-medium mb-2 uppercase"
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
                           style={{ color: "var(--text-secondary)" }}
                         >
                           City
@@ -307,7 +316,7 @@ export default function NewDelivery() {
                           onChange={(e) =>
                             updateFormData("destCity", e.target.value)
                           }
-                          className="w-full px-4 py-3 rounded-lg outline-none transition-all"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
                           style={{
                             background: "rgba(0,0,0,0.3)",
                             border: "1px solid var(--border-soft)",
@@ -318,7 +327,7 @@ export default function NewDelivery() {
 
                       <div>
                         <label
-                          className="block text-sm font-medium mb-2 uppercase"
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
                           style={{ color: "var(--text-secondary)" }}
                         >
                           Country
@@ -330,7 +339,7 @@ export default function NewDelivery() {
                           onChange={(e) =>
                             updateFormData("destCountry", e.target.value)
                           }
-                          className="w-full px-4 py-3 rounded-lg outline-none transition-all"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
                           style={{
                             background: "rgba(0,0,0,0.3)",
                             border: "1px solid var(--border-soft)",
@@ -342,11 +351,11 @@ export default function NewDelivery() {
                   </div>
                 </div>
 
-                <div className="flex justify-end mt-8">
+                <div className="flex justify-end mt-6 sm:mt-8">
                   <button
                     onClick={() => setCurrentStep(2)}
                     disabled={!canProceedStep1()}
-                    className="px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all"
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium flex items-center gap-2 transition-all text-sm sm:text-base"
                     style={{
                       background: canProceedStep1()
                         ? "var(--accent-teal)"
@@ -368,29 +377,32 @@ export default function NewDelivery() {
             {currentStep === 2 && (
               <div>
                 <h2
-                  className="text-2xl font-bold mb-2"
+                  className="text-xl sm:text-2xl font-bold mb-2"
                   style={{ color: "var(--text-primary)" }}
                 >
                   Package Details
                 </h2>
-                <p className="mb-6" style={{ color: "var(--text-secondary)" }}>
+                <p
+                  className="mb-4 sm:mb-6 text-sm sm:text-base"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   Specify package type, weight, and dimensions
                 </p>
 
                 {/* Package Type */}
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                   <label
-                    className="block text-sm font-medium mb-3 uppercase"
+                    className="block text-xs sm:text-sm font-medium mb-3 uppercase"
                     style={{ color: "var(--text-secondary)" }}
                   >
                     Package Type
                   </label>
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     {packageTypes.map((pkg) => (
                       <button
                         key={pkg.id}
                         onClick={() => updateFormData("packageType", pkg.id)}
-                        className="p-4 rounded-xl flex flex-col items-center justify-center gap-3 transition-all hover:scale-105"
+                        className="p-3 sm:p-4 rounded-xl flex flex-col items-center justify-center gap-2 sm:gap-3 transition-all hover:scale-105 active:scale-95"
                         style={{
                           background:
                             formData.packageType === pkg.id
@@ -403,7 +415,7 @@ export default function NewDelivery() {
                         }}
                       >
                         <pkg.icon
-                          className="h-8 w-8"
+                          className="h-6 w-6 sm:h-8 sm:w-8"
                           style={{
                             color:
                               formData.packageType === pkg.id
@@ -412,7 +424,7 @@ export default function NewDelivery() {
                           }}
                         />
                         <span
-                          className="font-medium"
+                          className="font-medium text-xs sm:text-sm text-center"
                           style={{
                             color:
                               formData.packageType === pkg.id
@@ -428,13 +440,13 @@ export default function NewDelivery() {
                 </div>
 
                 {/* Weight & Dimensions */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <div>
                     <label
-                      className="flex items-center gap-2 text-sm font-medium mb-2 uppercase"
+                      className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-2 uppercase"
                       style={{ color: "var(--text-secondary)" }}
                     >
-                      <Weight className="h-4 w-4" />
+                      <Weight className="h-3 w-3 sm:h-4 sm:w-4" />
                       Weight (KG)
                     </label>
                     <input
@@ -442,7 +454,7 @@ export default function NewDelivery() {
                       placeholder="0.00"
                       value={formData.weight}
                       onChange={(e) => updateFormData("weight", e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg outline-none"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none text-sm sm:text-base"
                       style={{
                         background: "rgba(0,0,0,0.3)",
                         border: "1px solid var(--border-soft)",
@@ -453,17 +465,17 @@ export default function NewDelivery() {
 
                   <div>
                     <label
-                      className="flex items-center gap-2 text-sm font-medium mb-2 uppercase"
+                      className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-2 uppercase"
                       style={{ color: "var(--text-secondary)" }}
                     >
-                      <Ruler className="h-4 w-4" />L (CM)
+                      <Ruler className="h-3 w-3 sm:h-4 sm:w-4" />L (CM)
                     </label>
                     <input
                       type="number"
                       placeholder="0"
                       value={formData.length}
                       onChange={(e) => updateFormData("length", e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg outline-none"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none text-sm sm:text-base"
                       style={{
                         background: "rgba(0,0,0,0.3)",
                         border: "1px solid var(--border-soft)",
@@ -474,17 +486,17 @@ export default function NewDelivery() {
 
                   <div>
                     <label
-                      className="flex items-center gap-2 text-sm font-medium mb-2 uppercase"
+                      className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-2 uppercase"
                       style={{ color: "var(--text-secondary)" }}
                     >
-                      <Ruler className="h-4 w-4" />W (CM)
+                      <Ruler className="h-3 w-3 sm:h-4 sm:w-4" />W (CM)
                     </label>
                     <input
                       type="number"
                       placeholder="0"
                       value={formData.width}
                       onChange={(e) => updateFormData("width", e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg outline-none"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none text-sm sm:text-base"
                       style={{
                         background: "rgba(0,0,0,0.3)",
                         border: "1px solid var(--border-soft)",
@@ -495,17 +507,17 @@ export default function NewDelivery() {
 
                   <div>
                     <label
-                      className="flex items-center gap-2 text-sm font-medium mb-2 uppercase"
+                      className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-2 uppercase"
                       style={{ color: "var(--text-secondary)" }}
                     >
-                      <Ruler className="h-4 w-4" />H (CM)
+                      <Ruler className="h-3 w-3 sm:h-4 sm:w-4" />H (CM)
                     </label>
                     <input
                       type="number"
                       placeholder="0"
                       value={formData.height}
                       onChange={(e) => updateFormData("height", e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg outline-none"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none text-sm sm:text-base"
                       style={{
                         background: "rgba(0,0,0,0.3)",
                         border: "1px solid var(--border-soft)",
@@ -516,21 +528,21 @@ export default function NewDelivery() {
                 </div>
 
                 {/* Service Level */}
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                   <label
-                    className="block text-sm font-medium mb-3 uppercase"
+                    className="block text-xs sm:text-sm font-medium mb-3 uppercase"
                     style={{ color: "var(--text-secondary)" }}
                   >
                     Service Level
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     {serviceLevels.map((service) => (
                       <button
                         key={service.id}
                         onClick={() =>
                           updateFormData("serviceLevel", service.id)
                         }
-                        className="p-4 rounded-xl transition-all hover:scale-105"
+                        className="p-3 sm:p-4 rounded-xl transition-all hover:scale-105 active:scale-95"
                         style={{
                           background:
                             formData.serviceLevel === service.id
@@ -542,9 +554,9 @@ export default function NewDelivery() {
                               : "1px solid var(--border-soft)",
                         }}
                       >
-                        <div className="flex items-center gap-3 mb-2">
+                        <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
                           <service.icon
-                            className="h-5 w-5"
+                            className="h-4 w-4 sm:h-5 sm:w-5"
                             style={{
                               color:
                                 formData.serviceLevel === service.id
@@ -553,7 +565,7 @@ export default function NewDelivery() {
                             }}
                           />
                           <span
-                            className="font-semibold"
+                            className="font-semibold text-sm sm:text-base"
                             style={{
                               color:
                                 formData.serviceLevel === service.id
@@ -565,7 +577,7 @@ export default function NewDelivery() {
                           </span>
                         </div>
                         <p
-                          className="text-sm"
+                          className="text-xs sm:text-sm"
                           style={{ color: "var(--text-secondary)" }}
                         >
                           {service.time}
@@ -575,10 +587,10 @@ export default function NewDelivery() {
                   </div>
                 </div>
 
-                <div className="flex justify-between mt-8">
+                <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-6 sm:mt-8">
                   <button
                     onClick={() => setCurrentStep(1)}
-                    className="px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all"
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all text-sm sm:text-base order-2 sm:order-1"
                     style={{
                       background: "rgba(255,255,255,0.05)",
                       border: "1px solid var(--border-soft)",
@@ -592,7 +604,7 @@ export default function NewDelivery() {
                   <button
                     onClick={() => setCurrentStep(3)}
                     disabled={!canProceedStep2()}
-                    className="px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all"
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all text-sm sm:text-base order-1 sm:order-2"
                     style={{
                       background: canProceedStep2()
                         ? "var(--accent-teal)"
@@ -614,35 +626,38 @@ export default function NewDelivery() {
             {currentStep === 3 && (
               <div>
                 <h2
-                  className="text-2xl font-bold mb-2"
+                  className="text-xl sm:text-2xl font-bold mb-2"
                   style={{ color: "var(--text-primary)" }}
                 >
                   Contact Details
                 </h2>
-                <p className="mb-6" style={{ color: "var(--text-secondary)" }}>
+                <p
+                  className="mb-4 sm:mb-6 text-sm sm:text-base"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   We'll discuss your quote via WhatsApp
                 </p>
 
                 {/* Shipment Summary */}
                 <div
-                  className="p-6 rounded-xl mb-6"
+                  className="p-4 sm:p-6 rounded-xl mb-4 sm:mb-6"
                   style={{
                     background: "rgba(0,0,0,0.3)",
                     border: "1px solid var(--border-soft)",
                   }}
                 >
                   <h3
-                    className="text-lg font-semibold mb-4"
+                    className="text-base sm:text-lg font-semibold mb-3 sm:mb-4"
                     style={{ color: "var(--text-primary)" }}
                   >
                     Shipment Summary
                   </h3>
 
                   {/* Route */}
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-4">
+                    <div className="flex items-start gap-2 flex-1">
                       <MapPin
-                        className="h-4 w-4"
+                        className="h-4 w-4 mt-0.5"
                         style={{ color: "var(--accent-teal)" }}
                       />
                       <div>
@@ -653,7 +668,7 @@ export default function NewDelivery() {
                           Origin
                         </div>
                         <div
-                          className="font-semibold"
+                          className="font-semibold text-sm sm:text-base"
                           style={{ color: "var(--text-primary)" }}
                         >
                           {formData.originCity}, {formData.originCountry}
@@ -662,13 +677,13 @@ export default function NewDelivery() {
                     </div>
 
                     <ArrowRight
-                      className="h-5 w-5"
+                      className="h-5 w-5 hidden sm:block"
                       style={{ color: "var(--accent-teal)" }}
                     />
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-start gap-2 flex-1">
                       <MapPin
-                        className="h-4 w-4"
+                        className="h-4 w-4 mt-0.5"
                         style={{ color: "var(--accent-amber)" }}
                       />
                       <div>
@@ -679,7 +694,7 @@ export default function NewDelivery() {
                           Destination
                         </div>
                         <div
-                          className="font-semibold"
+                          className="font-semibold text-sm sm:text-base"
                           style={{ color: "var(--text-primary)" }}
                         >
                           {formData.destCity}, {formData.destCountry}
@@ -689,7 +704,7 @@ export default function NewDelivery() {
                   </div>
 
                   {/* Package Info */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                     <div>
                       <div
                         className="text-xs uppercase mb-1"
@@ -698,7 +713,7 @@ export default function NewDelivery() {
                         Package
                       </div>
                       <div
-                        className="font-semibold capitalize"
+                        className="font-semibold capitalize text-sm sm:text-base"
                         style={{ color: "var(--text-primary)" }}
                       >
                         {formData.packageType.replace("-", " ")}
@@ -713,14 +728,14 @@ export default function NewDelivery() {
                         Weight
                       </div>
                       <div
-                        className="font-semibold"
+                        className="font-semibold text-sm sm:text-base"
                         style={{ color: "var(--text-primary)" }}
                       >
                         {formData.weight} kg
                       </div>
                     </div>
 
-                    <div>
+                    <div className="col-span-2 sm:col-span-1">
                       <div
                         className="text-xs uppercase mb-1"
                         style={{ color: "var(--text-secondary)" }}
@@ -728,7 +743,7 @@ export default function NewDelivery() {
                         Dimensions
                       </div>
                       <div
-                        className="font-semibold"
+                        className="font-semibold text-sm sm:text-base"
                         style={{ color: "var(--text-primary)" }}
                       >
                         {formData.length}×{formData.width}×{formData.height} cm
@@ -737,7 +752,7 @@ export default function NewDelivery() {
                   </div>
 
                   <div
-                    className="mt-4 pt-4"
+                    className="mt-3 sm:mt-4 pt-3 sm:pt-4"
                     style={{ borderTop: "1px solid var(--border-soft)" }}
                   >
                     <div
@@ -747,7 +762,7 @@ export default function NewDelivery() {
                       Service Level
                     </div>
                     <div
-                      className="font-semibold capitalize"
+                      className="font-semibold capitalize text-sm sm:text-base"
                       style={{ color: "var(--accent-teal)" }}
                     >
                       {formData.serviceLevel}
@@ -756,12 +771,12 @@ export default function NewDelivery() {
                 </div>
 
                 {/* WhatsApp Input */}
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                   <label
-                    className="flex items-center gap-2 text-sm font-medium mb-2 uppercase"
+                    className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-2 uppercase"
                     style={{ color: "var(--text-secondary)" }}
                   >
-                    <MessageCircle className="h-4 w-4" />
+                    <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />
                     Your WhatsApp Number
                   </label>
                   <input
@@ -771,7 +786,7 @@ export default function NewDelivery() {
                     onChange={(e) =>
                       updateFormData("userWhatsApp", e.target.value)
                     }
-                    className="w-full px-4 py-3 rounded-lg outline-none"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none text-sm sm:text-base"
                     style={{
                       background: "rgba(0,0,0,0.3)",
                       border: "1px solid var(--border-soft)",
@@ -788,26 +803,26 @@ export default function NewDelivery() {
 
                 {/* Info Box */}
                 <div
-                  className="p-4 rounded-lg mb-6"
+                  className="p-3 sm:p-4 rounded-lg mb-4 sm:mb-6"
                   style={{
                     background: "rgba(23,199,189,0.1)",
                     border: "1px solid var(--accent-teal)",
                   }}
                 >
-                  <div className="flex gap-3">
+                  <div className="flex gap-2 sm:gap-3">
                     <MessageCircle
-                      className="h-5 w-5 shrink-0 mt-0.5"
+                      className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 mt-0.5"
                       style={{ color: "var(--accent-teal)" }}
                     />
                     <div>
                       <p
-                        className="text-sm font-medium mb-1"
+                        className="text-xs sm:text-sm font-medium mb-1"
                         style={{ color: "var(--text-primary)" }}
                       >
                         Get Your Quote on WhatsApp
                       </p>
                       <p
-                        className="text-sm"
+                        className="text-xs sm:text-sm"
                         style={{ color: "var(--text-secondary)" }}
                       >
                         Click the button below to open WhatsApp with your
@@ -818,10 +833,10 @@ export default function NewDelivery() {
                   </div>
                 </div>
 
-                <div className="flex justify-between mt-8">
+                <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-6 sm:mt-8">
                   <button
                     onClick={() => setCurrentStep(2)}
-                    className="px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all"
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all text-sm sm:text-base order-2 sm:order-1"
                     style={{
                       background: "rgba(255,255,255,0.05)",
                       border: "1px solid var(--border-soft)",
@@ -835,7 +850,7 @@ export default function NewDelivery() {
                   <button
                     onClick={handleWhatsAppRedirect}
                     disabled={!canProceedStep3()}
-                    className="px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all"
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all text-sm sm:text-base order-1 sm:order-2"
                     style={{
                       background: canProceedStep3()
                         ? "var(--accent-teal)"
@@ -847,14 +862,19 @@ export default function NewDelivery() {
                     }}
                   >
                     <MessageCircle className="h-4 w-4" />
-                    Get Quote on WhatsApp
+                    <span className="hidden sm:inline">
+                      Get Quote on WhatsApp
+                    </span>
+                    <span className="sm:hidden">Get Quote</span>
                   </button>
                 </div>
               </div>
             )}
           </div>
         </div>
+        <BottomNav />
       </div>
+
     </Sidebar>
   );
 }

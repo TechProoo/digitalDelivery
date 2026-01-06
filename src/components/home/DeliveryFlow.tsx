@@ -41,14 +41,14 @@ export default function DeliveryFlow() {
 
       <div className="mx-auto mt-6 flex max-w-2xl items-center justify-center gap-4">
         <Link
-          to="/new-delivery"
+          to="/dashboard/new-delivery"
           className="rounded-md bg-(--accent-teal) px-5 py-2 text-sm font-medium text-(--bg-primary) shadow-sm"
         >
           Get a Quote
         </Link>
 
         <Link
-          to="/track-package"
+          to="/dashboard/track"
           className="rounded-md border border-(--border-soft) px-5 py-2 text-sm font-medium text-(--text-primary)"
         >
           Track a Package

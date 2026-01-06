@@ -9,7 +9,7 @@ export default function Hero() {
   const handleSubmit = () => {
     const value = tn?.trim();
     if (!value) return;
-    navigate(`/track-package?tn=${encodeURIComponent(value)}`);
+    navigate(`/dashboard/track?tn=${encodeURIComponent(value)}`);
   };
 
   return (

@@ -1,13 +1,13 @@
 import Logo from "../../assets/logo.png";
 import { MoveRight } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import BottomNav from "../dashboard/bottom-nav";
 
 const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Services", path: "/services" },
     { name: "How it works", path: "/how-it-works" },
-    // { name: "Track Shipment", path: "/track-shipment" },
     { name: "Contact", path: "/contact" },
   ];
   return (
@@ -43,6 +43,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      <BottomNav />
     </div>
   );
 };

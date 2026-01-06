@@ -31,12 +31,12 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // lock body scroll when mobile menu open
-    if (isOpen) {
+    if (isOpen && !isLarge) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
-  }, [isOpen]);
+  }, [isOpen, isLarge]);
 
   const mainMenu = [
     {
@@ -46,17 +46,17 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
     },
     {
       title: "New Delivery",
-      to: "/new-delivery",
+      to: "/dashboard/new-delivery",
       icon: <Package className="h-5 w-5" />,
     },
     {
       title: "Track Package",
-      to: "/track-package",
+      to: "/dashboard/track",
       icon: <MapPin className="h-5 w-5" />,
     },
     {
       title: "My Orders",
-      to: "/my-orders",
+      to: "/dashboard/orders",
       icon: <Clock className="h-5 w-5" />,
     },
   ];
@@ -77,12 +77,16 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
       {/* sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-50 h-screen flex flex-col transition-all duration-300 overflow-x-hidden no-scrollbar",
-          // width
-          isCollapsed ? "w-20" : "w-64",
+          "fixed left-0 top-0 z-50 flex flex-col transition-all duration-300 overflow-x-hidden no-scrollbar",
+          // MOBILE: full height, full width sidebar
+          "h-screen w-64",
+          // DESKTOP: sticky, adjust width based on collapsed state
+          "lg:sticky lg:top-0 lg:h-screen",
+          isCollapsed && "lg:w-20",
+          !isCollapsed && "lg:w-64",
           // mobile translate
           isOpen ? "translate-x-0" : "-translate-x-full",
-          "lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen"
+          "lg:translate-x-0"
         )}
         style={{
           backgroundColor: "var(--bg-secondary)",
@@ -91,7 +95,9 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
       >
         {/* header */}
         <div
-          className={cn("h-16 flex items-center px-4 border-b")}
+          className={cn(
+            "h-16 flex items-center justify-between px-4 border-b shrink-0"
+          )}
           style={{
             borderColor: "var(--border-medium)",
             color: "var(--text-primary)",
@@ -100,22 +106,29 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
           {!isCollapsed ? (
             <>
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
+                <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shrink-0">
                   <Package className="h-5 w-5" />
                 </div>
-                <div className="hidden lg:block">
-                  <div className="text-lg font-bold text-primary">
+                <div className="min-w-0">
+                  <div className="text-lg font-bold text-primary truncate">
                     Digital Delivery
                   </div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-xs text-muted-foreground truncate">
                     Logistics Platform
                   </div>
                 </div>
               </div>
-              {/* single toggle button removed from here; control is in header bar to keep behavior consistent */}
+              {/* Close button for mobile */}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="lg:hidden p-2 rounded-lg hover:bg-accent"
+                aria-label="Close sidebar"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </>
           ) : (
-            // collapsed header
+            // collapsed header (desktop only)
             <div className="w-full flex items-center justify-center">
               <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
                 <Package className="h-5 w-5" />
@@ -127,47 +140,77 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
         {/* nav */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-6 no-scrollbar">
           <div>
+            {!isCollapsed && (
+              <h3 className="px-3 mb-2 text-xs font-semibold text-muted-foreground uppercase">
+                Main Menu
+              </h3>
+            )}
             <div className="space-y-1">
               {mainMenu.map((item) => (
                 <NavLink
                   key={item.to}
                   to={item.to}
+                  end={item.to === "/dashboard"}
+                  onClick={() => !isLarge && setIsOpen(false)} // Close mobile menu on navigation
                   className={({ isActive }) =>
                     cn(
-                      "group relative flex items-center rounded-lg transition-all duration-150 overflow-hidden",
+                      "group relative flex items-center rounded-lg transition-all duration-200 overflow-hidden",
                       isCollapsed
                         ? "justify-center px-0 py-2.5 gap-0"
                         : "gap-3 px-3 py-2.5",
-                      "hover:bg-(--hover-overlay)",
                       isActive && "shadow-sm"
                     )
                   }
                   style={({ isActive }) => ({
+                    backgroundColor: isActive
+                      ? "var(--bg-tertiary)"
+                      : "transparent",
                     color: isActive
                       ? "var(--text-primary)"
                       : "var(--text-secondary)",
-                    backgroundColor: isActive
-                      ? "var(--bg-tertiary)"
-                      : undefined,
                   })}
+                  onMouseEnter={(e) => {
+                    const isActive = e.currentTarget.getAttribute("aria-current") === "page";
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(46,196,182,0.08)";
+                      e.currentTarget.style.color = "var(--accent-teal)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    const isActive = e.currentTarget.getAttribute("aria-current") === "page";
+                    e.currentTarget.style.backgroundColor = isActive
+                      ? "var(--bg-tertiary)"
+                      : "transparent";
+                    e.currentTarget.style.color = isActive
+                      ? "var(--text-primary)"
+                      : "var(--text-secondary)";
+                  }}
                 >
                   <span
-                    className="shrink-0 flex items-center justify-center"
-                    style={{ color: "var(--text-tertiary)" }}
+                    className="shrink-0 flex items-center justify-center transition-colors duration-200"
+                    style={{ color: "var(--accent-teal)" }}
                   >
                     {item.icon}
                   </span>
 
-                  <span className={cn(isCollapsed && "sr-only")}>
+                  <span
+                    className={cn(
+                      "font-medium",
+                      isCollapsed && "lg:sr-only text-3xl"
+                    )}
+                  >
                     {item.title}
                   </span>
 
-                  {isCollapsed && (
+                  {/* Tooltip for collapsed desktop view */}
+                  {isCollapsed && isLarge && (
                     <div
-                      className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2 py-1 bg-popover text-popover-foreground text-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap transform transition-all duration-200 group-hover:translate-x-1"
+                      className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2 py-1 text-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap transform transition-all duration-200 group-hover:translate-x-1 shadow-lg"
                       style={{
                         backgroundColor: "var(--bg-overlay)",
                         color: "var(--text-primary)",
+                        border: "1px solid var(--border-medium)",
                       }}
                     >
                       {item.title}
@@ -181,48 +224,47 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 
         {/* footer */}
         <div
-          className="mt-auto border-t p-4"
+          className="mt-auto border-t p-4 shrink-0"
           style={{
             borderColor: "var(--border-medium)",
             color: "var(--text-primary)",
           }}
         >
           {!isCollapsed ? (
-            <div className="flex items-center gap-3">
-              <div
-                className="h-10 w-10 rounded-full"
-                style={{
-                  backgroundColor: "var(--brand-primary)",
-                  color: "var(--text-primary)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: 600,
-                }}
-              >
-                TP
-              </div>
-              <div className="flex-1">
-                <div className="text-sm font-medium">TechPro</div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-3 p-2 rounded-lg bg-muted">
                 <div
-                  className="text-xs"
-                  style={{ color: "var(--text-secondary)" }}
+                  className="h-10 w-10 rounded-full shrink-0"
+                  style={{
+                    backgroundColor: "var(--brand-primary)",
+                    color: "var(--text-primary)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: 600,
+                  }}
                 >
-                  techpro@email.com
+                  TP
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium truncate">TechPro</div>
+                  <div
+                    className="text-xs truncate"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    techpro@email.com
+                  </div>
                 </div>
               </div>
               <button
-                className="px-3 py-2 rounded-lg flex items-center gap-2"
+                className="w-full px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-destructive/10 transition-colors"
                 style={{
-                  color: "var(--text-primary)",
+                  color: "var(--status-failed)",
                   backgroundColor: "transparent",
                 }}
               >
-                <LogOut
-                  className="h-4 w-4"
-                  style={{ color: "var(--status-failed)" }}
-                />
-                <span>Logout</span>
+                <LogOut className="h-4 w-4" />
+                <span className="font-medium">Logout</span>
               </button>
             </div>
           ) : (
@@ -240,23 +282,23 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
               >
                 TP
               </div>
-              <button
-                className="p-2 rounded relative group"
-                style={{ backgroundColor: "transparent" }}
-              >
+              <button className="p-2 rounded relative group hover:bg-destructive/10 transition-colors">
                 <LogOut
                   className="h-5 w-5"
                   style={{ color: "var(--status-failed)" }}
                 />
-                <div
-                  className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none"
-                  style={{
-                    backgroundColor: "var(--bg-overlay)",
-                    color: "var(--text-primary)",
-                  }}
-                >
-                  Logout
-                </div>
+                {isLarge && (
+                  <div
+                    className="absolute left-full ml-2 px-2 py-1 text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap shadow-lg"
+                    style={{
+                      backgroundColor: "var(--bg-overlay)",
+                      color: "var(--text-primary)",
+                      border: "1px solid var(--border-medium)",
+                    }}
+                  >
+                    Logout
+                  </div>
+                )}
               </button>
             </div>
           )}
@@ -264,16 +306,17 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* main content area */}
-      <div
-        className={cn(
-          "flex-1 flex flex-col min-h-screen lg:pl-0",
-          isCollapsed ? "pl-20" : "pl-64"
-        )}
-      >
+      <div className="flex-1 flex flex-col min-h-screen w-full">
         {/* header bar */}
-        <header className="sticky top-0 h-16 bg-(--bg-secondary) border-b z-30 flex items-center px-4">
+        <header
+          className="sticky top-0 h-16 border-b z-30 flex items-center px-4 lg:px-6 shrink-0"
+          style={{
+            backgroundColor: "var(--bg-secondary)",
+            borderColor: "var(--border-medium)",
+          }}
+        >
           <div className="flex items-center gap-3">
-            {/* unified toggle button: on large screens toggles collapse, on small screens toggles open */}
+            {/* Toggle button */}
             <button
               onClick={() => {
                 if (isLarge) setIsCollapsed((s) => !s);
@@ -282,45 +325,61 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
               aria-label={
                 isLarge
                   ? isCollapsed
-                    ? "Open sidebar"
-                    : "Close sidebar"
+                    ? "Expand sidebar"
+                    : "Collapse sidebar"
                   : isOpen
-                  ? "Close sidebar"
-                  : "Open sidebar"
+                  ? "Close menu"
+                  : "Open menu"
               }
-              className="p-2 rounded-lg"
+              className="p-2 rounded-lg hover:bg-accent transition-colors"
             >
               {isLarge ? (
-                !isCollapsed ? (
-                  <X className="h-5 w-5" color="#e6f1f5" />
+                isCollapsed ? (
+                  <Menu
+                    className="h-5 w-5"
+                    style={{ color: "var(--text-primary)" }}
+                  />
                 ) : (
-                  <Menu className="h-5 w-5" color="#e6f1f5" />
+                  <X
+                    className="h-5 w-5"
+                    style={{ color: "var(--text-primary)" }}
+                  />
                 )
-              ) : isOpen ? (
-                <X className="h-5 w-5" color="#e6f1f5" />
               ) : (
-                <Menu className="h-5 w-5" color="#e6f1f5" />
+                <Menu
+                  className="h-5 w-5"
+                  style={{ color: "var(--text-primary)" }}
+                />
               )}
             </button>
-            <div className="ml-2 text-xl font-semibold text-(--text-primary)">
+            <h1
+              className="text-xl font-semibold"
+              style={{ color: "var(--text-primary)" }}
+            >
               Dashboard
-            </div>
+            </h1>
           </div>
 
           <div className="flex-1"></div>
 
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <button className="p-2 rounded-lg">
-                <Package className="h-5 w-5" color="#e6f1f5" />
-              </button>
-              <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full" />
-            </div>
+          <div className="flex items-center gap-2">
+            <button className="p-2 rounded-lg hover:bg-accent transition-colors relative">
+              <Package
+                className="h-5 w-5"
+                style={{ color: "var(--text-primary)" }}
+              />
+              <span
+                className="absolute top-1 right-1 h-2 w-2 rounded-full"
+                style={{ backgroundColor: "var(--brand-primary)" }}
+              />
+            </button>
           </div>
         </header>
 
         {/* content */}
-        <main className="flex-1 p-4 lg:p-6 bg-muted/50">{children}</main>
+        <main className="flex-1 p-4 lg:p-6 bg-muted/50 overflow-auto">
+          {children}
+        </main>
       </div>
     </div>
   );

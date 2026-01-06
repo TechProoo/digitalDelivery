@@ -16,7 +16,10 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
+  Calendar,
+  ArrowRight,
 } from "lucide-react";
+import BottomNav from "../components/dashboard/bottom-nav";
 
 type OrderStatus = "delivered" | "in-transit" | "pending" | "failed";
 type ServiceType = "road" | "air" | "sea" | "express";
@@ -197,58 +200,74 @@ export default function MyOrders() {
   const getStatusBg = (status: OrderStatus) => {
     switch (status) {
       case "delivered":
-        return "rgba(46,196,182,0.12)";
+        return "rgba(46,196,182,0.15)";
       case "in-transit":
-        return "rgba(78,168,222,0.12)";
+        return "rgba(78,168,222,0.15)";
       case "pending":
-        return "rgba(244,162,97,0.12)";
+        return "rgba(244,162,97,0.15)";
       case "failed":
-        return "rgba(239,71,111,0.12)";
+        return "rgba(239,71,111,0.15)";
+    }
+  };
+
+  const getStatusIcon = (status: OrderStatus) => {
+    switch (status) {
+      case "delivered":
+        return CheckCircle;
+      case "in-transit":
+        return Truck;
+      case "pending":
+        return Clock;
+      case "failed":
+        return AlertCircle;
     }
   };
 
   const getServiceIcon = (service: ServiceType) => {
     switch (service) {
       case "road":
-        return <Truck className="h-4 w-4" />;
+        return Truck;
       case "air":
-        return <Plane className="h-4 w-4" />;
+        return Plane;
       case "sea":
-        return <Ship className="h-4 w-4" />;
+        return Ship;
       case "express":
-        return <Truck className="h-4 w-4" />;
+        return Truck;
     }
   };
 
   return (
     <Sidebar>
       <div
-        className="min-h-screen p-6"
+        className="min-h-screen p-4 sm:p-6 lg:p-8"
         style={{ background: "var(--bg-primary)" }}
       >
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <div className="flex items-center gap-3 mb-2">
             <div
-              className="p-3 rounded-xl"
+              className="p-2.5 sm:p-3 rounded-xl"
               style={{
                 background: "var(--gradient-surface)",
                 border: "1px solid var(--border-soft)",
               }}
             >
               <Package
-                className="h-6 w-6"
+                className="h-5 w-5 sm:h-6 sm:w-6"
                 style={{ color: "var(--accent-teal)" }}
               />
             </div>
             <div>
               <h1
-                className="text-2xl font-bold"
+                className="text-xl sm:text-2xl font-bold"
                 style={{ color: "var(--text-primary)" }}
               >
                 My Orders
               </h1>
-              <p style={{ color: "var(--text-secondary)" }}>
+              <p
+                className="text-sm sm:text-base"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 View and manage all your shipments
               </p>
             </div>
@@ -256,9 +275,9 @@ export default function MyOrders() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
           <div
-            className="p-4 rounded-xl"
+            className="p-3 sm:p-4 rounded-xl"
             style={{
               background: "var(--gradient-surface)",
               border: "1px solid var(--border-soft)",
@@ -267,18 +286,23 @@ export default function MyOrders() {
           >
             <div className="flex items-center justify-between mb-2">
               <span
-                className="text-sm font-medium"
+                className="text-xs sm:text-sm font-medium"
                 style={{ color: "var(--text-secondary)" }}
               >
                 Total Orders
               </span>
-              <Package
-                className="h-5 w-5"
-                style={{ color: "var(--accent-teal)" }}
-              />
+              <div
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
+                style={{ background: "rgba(23,199,189,0.15)" }}
+              >
+                <Package
+                  className="h-4 w-4 sm:h-5 sm:w-5"
+                  style={{ color: "var(--accent-teal)" }}
+                />
+              </div>
             </div>
             <div
-              className="text-2xl font-bold"
+              className="text-xl sm:text-2xl font-bold"
               style={{ color: "var(--text-primary)" }}
             >
               {stats.total}
@@ -286,7 +310,7 @@ export default function MyOrders() {
           </div>
 
           <div
-            className="p-4 rounded-xl"
+            className="p-3 sm:p-4 rounded-xl"
             style={{
               background: "var(--gradient-surface)",
               border: "1px solid var(--border-soft)",
@@ -295,18 +319,23 @@ export default function MyOrders() {
           >
             <div className="flex items-center justify-between mb-2">
               <span
-                className="text-sm font-medium"
+                className="text-xs sm:text-sm font-medium"
                 style={{ color: "var(--text-secondary)" }}
               >
                 Delivered
               </span>
-              <CheckCircle
-                className="h-5 w-5"
-                style={{ color: "var(--status-delivered)" }}
-              />
+              <div
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
+                style={{ background: "rgba(46,196,182,0.15)" }}
+              >
+                <CheckCircle
+                  className="h-4 w-4 sm:h-5 sm:w-5"
+                  style={{ color: "var(--status-delivered)" }}
+                />
+              </div>
             </div>
             <div
-              className="text-2xl font-bold"
+              className="text-xl sm:text-2xl font-bold"
               style={{ color: "var(--status-delivered)" }}
             >
               {stats.delivered}
@@ -314,7 +343,7 @@ export default function MyOrders() {
           </div>
 
           <div
-            className="p-4 rounded-xl"
+            className="p-3 sm:p-4 rounded-xl"
             style={{
               background: "var(--gradient-surface)",
               border: "1px solid var(--border-soft)",
@@ -323,18 +352,23 @@ export default function MyOrders() {
           >
             <div className="flex items-center justify-between mb-2">
               <span
-                className="text-sm font-medium"
+                className="text-xs sm:text-sm font-medium"
                 style={{ color: "var(--text-secondary)" }}
               >
                 In Transit
               </span>
-              <Truck
-                className="h-5 w-5"
-                style={{ color: "var(--status-in-transit)" }}
-              />
+              <div
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
+                style={{ background: "rgba(78,168,222,0.15)" }}
+              >
+                <Truck
+                  className="h-4 w-4 sm:h-5 sm:w-5"
+                  style={{ color: "var(--status-in-transit)" }}
+                />
+              </div>
             </div>
             <div
-              className="text-2xl font-bold"
+              className="text-xl sm:text-2xl font-bold"
               style={{ color: "var(--status-in-transit)" }}
             >
               {stats.inTransit}
@@ -342,7 +376,7 @@ export default function MyOrders() {
           </div>
 
           <div
-            className="p-4 rounded-xl"
+            className="p-3 sm:p-4 rounded-xl"
             style={{
               background: "var(--gradient-surface)",
               border: "1px solid var(--border-soft)",
@@ -351,18 +385,23 @@ export default function MyOrders() {
           >
             <div className="flex items-center justify-between mb-2">
               <span
-                className="text-sm font-medium"
+                className="text-xs sm:text-sm font-medium"
                 style={{ color: "var(--text-secondary)" }}
               >
                 Pending
               </span>
-              <Clock
-                className="h-5 w-5"
-                style={{ color: "var(--status-pending)" }}
-              />
+              <div
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
+                style={{ background: "rgba(244,162,97,0.15)" }}
+              >
+                <Clock
+                  className="h-4 w-4 sm:h-5 sm:w-5"
+                  style={{ color: "var(--status-pending)" }}
+                />
+              </div>
             </div>
             <div
-              className="text-2xl font-bold"
+              className="text-xl sm:text-2xl font-bold"
               style={{ color: "var(--status-pending)" }}
             >
               {stats.pending}
@@ -372,14 +411,14 @@ export default function MyOrders() {
 
         {/* Filters & Search */}
         <div
-          className="p-4 rounded-xl mb-6"
+          className="p-4 sm:p-4 rounded-xl mb-4 sm:mb-6"
           style={{
             background: "var(--gradient-surface)",
             border: "1px solid var(--border-soft)",
             boxShadow: "var(--shadow-soft)",
           }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {/* Search */}
             <div className="relative">
               <Search
@@ -388,13 +427,13 @@ export default function MyOrders() {
               />
               <input
                 type="text"
-                placeholder="Search by ID, origin, or destination..."
+                placeholder="Search orders..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full pl-10 pr-4 py-2 rounded-lg outline-none text-sm"
+                className="w-full pl-10 pr-3 py-2.5 rounded-lg outline-none text-sm"
                 style={{
                   background: "rgba(0,0,0,0.3)",
                   border: "1px solid var(--border-soft)",
@@ -406,7 +445,7 @@ export default function MyOrders() {
             {/* Status Filter */}
             <div className="relative">
               <Filter
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none"
                 style={{ color: "var(--text-secondary)" }}
               />
               <select
@@ -415,7 +454,7 @@ export default function MyOrders() {
                   setStatusFilter(e.target.value as OrderStatus | "all");
                   setCurrentPage(1);
                 }}
-                className="w-full pl-10 pr-4 py-2 rounded-lg outline-none text-sm appearance-none cursor-pointer"
+                className="w-full pl-10 pr-8 py-2.5 rounded-lg outline-none text-sm appearance-none cursor-pointer"
                 style={{
                   background: "rgba(0,0,0,0.3)",
                   border: "1px solid var(--border-soft)",
@@ -433,7 +472,7 @@ export default function MyOrders() {
             {/* Service Filter */}
             <div className="relative">
               <Truck
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none"
                 style={{ color: "var(--text-secondary)" }}
               />
               <select
@@ -442,7 +481,7 @@ export default function MyOrders() {
                   setServiceFilter(e.target.value as ServiceType | "all");
                   setCurrentPage(1);
                 }}
-                className="w-full pl-10 pr-4 py-2 rounded-lg outline-none text-sm appearance-none cursor-pointer"
+                className="w-full pl-10 pr-8 py-2.5 rounded-lg outline-none text-sm appearance-none cursor-pointer"
                 style={{
                   background: "rgba(0,0,0,0.3)",
                   border: "1px solid var(--border-soft)",
@@ -459,114 +498,116 @@ export default function MyOrders() {
           </div>
         </div>
 
-        {/* Orders Table */}
-        <div
-          className="rounded-xl overflow-hidden mb-6"
-          style={{
-            background: "var(--gradient-surface)",
-            border: "1px solid var(--border-soft)",
-            boxShadow: "var(--shadow-soft)",
-          }}
-        >
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr
-                  className="border-b"
-                  style={{ borderColor: "var(--border-soft)" }}
-                >
-                  <th
-                    className="text-left py-4 px-4 text-sm font-semibold uppercase"
-                    style={{ color: "var(--text-secondary)" }}
+        {/* Orders - Desktop Table / Mobile Cards */}
+        <div className="pb-20 lg:pb-6">
+          {/* Desktop Table */}
+          <div
+            className="hidden lg:block rounded-xl overflow-hidden mb-6"
+            style={{
+              background: "var(--gradient-surface)",
+              border: "1px solid var(--border-soft)",
+              boxShadow: "var(--shadow-soft)",
+            }}
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr
+                    className="border-b"
+                    style={{ borderColor: "var(--border-soft)" }}
                   >
-                    Order ID
-                  </th>
-                  <th
-                    className="text-left py-4 px-4 text-sm font-semibold uppercase"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    Route
-                  </th>
-                  <th
-                    className="text-left py-4 px-4 text-sm font-semibold uppercase"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    Package
-                  </th>
-                  <th
-                    className="text-left py-4 px-4 text-sm font-semibold uppercase"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    Service
-                  </th>
-                  <th
-                    className="text-left py-4 px-4 text-sm font-semibold uppercase"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    Status
-                  </th>
-                  <th
-                    className="text-left py-4 px-4 text-sm font-semibold uppercase"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    Date
-                  </th>
-                  <th
-                    className="text-left py-4 px-4 text-sm font-semibold uppercase"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    Amount
-                  </th>
-                  <th
-                    className="text-left py-4 px-4 text-sm font-semibold uppercase"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedOrders.length === 0 ? (
-                  <tr>
-                    <td colSpan={8} className="py-12 text-center">
-                      <AlertCircle
-                        className="h-12 w-12 mx-auto mb-3"
-                        style={{ color: "var(--text-secondary)" }}
-                      />
-                      <p
-                        className="text-lg font-medium"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
-                        No orders found
-                      </p>
-                      <p
-                        className="text-sm"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
-                        Try adjusting your filters or search query
-                      </p>
-                    </td>
-                  </tr>
-                ) : (
-                  paginatedOrders.map((order) => (
-                    <tr
-                      key={order.id}
-                      className="border-b transition-colors hover:bg-white/5"
-                      style={{ borderColor: "var(--border-soft)" }}
+                    <th
+                      className="text-left py-4 px-4 text-xs font-semibold uppercase"
+                      style={{ color: "var(--text-secondary)" }}
                     >
-                      <td className="py-4 px-4">
-                        <span
-                          className="font-semibold"
-                          style={{ color: "var(--accent-amber)" }}
+                      Order ID
+                    </th>
+                    <th
+                      className="text-left py-4 px-4 text-xs font-semibold uppercase"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      Route
+                    </th>
+                    <th
+                      className="text-left py-4 px-4 text-xs font-semibold uppercase"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      Package
+                    </th>
+                    <th
+                      className="text-left py-4 px-4 text-xs font-semibold uppercase"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      Service
+                    </th>
+                    <th
+                      className="text-left py-4 px-4 text-xs font-semibold uppercase"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      Status
+                    </th>
+                    <th
+                      className="text-left py-4 px-4 text-xs font-semibold uppercase"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      Date
+                    </th>
+                    <th
+                      className="text-left py-4 px-4 text-xs font-semibold uppercase"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      Amount
+                    </th>
+                    <th
+                      className="text-left py-4 px-4 text-xs font-semibold uppercase"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedOrders.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="py-12 text-center">
+                        <AlertCircle
+                          className="h-12 w-12 mx-auto mb-3"
+                          style={{ color: "var(--text-secondary)" }}
+                        />
+                        <p
+                          className="text-lg font-medium"
+                          style={{ color: "var(--text-secondary)" }}
                         >
-                          {order.id}
-                        </span>
+                          No orders found
+                        </p>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Try adjusting your filters or search query
+                        </p>
                       </td>
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-2">
+                    </tr>
+                  ) : (
+                    paginatedOrders.map((order) => (
+                      <tr
+                        key={order.id}
+                        className="border-b transition-colors hover:bg-white/5 cursor-pointer"
+                        style={{ borderColor: "var(--border-soft)" }}
+                        onClick={() => setSelectedOrder(order)}
+                      >
+                        <td className="py-4 px-4">
+                          <span
+                            className="font-semibold text-sm"
+                            style={{ color: "var(--accent-amber)" }}
+                          >
+                            {order.id}
+                          </span>
+                        </td>
+                        <td className="py-4 px-4">
                           <div>
                             <div
-                              className="text-sm"
+                              className="text-sm font-medium mb-0.5"
                               style={{ color: "var(--text-primary)" }}
                             >
                               {order.origin}
@@ -575,175 +616,473 @@ export default function MyOrders() {
                               className="text-xs flex items-center gap-1"
                               style={{ color: "var(--text-secondary)" }}
                             >
-                              <MapPin className="h-3 w-3" />
+                              <ArrowRight className="h-3 w-3" />
                               {order.destination}
                             </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="py-4 px-4">
-                        <div
-                          className="text-sm"
-                          style={{ color: "var(--text-primary)" }}
-                        >
-                          {order.packageType}
-                        </div>
-                        <div
-                          className="text-xs"
-                          style={{ color: "var(--text-secondary)" }}
-                        >
-                          {order.weight}
-                        </div>
-                      </td>
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-2">
-                          <span style={{ color: "var(--accent-teal)" }}>
-                            {getServiceIcon(order.service)}
-                          </span>
-                          <span
-                            className="text-sm capitalize"
+                        </td>
+                        <td className="py-4 px-4">
+                          <div
+                            className="text-sm font-medium"
                             style={{ color: "var(--text-primary)" }}
                           >
-                            {order.service}
+                            {order.packageType}
+                          </div>
+                          <div
+                            className="text-xs"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
+                            {order.weight}
+                          </div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-2">
+                            {(() => {
+                              const Icon = getServiceIcon(order.service);
+                              return (
+                                <Icon
+                                  className="h-4 w-4"
+                                  style={{ color: "var(--accent-teal)" }}
+                                />
+                              );
+                            })()}
+                            <span
+                              className="text-sm capitalize font-medium"
+                              style={{ color: "var(--text-primary)" }}
+                            >
+                              {order.service}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <span
+                            className="px-2.5 py-1 rounded-full text-xs font-medium capitalize inline-flex items-center gap-1.5"
+                            style={{
+                              background: getStatusBg(order.status),
+                              color: getStatusColor(order.status),
+                            }}
+                          >
+                            {(() => {
+                              const Icon = getStatusIcon(order.status);
+                              return <Icon className="h-3 w-3" />;
+                            })()}
+                            {order.status.replace("-", " ")}
                           </span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-4">
-                        <span
-                          className="px-3 py-1 rounded-full text-xs font-medium capitalize"
+                        </td>
+                        <td
+                          className="py-4 px-4 text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          {order.date}
+                        </td>
+                        <td
+                          className="py-4 px-4 font-semibold text-sm"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {order.amount}
+                        </td>
+                        <td className="py-4 px-4">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedOrder(order);
+                            }}
+                            className="p-2 rounded-lg transition-all hover:scale-110 active:scale-95"
+                            style={{
+                              background: "rgba(23,199,189,0.12)",
+                              border: "1px solid var(--accent-teal)",
+                              color: "var(--accent-teal)",
+                            }}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            {paginatedOrders.length > 0 && (
+              <div
+                className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t"
+                style={{ borderColor: "var(--border-soft)" }}
+              >
+                <div
+                  className="text-sm"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+                  {Math.min(currentPage * itemsPerPage, filteredOrders.length)}{" "}
+                  of {filteredOrders.length} orders
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="p-2 rounded-lg transition-colors"
+                    style={{
+                      background:
+                        currentPage === 1
+                          ? "rgba(255,255,255,0.03)"
+                          : "transparent",
+                      border: "1px solid var(--border-soft)",
+                      color:
+                        currentPage === 1
+                          ? "var(--text-secondary)"
+                          : "var(--text-primary)",
+                      cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+
+                  {Array.from({ length: Math.min(totalPages, 5) }).map(
+                    (_, i) => {
+                      const pageNum = i + 1;
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => setCurrentPage(pageNum)}
+                          className="px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
                           style={{
-                            background: getStatusBg(order.status),
-                            color: getStatusColor(order.status),
+                            background:
+                              currentPage === pageNum
+                                ? "var(--accent-teal)"
+                                : "transparent",
+                            border:
+                              currentPage === pageNum
+                                ? "none"
+                                : "1px solid var(--border-soft)",
+                            color:
+                              currentPage === pageNum
+                                ? "var(--text-inverse)"
+                                : "var(--text-primary)",
                           }}
                         >
-                          {order.status.replace("-", " ")}
-                        </span>
-                      </td>
-                      <td
-                        className="py-4 px-4 text-sm"
+                          {pageNum}
+                        </button>
+                      );
+                    }
+                  )}
+
+                  <button
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                    }
+                    disabled={currentPage === totalPages}
+                    className="p-2 rounded-lg transition-colors"
+                    style={{
+                      background:
+                        currentPage === totalPages
+                          ? "rgba(255,255,255,0.03)"
+                          : "transparent",
+                      border: "1px solid var(--border-soft)",
+                      color:
+                        currentPage === totalPages
+                          ? "var(--text-secondary)"
+                          : "var(--text-primary)",
+                      cursor:
+                        currentPage === totalPages ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="lg:hidden space-y-3">
+            {paginatedOrders.length === 0 ? (
+              <div
+                className="p-8 rounded-xl text-center"
+                style={{
+                  background: "var(--gradient-surface)",
+                  border: "1px solid var(--border-soft)",
+                }}
+              >
+                <AlertCircle
+                  className="h-12 w-12 mx-auto mb-3"
+                  style={{ color: "var(--text-secondary)" }}
+                />
+                <p
+                  className="text-base font-medium mb-1"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  No orders found
+                </p>
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Try adjusting your filters
+                </p>
+              </div>
+            ) : (
+              paginatedOrders.map((order) => (
+                <div
+                  key={order.id}
+                  onClick={() => setSelectedOrder(order)}
+                  className="p-4 rounded-xl cursor-pointer active:scale-[0.98] transition-transform"
+                  style={{
+                    background: "var(--gradient-surface)",
+                    border: "1px solid var(--border-soft)",
+                    boxShadow: "var(--shadow-soft)",
+                  }}
+                >
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <span
+                        className="font-bold text-sm"
+                        style={{ color: "var(--accent-amber)" }}
+                      >
+                        {order.id}
+                      </span>
+                      <div
+                        className="text-xs mt-0.5"
                         style={{ color: "var(--text-secondary)" }}
                       >
                         {order.date}
-                      </td>
-                      <td
-                        className="py-4 px-4 font-semibold"
-                        style={{ color: "var(--text-primary)" }}
-                      >
-                        {order.amount}
-                      </td>
-                      <td className="py-4 px-4">
-                        <button
-                          onClick={() => setSelectedOrder(order)}
-                          className="p-2 rounded-lg transition-all hover:scale-110"
-                          style={{
-                            background: "rgba(23,199,189,0.1)",
-                            border: "1px solid var(--accent-teal)",
-                            color: "var(--accent-teal)",
-                          }}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                      </div>
+                    </div>
+                    <span
+                      className="px-2.5 py-1 rounded-full text-xs font-medium capitalize inline-flex items-center gap-1.5"
+                      style={{
+                        background: getStatusBg(order.status),
+                        color: getStatusColor(order.status),
+                      }}
+                    >
+                      {(() => {
+                        const Icon = getStatusIcon(order.status);
+                        return <Icon className="h-3 w-3" />;
+                      })()}
+                      {order.status.replace("-", " ")}
+                    </span>
+                  </div>
 
-          {/* Pagination */}
-          {paginatedOrders.length > 0 && (
-            <div
-              className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t"
-              style={{ borderColor: "var(--border-soft)" }}
-            >
-              <div
-                className="text-sm"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-                {Math.min(currentPage * itemsPerPage, filteredOrders.length)} of{" "}
-                {filteredOrders.length} orders
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="p-2 rounded-lg transition-colors"
-                  style={{
-                    background:
-                      currentPage === 1 ? "rgba(0,0,0,0.04)" : "transparent",
-                    border: "1px solid var(--border-soft)",
-                    color:
-                      currentPage === 1
-                        ? "var(--text-secondary)"
-                        : "var(--text-primary)",
-                    cursor: currentPage === 1 ? "not-allowed" : "pointer",
-                  }}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-
-                {Array.from({ length: totalPages }).map((_, i) => (
-                  <button
-                    key={i + 1}
-                    onClick={() => setCurrentPage(i + 1)}
-                    className="px-3 py-1 rounded-lg text-sm font-medium transition-all"
+                  {/* Route */}
+                  <div
+                    className="mb-3 p-3 rounded-lg"
                     style={{
-                      background:
-                        currentPage === i + 1
-                          ? "var(--accent-teal)"
-                          : "transparent",
-                      border:
-                        currentPage === i + 1
-                          ? "none"
-                          : "1px solid var(--border-soft)",
-                      color:
-                        currentPage === i + 1
-                          ? "var(--text-inverse)"
-                          : "var(--text-primary)",
+                      background: "rgba(0,0,0,0.2)",
+                      border: "1px solid var(--border-soft)",
                     }}
                   >
-                    {i + 1}
-                  </button>
-                ))}
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <MapPin
+                        className="h-3.5 w-3.5"
+                        style={{ color: "var(--accent-teal)" }}
+                      />
+                      <span
+                        className="text-xs font-medium"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        FROM
+                      </span>
+                    </div>
+                    <div
+                      className="text-sm font-semibold mb-2"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {order.origin}
+                    </div>
 
-                <button
-                  onClick={() =>
-                    setCurrentPage((p) => Math.min(totalPages, p + 1))
-                  }
-                  disabled={currentPage === totalPages}
-                  className="p-2 rounded-lg transition-colors"
-                  style={{
-                    background:
-                      currentPage === totalPages
-                        ? "rgba(0,0,0,0.04)"
-                        : "transparent",
-                    border: "1px solid var(--border-soft)",
-                    color:
-                      currentPage === totalPages
-                        ? "var(--text-secondary)"
-                        : "var(--text-primary)",
-                    cursor:
-                      currentPage === totalPages ? "not-allowed" : "pointer",
-                  }}
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <MapPin
+                        className="h-3.5 w-3.5"
+                        style={{ color: "var(--accent-amber)" }}
+                      />
+                      <span
+                        className="text-xs font-medium"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        TO
+                      </span>
+                    </div>
+                    <div
+                      className="text-sm font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {order.destination}
+                    </div>
+                  </div>
+
+                  {/* Details Grid */}
+                  <div className="grid grid-cols-3 gap-3 mb-3">
+                    <div>
+                      <div
+                        className="text-xs mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Package
+                      </div>
+                      <div
+                        className="text-sm font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {order.packageType}
+                      </div>
+                      <div
+                        className="text-xs"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        {order.weight}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div
+                        className="text-xs mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Service
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        {(() => {
+                          const Icon = getServiceIcon(order.service);
+                          return (
+                            <Icon
+                              className="h-3.5 w-3.5"
+                              style={{ color: "var(--accent-teal)" }}
+                            />
+                          );
+                        })()}
+                        <span
+                          className="text-sm font-semibold capitalize"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {order.service}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div
+                        className="text-xs mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Amount
+                      </div>
+                      <div
+                        className="text-sm font-bold"
+                        style={{ color: "var(--accent-teal)" }}
+                      >
+                        {order.amount}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div
+                    className="flex items-center justify-between pt-3 border-t"
+                    style={{ borderColor: "var(--border-soft)" }}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <Calendar
+                        className="h-3.5 w-3.5"
+                        style={{ color: "var(--text-secondary)" }}
+                      />
+                      <span
+                        className="text-xs"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Est: {order.estimatedDelivery}
+                      </span>
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedOrder(order);
+                      }}
+                      className="text-xs font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-lg"
+                      style={{
+                        background: "rgba(23,199,189,0.12)",
+                        color: "var(--accent-teal)",
+                      }}
+                    >
+                      View Details
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+
+            {/* Mobile Pagination */}
+            {paginatedOrders.length > 0 && (
+              <div className="flex items-center justify-between pt-2">
+                <div
+                  className="text-xs"
+                  style={{ color: "var(--text-secondary)" }}
                 >
-                  <ChevronRight className="h-4 w-4" />
-                </button>
+                  Page {currentPage} of {totalPages}
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="p-2 rounded-lg transition-colors"
+                    style={{
+                      background:
+                        currentPage === 1
+                          ? "rgba(255,255,255,0.03)"
+                          : "rgba(23,199,189,0.12)",
+                      border: "1px solid var(--border-soft)",
+                      color:
+                        currentPage === 1
+                          ? "var(--text-secondary)"
+                          : "var(--accent-teal)",
+                      cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                    }
+                    disabled={currentPage === totalPages}
+                    className="p-2 rounded-lg transition-colors"
+                    style={{
+                      background:
+                        currentPage === totalPages
+                          ? "rgba(255,255,255,0.03)"
+                          : "rgba(23,199,189,0.12)",
+                      border: "1px solid var(--border-soft)",
+                      color:
+                        currentPage === totalPages
+                          ? "var(--text-secondary)"
+                          : "var(--accent-teal)",
+                      cursor:
+                        currentPage === totalPages ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Order Detail Modal */}
         {selectedOrder && (
           <div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: "rgba(0,0,0,0.7)" }}
+            style={{
+              background: "rgba(0,0,0,0.75)",
+              backdropFilter: "blur(4px)",
+            }}
             onClick={() => setSelectedOrder(null)}
           >
             <div
-              className="max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-2xl p-6"
+              className="max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-xl sm:rounded-2xl p-4 sm:p-6"
               style={{
                 background: "var(--bg-secondary)",
                 border: "1px solid var(--border-soft)",
@@ -752,24 +1091,25 @@ export default function MyOrders() {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-start justify-between mb-6">
                 <div>
                   <h2
-                    className="text-xl font-bold mb-1"
+                    className="text-lg sm:text-xl font-bold mb-1"
                     style={{ color: "var(--text-primary)" }}
                   >
                     Order Details
                   </h2>
                   <p
-                    className="text-sm"
+                    className="text-xs sm:text-sm flex items-center gap-1.5"
                     style={{ color: "var(--text-secondary)" }}
                   >
-                    Tracking: {selectedOrder.trackingNumber}
+                    <Package className="h-3.5 w-3.5" />
+                    {selectedOrder.trackingNumber}
                   </p>
                 </div>
                 <button
                   onClick={() => setSelectedOrder(null)}
-                  className="p-2 rounded-lg transition-all hover:scale-110"
+                  className="p-2 rounded-lg transition-all hover:scale-110 active:scale-95"
                   style={{
                     background: "rgba(255,255,255,0.05)",
                     border: "1px solid var(--border-soft)",
@@ -780,50 +1120,59 @@ export default function MyOrders() {
                 </button>
               </div>
 
-              {/* Order Info */}
-              <div className="space-y-4 mb-6">
-                <div
-                  className="p-4 rounded-xl"
-                  style={{
-                    background: "rgba(0,0,0,0.2)",
-                    border: "1px solid var(--border-soft)",
-                  }}
-                >
-                  <div className="grid grid-cols-2 gap-4">
+              {/* Status Banner */}
+              <div
+                className="p-4 rounded-xl mb-6"
+                style={{
+                  background: getStatusBg(selectedOrder.status),
+                  border: `1px solid ${getStatusColor(selectedOrder.status)}`,
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {(() => {
+                      const Icon = getStatusIcon(selectedOrder.status);
+                      return (
+                        <div
+                          className="w-10 h-10 rounded-full flex items-center justify-center"
+                          style={{
+                            background: getStatusColor(selectedOrder.status),
+                          }}
+                        >
+                          <Icon
+                            className="h-5 w-5"
+                            style={{ color: "var(--text-inverse)" }}
+                          />
+                        </div>
+                      );
+                    })()}
                     <div>
                       <div
-                        className="text-xs uppercase mb-1"
-                        style={{ color: "var(--text-secondary)" }}
+                        className="text-xs uppercase font-medium mb-0.5"
+                        style={{ color: getStatusColor(selectedOrder.status) }}
                       >
-                        Order ID
+                        Current Status
                       </div>
                       <div
-                        className="font-semibold"
-                        style={{ color: "var(--accent-amber)" }}
-                      >
-                        {selectedOrder.id}
-                      </div>
-                    </div>
-                    <div>
-                      <div
-                        className="text-xs uppercase mb-1"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
-                        Status
-                      </div>
-                      <span
-                        className="px-3 py-1 rounded-full text-xs font-medium capitalize inline-block"
-                        style={{
-                          background: getStatusBg(selectedOrder.status),
-                          color: getStatusColor(selectedOrder.status),
-                        }}
+                        className="font-bold text-sm sm:text-base capitalize"
+                        style={{ color: "var(--text-primary)" }}
                       >
                         {selectedOrder.status.replace("-", " ")}
-                      </span>
+                      </div>
                     </div>
                   </div>
+                  <span
+                    className="font-bold text-xl sm:text-2xl"
+                    style={{ color: getStatusColor(selectedOrder.status) }}
+                  >
+                    {selectedOrder.amount}
+                  </span>
                 </div>
+              </div>
 
+              {/* Order Info Grid */}
+              <div className="space-y-4 mb-6">
+                {/* Route */}
                 <div
                   className="p-4 rounded-xl"
                   style={{
@@ -832,35 +1181,58 @@ export default function MyOrders() {
                   }}
                 >
                   <div
-                    className="text-xs uppercase mb-3"
+                    className="text-xs uppercase mb-3 font-medium"
                     style={{ color: "var(--text-secondary)" }}
                   >
-                    Route
+                    Shipment Route
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <div
-                        className="text-xs mb-1"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
-                        From
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <div
+                          className="w-8 h-8 rounded-full flex items-center justify-center"
+                          style={{ background: "rgba(23,199,189,0.15)" }}
+                        >
+                          <MapPin
+                            className="h-4 w-4"
+                            style={{ color: "var(--accent-teal)" }}
+                          />
+                        </div>
+                        <span
+                          className="text-xs font-medium"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Origin
+                        </span>
                       </div>
                       <div
-                        className="font-semibold"
+                        className="font-semibold text-sm pl-10"
                         style={{ color: "var(--text-primary)" }}
                       >
                         {selectedOrder.origin}
                       </div>
                     </div>
+
                     <div>
-                      <div
-                        className="text-xs mb-1"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
-                        To
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <div
+                          className="w-8 h-8 rounded-full flex items-center justify-center"
+                          style={{ background: "rgba(244,162,97,0.15)" }}
+                        >
+                          <MapPin
+                            className="h-4 w-4"
+                            style={{ color: "var(--accent-amber)" }}
+                          />
+                        </div>
+                        <span
+                          className="text-xs font-medium"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Destination
+                        </span>
                       </div>
                       <div
-                        className="font-semibold"
+                        className="font-semibold text-sm pl-10"
                         style={{ color: "var(--text-primary)" }}
                       >
                         {selectedOrder.destination}
@@ -869,7 +1241,8 @@ export default function MyOrders() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                {/* Package & Service */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div
                     className="p-4 rounded-xl"
                     style={{
@@ -878,13 +1251,13 @@ export default function MyOrders() {
                     }}
                   >
                     <div
-                      className="text-xs uppercase mb-2"
+                      className="text-xs uppercase mb-2 font-medium"
                       style={{ color: "var(--text-secondary)" }}
                     >
-                      Package
+                      Package Details
                     </div>
                     <div
-                      className="font-semibold mb-1"
+                      className="font-semibold mb-1 text-sm"
                       style={{ color: "var(--text-primary)" }}
                     >
                       {selectedOrder.packageType}
@@ -905,17 +1278,23 @@ export default function MyOrders() {
                     }}
                   >
                     <div
-                      className="text-xs uppercase mb-2"
+                      className="text-xs uppercase mb-2 font-medium"
                       style={{ color: "var(--text-secondary)" }}
                     >
-                      Service
+                      Service Type
                     </div>
                     <div className="flex items-center gap-2">
-                      <span style={{ color: "var(--accent-teal)" }}>
-                        {getServiceIcon(selectedOrder.service)}
-                      </span>
+                      {(() => {
+                        const Icon = getServiceIcon(selectedOrder.service);
+                        return (
+                          <Icon
+                            className="h-5 w-5"
+                            style={{ color: "var(--accent-teal)" }}
+                          />
+                        );
+                      })()}
                       <span
-                        className="font-semibold capitalize"
+                        className="font-semibold capitalize text-sm"
                         style={{ color: "var(--text-primary)" }}
                       >
                         {selectedOrder.service}
@@ -924,7 +1303,8 @@ export default function MyOrders() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                {/* Dates */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div
                     className="p-4 rounded-xl"
                     style={{
@@ -933,13 +1313,14 @@ export default function MyOrders() {
                     }}
                   >
                     <div
-                      className="text-xs uppercase mb-2"
+                      className="text-xs uppercase mb-2 font-medium flex items-center gap-1.5"
                       style={{ color: "var(--text-secondary)" }}
                     >
+                      <Calendar className="h-3.5 w-3.5" />
                       Order Date
                     </div>
                     <div
-                      className="font-semibold"
+                      className="font-semibold text-sm"
                       style={{ color: "var(--text-primary)" }}
                     >
                       {selectedOrder.date}
@@ -954,52 +1335,29 @@ export default function MyOrders() {
                     }}
                   >
                     <div
-                      className="text-xs uppercase mb-2"
+                      className="text-xs uppercase mb-2 font-medium flex items-center gap-1.5"
                       style={{ color: "var(--text-secondary)" }}
                     >
+                      <Clock className="h-3.5 w-3.5" />
                       Est. Delivery
                     </div>
                     <div
-                      className="font-semibold"
+                      className="font-semibold text-sm"
                       style={{ color: "var(--accent-amber)" }}
                     >
                       {selectedOrder.estimatedDelivery}
                     </div>
                   </div>
                 </div>
-
-                <div
-                  className="p-4 rounded-xl"
-                  style={{
-                    background: "rgba(23,199,189,0.1)",
-                    border: "1px solid var(--accent-teal)",
-                  }}
-                >
-                  <div className="flex items-center justify-between">
-                    <span
-                      className="text-sm font-medium"
-                      style={{ color: "var(--text-secondary)" }}
-                    >
-                      Total Amount
-                    </span>
-                    <span
-                      className="text-2xl font-bold"
-                      style={{ color: "var(--accent-teal)" }}
-                    >
-                      {selectedOrder.amount}
-                    </span>
-                  </div>
-                </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   onClick={() => {
-                    setSelectedOrder(null);
-                    window.location.href = `/track-package?id=${selectedOrder.trackingNumber}`;
+                    window.location.href = `/dashboard/track?tn=${selectedOrder.trackingNumber}`;
                   }}
-                  className="py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all hover:scale-105"
+                  className="py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 text-sm"
                   style={{
                     background: "var(--accent-teal)",
                     color: "var(--text-inverse)",
@@ -1009,7 +1367,7 @@ export default function MyOrders() {
                   Track Order
                 </button>
                 <button
-                  className="py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all hover:scale-105"
+                  className="py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 text-sm"
                   style={{
                     background: "rgba(255,255,255,0.05)",
                     border: "1px solid var(--border-soft)",
@@ -1023,6 +1381,8 @@ export default function MyOrders() {
             </div>
           </div>
         )}
+
+        <BottomNav />
       </div>
     </Sidebar>
   );
