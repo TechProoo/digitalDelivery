@@ -1,7 +1,8 @@
 import DemoTimeline from "../ui/demo-timeline";
 import BoxImg from "../../assets/box.png";
+import { Globe, Link, Star, Users, Zap } from "lucide-react";
 
-const HowItWorks = () => {
+const HowItWorksComponents = () => {
   return (
     <section className="hiw_cover md:p-10">
       <div className="flex justify-center mt-5">
@@ -72,4 +73,4 @@ const HowItWorks = () => {
   );
 };
 
-export default HowItWorks;
+export default HowItWorksComponents;

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
-import { ScrollArea } from "../../components/ui/scroll-area";
+import { ScrollArea } from "./scroll-area";
 import { Check, Clock, X } from "lucide-react";
 
 const timelineVariants = cva("relative flex flex-col", {

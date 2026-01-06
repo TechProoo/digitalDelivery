@@ -46,17 +46,17 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
     },
     {
       title: "New Delivery",
-      to: "/dashboard/new-delivery",
+      to: "/new-delivery",
       icon: <Package className="h-5 w-5" />,
     },
     {
       title: "Track Package",
-      to: "/dashboard/track",
+      to: "/track-package",
       icon: <MapPin className="h-5 w-5" />,
     },
     {
       title: "My Orders",
-      to: "/dashboard/orders",
+      to: "/my-orders",
       icon: <Clock className="h-5 w-5" />,
     },
   ];
@@ -126,17 +126,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 
         {/* nav */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-6 no-scrollbar">
-          {/* MAIN MENU */}
           <div>
-            <div
-              className={cn(
-                "px-3 mb-2 text-xs uppercase font-semibold text-muted-foreground",
-                isCollapsed && "hidden"
-              )}
-            >
-              MAIN MENU
-            </div>
-
             <div className="space-y-1">
               {mainMenu.map((item) => (
                 <NavLink
@@ -148,7 +138,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
                       isCollapsed
                         ? "justify-center px-0 py-2.5 gap-0"
                         : "gap-3 px-3 py-2.5",
-                      "hover:bg-[var(--hover-overlay)]",
+                      "hover:bg-(--hover-overlay)",
                       isActive && "shadow-sm"
                     )
                   }
@@ -281,7 +271,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
         )}
       >
         {/* header bar */}
-        <header className="sticky top-0 h-16 bg-background border-b z-30 flex items-center px-4">
+        <header className="sticky top-0 h-16 bg-(--bg-secondary) border-b z-30 flex items-center px-4">
           <div className="flex items-center gap-3">
             {/* unified toggle button: on large screens toggles collapse, on small screens toggles open */}
             <button
@@ -302,17 +292,19 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
             >
               {isLarge ? (
                 !isCollapsed ? (
-                  <X className="h-5 w-5" />
+                  <X className="h-5 w-5" color="#e6f1f5" />
                 ) : (
-                  <Menu className="h-5 w-5" />
+                  <Menu className="h-5 w-5" color="#e6f1f5" />
                 )
               ) : isOpen ? (
-                <X className="h-5 w-5" />
+                <X className="h-5 w-5" color="#e6f1f5" />
               ) : (
-                <Menu className="h-5 w-5" />
+                <Menu className="h-5 w-5" color="#e6f1f5" />
               )}
             </button>
-            <div className="ml-2 text-xl font-semibold">Dashboard</div>
+            <div className="ml-2 text-xl font-semibold text-(--text-primary)">
+              Dashboard
+            </div>
           </div>
 
           <div className="flex-1"></div>
@@ -320,7 +312,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-4">
             <div className="relative">
               <button className="p-2 rounded-lg">
-                <Package className="h-5 w-5" />
+                <Package className="h-5 w-5" color="#e6f1f5" />
               </button>
               <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full" />
             </div>

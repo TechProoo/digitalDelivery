@@ -1,9 +1,19 @@
 import { MoveRight, Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-const Hero = () => {
+export default function Hero() {
+  const navigate = useNavigate();
+  const [tn, setTn] = useState("");
+
+  const handleSubmit = () => {
+    const value = tn?.trim();
+    if (!value) return;
+    navigate(`/track-package?tn=${encodeURIComponent(value)}`);
+  };
+
   return (
-    <div className="hero_container p-10">
+    <div className="hero_container md:p-10 p-3">
       <div className="hero_text">
         <div>
           <div className="badge_design">
@@ -45,16 +55,21 @@ const Hero = () => {
               <input
                 type="text"
                 placeholder="Enter tracking number..."
+                value={tn}
+                onChange={(e) => setTn(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSubmit();
+                }}
                 className="bg-transparent outline-none border-none text-gray-300 placeholder-gray-400 w-full text-lg"
                 style={{ paddingLeft: 0 }}
               />
-              <button className="rounded-md">Track</button>
+              <button onClick={handleSubmit} className="rounded-md">
+                Track
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default Hero;
+}

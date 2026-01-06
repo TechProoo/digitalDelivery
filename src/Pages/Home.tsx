@@ -1,10 +1,10 @@
 import Hero from "../components/home/Hero";
-import HowItWorks from "../components/home/HowItWorks";
 import TrackPackage from "../components/home/TrackPackage";
 import Cta from "../components/home/Cta";
 import Footer from "../components/home/Footer";
 import Navbar from "../components/home/Navbar";
-import Services from "../components/home/Services";
+import ServicesComponent from "../components/home/ServicesComponent";
+import HowItWorksComponents from "../components/home/HowItWorksComponents";
 
 const Home = () => {
   return (
@@ -13,8 +13,8 @@ const Home = () => {
         <Navbar />
         <Hero />
       </div>
-      <Services />
-      <HowItWorks />
+      <ServicesComponent />
+      <HowItWorksComponents />
       <TrackPackage />
       <Cta />
       <Footer />

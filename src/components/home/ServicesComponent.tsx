@@ -11,9 +11,9 @@ import Live from "../../assets/live.png";
 import Del from "../../assets/delivery.png";
 import Card_two from "../Card_two";
 
-const Services = () => {
+const ServicesComponent = () => {
   return (
-    <div className="services_container md:p-10">
+    <div className=" md:p-10">
       <div className="flex justify-center mt-10">
         <div className="badge_design text-center">
           Our Services
@@ -75,7 +75,7 @@ const Services = () => {
             </div>
           </div>
 
-          <div className="col-span-12 md:col-span-5 md:mt-0 mt-10">
+          <div className="col-span-12 md:col-span-5 md:mt-0 mt-10 relative">
             <div className="services_right_head header text-4xl">
               <h1>Smart Logistics Solutions Built for Speed and Reliability</h1>
             </div>
@@ -93,7 +93,7 @@ const Services = () => {
                   </span>
                 </button>
               </div>
-              <img src={Design} className="mt-10 md:ml-100" alt="" />
+              <img src={Design} className="mt-10 absolute bottom-0 right-0" alt="" />
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@ const Services = () => {
               },
             ].map((card, idx) => (
               <div
-                className="col-span-12 justify-center m-auto sm:col-span-6 md:col-span-3 card_container"
+                className="col-span-12 justify-center m-auto sm:col-span-6 md:col-span-4 lg:col-span-3 card_container gap-3"
                 key={idx}
               >
                 <Card
@@ -160,4 +160,4 @@ const Services = () => {
   );
 };
 
-export default Services;
+export default ServicesComponent;

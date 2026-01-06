@@ -8,7 +8,7 @@ interface CardProps {
 
 const Card = ({ image, title, description }: CardProps) => {
   return (
-    <div className="card_cover md:w-65 sm:w-60 w-65 h-80 p-3 relative rounded-3xl">
+    <div className="card_cover md:w-65 sm:w-60 w-[320px] h-80 p-3 relative rounded-3xl">
       <div className="card_img w-full h-full ">
         <img src={image} className="rounded-2xl object-cover" alt="" />
       </div>

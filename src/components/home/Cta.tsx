@@ -6,7 +6,7 @@ const Cta = () => {
     <section className="cta_section my-16">
       <div className="max-w-7xl h-screen mx-auto rounded-4xl p-10 md:p-14 flex flex-col  items-center justify-center gap-8 bg-(--bg-secondary) shadow-strong">
         <div className="text-center max-w-3xl">
-          <h2 className="text-4xl md:text-5xl leading-tight font-extrabold text-(--text-primary)">
+          <h2 className="text-4xl md:text-5xl leading-tight font-extrabold text-(--text-primary) header">
             Ready to Ship with Confidence?
           </h2>
           <p className="mt-3 text-lg md:text-xl text-(--text-secondary)">

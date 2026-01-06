@@ -11,7 +11,7 @@ const Navbar = () => {
     { name: "Contact", path: "/contact" },
   ];
   return (
-    <div className="navbar_container">
+    <div className="navbar_container px-10">
       <div className="navbar">
         <div className="w-full flex justify-between items-center">
           <div className="nav_logo">
