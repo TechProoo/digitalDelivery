@@ -21,8 +21,15 @@ import {
 } from "lucide-react";
 import BottomNav from "../components/dashboard/bottom-nav";
 
-type OrderStatus = "delivered" | "in-transit" | "pending" | "failed";
-type ServiceType = "road" | "air" | "sea" | "express";
+import {
+  ShipmentStatus,
+  ServiceType,
+  STATUS_COLORS,
+  STATUS_LABELS,
+  SERVICE_TYPE_LABELS,
+  isValidShipmentStatus,
+  isValidServiceType,
+} from "../types/shipment";
 
 interface Order {
   id: string;
@@ -31,7 +38,7 @@ interface Order {
   packageType: string;
   weight: string;
   service: ServiceType;
-  status: OrderStatus;
+  status: ShipmentStatus;
   date: string;
   amount: string;
   estimatedDelivery: string;
@@ -45,8 +52,8 @@ const sampleOrders: Order[] = [
     destination: "Abuja, Wuse",
     packageType: "Parcel",
     weight: "5.2 kg",
-    service: "express",
-    status: "in-transit",
+    service: ServiceType.DOOR_TO_DOOR,
+    status: ShipmentStatus.IN_TRANSIT,
     date: "Jan 2, 2026",
     amount: "$125.00",
     estimatedDelivery: "Jan 8, 2026",
@@ -58,8 +65,8 @@ const sampleOrders: Order[] = [
     destination: "Lagos, Victoria Island",
     packageType: "Container",
     weight: "2500 kg",
-    service: "sea",
-    status: "delivered",
+    service: ServiceType.SEA,
+    status: ShipmentStatus.DELIVERED,
     date: "Dec 15, 2025",
     amount: "$2,768.00",
     estimatedDelivery: "Jan 3, 2026",
@@ -71,8 +78,8 @@ const sampleOrders: Order[] = [
     destination: "Kano",
     packageType: "Pallet",
     weight: "120 kg",
-    service: "road",
-    status: "delivered",
+    service: ServiceType.ROAD,
+    status: ShipmentStatus.DELIVERED,
     date: "Dec 28, 2025",
     amount: "$85.00",
     estimatedDelivery: "Jan 1, 2026",
@@ -84,8 +91,8 @@ const sampleOrders: Order[] = [
     destination: "Abuja, Garki",
     packageType: "Parcel",
     weight: "3.5 kg",
-    service: "air",
-    status: "delivered",
+    service: ServiceType.AIR,
+    status: ShipmentStatus.DELIVERED,
     date: "Dec 20, 2025",
     amount: "$210.00",
     estimatedDelivery: "Dec 25, 2025",
@@ -97,8 +104,8 @@ const sampleOrders: Order[] = [
     destination: "Enugu",
     packageType: "Parcel",
     weight: "8 kg",
-    service: "road",
-    status: "pending",
+    service: ServiceType.ROAD,
+    status: ShipmentStatus.PENDING,
     date: "Jan 4, 2026",
     amount: "$45.00",
     estimatedDelivery: "Jan 10, 2026",
@@ -110,8 +117,8 @@ const sampleOrders: Order[] = [
     destination: "Lagos, Lekki",
     packageType: "Pallet",
     weight: "250 kg",
-    service: "air",
-    status: "in-transit",
+    service: ServiceType.AIR,
+    status: ShipmentStatus.IN_TRANSIT,
     date: "Jan 1, 2026",
     amount: "$890.00",
     estimatedDelivery: "Jan 6, 2026",
@@ -123,8 +130,8 @@ const sampleOrders: Order[] = [
     destination: "Calabar",
     packageType: "Parcel",
     weight: "2 kg",
-    service: "express",
-    status: "failed",
+    service: ServiceType.DOOR_TO_DOOR,
+    status: ShipmentStatus.CANCELLED,
     date: "Dec 18, 2025",
     amount: "$35.00",
     estimatedDelivery: "Dec 22, 2025",
@@ -136,8 +143,8 @@ const sampleOrders: Order[] = [
     destination: "Port Harcourt",
     packageType: "Container",
     weight: "1800 kg",
-    service: "sea",
-    status: "in-transit",
+    service: ServiceType.SEA,
+    status: ShipmentStatus.IN_TRANSIT,
     date: "Dec 10, 2025",
     amount: "$3,200.00",
     estimatedDelivery: "Jan 15, 2026",
@@ -147,7 +154,9 @@ const sampleOrders: Order[] = [
 
 export default function MyOrders() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<ShipmentStatus | "all">(
+    "all"
+  );
   const [serviceFilter, setServiceFilter] = useState<ServiceType | "all">(
     "all"
   );
@@ -179,59 +188,45 @@ export default function MyOrders() {
   // Stats
   const stats = {
     total: sampleOrders.length,
-    delivered: sampleOrders.filter((o) => o.status === "delivered").length,
-    inTransit: sampleOrders.filter((o) => o.status === "in-transit").length,
-    pending: sampleOrders.filter((o) => o.status === "pending").length,
+    delivered: sampleOrders.filter((o) => o.status === ShipmentStatus.DELIVERED)
+      .length,
+    inTransit: sampleOrders.filter(
+      (o) => o.status === ShipmentStatus.IN_TRANSIT
+    ).length,
+    pending: sampleOrders.filter((o) => o.status === ShipmentStatus.PENDING)
+      .length,
   };
 
-  const getStatusColor = (status: OrderStatus) => {
-    switch (status) {
-      case "delivered":
-        return "var(--status-delivered)";
-      case "in-transit":
-        return "var(--status-in-transit)";
-      case "pending":
-        return "var(--status-pending)";
-      case "failed":
-        return "var(--status-failed)";
-    }
-  };
+  const getStatusColor = (status: ShipmentStatus) => STATUS_COLORS[status].text;
 
-  const getStatusBg = (status: OrderStatus) => {
-    switch (status) {
-      case "delivered":
-        return "rgba(46,196,182,0.15)";
-      case "in-transit":
-        return "rgba(78,168,222,0.15)";
-      case "pending":
-        return "rgba(244,162,97,0.15)";
-      case "failed":
-        return "rgba(239,71,111,0.15)";
-    }
-  };
+  const getStatusBg = (status: ShipmentStatus) => STATUS_COLORS[status].bg;
 
-  const getStatusIcon = (status: OrderStatus) => {
+  const getStatusIcon = (status: ShipmentStatus) => {
     switch (status) {
-      case "delivered":
+      case ShipmentStatus.DELIVERED:
         return CheckCircle;
-      case "in-transit":
-        return Truck;
-      case "pending":
-        return Clock;
-      case "failed":
+      case ShipmentStatus.CANCELLED:
         return AlertCircle;
+      case ShipmentStatus.IN_TRANSIT:
+      case ShipmentStatus.PICKED_UP:
+        return Truck;
+      case ShipmentStatus.PENDING:
+      case ShipmentStatus.QUOTED:
+      case ShipmentStatus.ACCEPTED:
+      default:
+        return Clock;
     }
   };
 
   const getServiceIcon = (service: ServiceType) => {
     switch (service) {
-      case "road":
+      case ServiceType.ROAD:
         return Truck;
-      case "air":
+      case ServiceType.AIR:
         return Plane;
-      case "sea":
+      case ServiceType.SEA:
         return Ship;
-      case "express":
+      case ServiceType.DOOR_TO_DOOR:
         return Truck;
     }
   };
@@ -451,7 +446,12 @@ export default function MyOrders() {
               <select
                 value={statusFilter}
                 onChange={(e) => {
-                  setStatusFilter(e.target.value as OrderStatus | "all");
+                  const value = e.target.value;
+                  if (value === "all") {
+                    setStatusFilter("all");
+                  } else if (isValidShipmentStatus(value)) {
+                    setStatusFilter(value);
+                  }
                   setCurrentPage(1);
                 }}
                 className="w-full pl-10 pr-8 py-2.5 rounded-lg outline-none text-sm appearance-none cursor-pointer"
@@ -462,10 +462,27 @@ export default function MyOrders() {
                 }}
               >
                 <option value="all">All Status</option>
-                <option value="delivered">Delivered</option>
-                <option value="in-transit">In Transit</option>
-                <option value="pending">Pending</option>
-                <option value="failed">Failed</option>
+                <option value={ShipmentStatus.PENDING}>
+                  {STATUS_LABELS[ShipmentStatus.PENDING]}
+                </option>
+                <option value={ShipmentStatus.QUOTED}>
+                  {STATUS_LABELS[ShipmentStatus.QUOTED]}
+                </option>
+                <option value={ShipmentStatus.ACCEPTED}>
+                  {STATUS_LABELS[ShipmentStatus.ACCEPTED]}
+                </option>
+                <option value={ShipmentStatus.PICKED_UP}>
+                  {STATUS_LABELS[ShipmentStatus.PICKED_UP]}
+                </option>
+                <option value={ShipmentStatus.IN_TRANSIT}>
+                  {STATUS_LABELS[ShipmentStatus.IN_TRANSIT]}
+                </option>
+                <option value={ShipmentStatus.DELIVERED}>
+                  {STATUS_LABELS[ShipmentStatus.DELIVERED]}
+                </option>
+                <option value={ShipmentStatus.CANCELLED}>
+                  {STATUS_LABELS[ShipmentStatus.CANCELLED]}
+                </option>
               </select>
             </div>
 
@@ -478,7 +495,12 @@ export default function MyOrders() {
               <select
                 value={serviceFilter}
                 onChange={(e) => {
-                  setServiceFilter(e.target.value as ServiceType | "all");
+                  const value = e.target.value;
+                  if (value === "all") {
+                    setServiceFilter("all");
+                  } else if (isValidServiceType(value)) {
+                    setServiceFilter(value);
+                  }
                   setCurrentPage(1);
                 }}
                 className="w-full pl-10 pr-8 py-2.5 rounded-lg outline-none text-sm appearance-none cursor-pointer"
@@ -489,10 +511,18 @@ export default function MyOrders() {
                 }}
               >
                 <option value="all">All Services</option>
-                <option value="road">By Road</option>
-                <option value="air">By Air</option>
-                <option value="sea">By Sea</option>
-                <option value="express">Express</option>
+                <option value={ServiceType.ROAD}>
+                  {SERVICE_TYPE_LABELS[ServiceType.ROAD]}
+                </option>
+                <option value={ServiceType.AIR}>
+                  {SERVICE_TYPE_LABELS[ServiceType.AIR]}
+                </option>
+                <option value={ServiceType.SEA}>
+                  {SERVICE_TYPE_LABELS[ServiceType.SEA]}
+                </option>
+                <option value={ServiceType.DOOR_TO_DOOR}>
+                  {SERVICE_TYPE_LABELS[ServiceType.DOOR_TO_DOOR]}
+                </option>
               </select>
             </div>
           </div>
@@ -650,7 +680,7 @@ export default function MyOrders() {
                               className="text-sm capitalize font-medium"
                               style={{ color: "var(--text-primary)" }}
                             >
-                              {order.service}
+                              {SERVICE_TYPE_LABELS[order.service]}
                             </span>
                           </div>
                         </td>
@@ -666,7 +696,7 @@ export default function MyOrders() {
                               const Icon = getStatusIcon(order.status);
                               return <Icon className="h-3 w-3" />;
                             })()}
-                            {order.status.replace("-", " ")}
+                            {STATUS_LABELS[order.status]}
                           </span>
                         </td>
                         <td
@@ -956,7 +986,7 @@ export default function MyOrders() {
                           className="text-sm font-semibold capitalize"
                           style={{ color: "var(--text-primary)" }}
                         >
-                          {order.service}
+                          {SERVICE_TYPE_LABELS[order.service]}
                         </span>
                       </div>
                     </div>

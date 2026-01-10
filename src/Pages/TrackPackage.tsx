@@ -15,18 +15,26 @@ import {
   Phone,
 } from "lucide-react";
 
+import {
+  ShipmentStatus,
+  ServiceType,
+  STATUS_COLORS,
+  STATUS_LABELS,
+  SERVICE_TYPE_LABELS,
+} from "../types/shipment";
+
 interface TrackingData {
   trackingNumber: string;
-  status: "in-transit" | "delivered" | "pending" | "failed";
+  status: ShipmentStatus;
   currentLocation: string;
   origin: string;
   destination: string;
   estimatedDelivery: string;
   packageType: string;
   weight: string;
-  service: string;
+  serviceType: ServiceType;
   timeline: {
-    title: string;
+    status: ShipmentStatus;
     location: string;
     date: string;
     time: string;
@@ -47,45 +55,45 @@ interface TrackingData {
 const sampleTrackingData: { [key: string]: TrackingData } = {
   "DD-2024-001": {
     trackingNumber: "DD-2024-001",
-    status: "in-transit",
+    status: ShipmentStatus.IN_TRANSIT,
     currentLocation: "Port Harcourt Hub",
     origin: "Lagos, Nigeria",
     destination: "Abuja, Nigeria",
     estimatedDelivery: "Jan 8, 2026",
     packageType: "Parcel",
     weight: "5.2 kg",
-    service: "Express",
+    serviceType: ServiceType.DOOR_TO_DOOR,
     timeline: [
       {
-        title: "Order Received",
+        status: ShipmentStatus.PENDING,
         location: "Lagos, Ikeja",
         date: "Jan 2, 2026",
         time: "09:30 AM",
         completed: true,
       },
       {
-        title: "Package Processed",
+        status: ShipmentStatus.ACCEPTED,
         location: "Lagos Sorting Center",
         date: "Jan 2, 2026",
         time: "02:15 PM",
         completed: true,
       },
       {
-        title: "In Transit",
+        status: ShipmentStatus.PICKED_UP,
         location: "Port Harcourt Hub",
         date: "Jan 4, 2026",
         time: "10:45 AM",
         completed: true,
       },
       {
-        title: "Out for Delivery",
+        status: ShipmentStatus.IN_TRANSIT,
         location: "Abuja Distribution Center",
         date: "Jan 7, 2026",
         time: "08:00 AM",
         completed: false,
       },
       {
-        title: "Delivered",
+        status: ShipmentStatus.DELIVERED,
         location: "Abuja, Wuse",
         date: "Jan 8, 2026",
         time: "-- : --",
@@ -104,45 +112,45 @@ const sampleTrackingData: { [key: string]: TrackingData } = {
   },
   "DD-2024-002": {
     trackingNumber: "DD-2024-002",
-    status: "delivered",
+    status: ShipmentStatus.DELIVERED,
     currentLocation: "Delivered",
     origin: "Shanghai, China",
     destination: "Lagos, Nigeria",
     estimatedDelivery: "Jan 3, 2026",
     packageType: "Container",
     weight: "2500 kg",
-    service: "Standard",
+    serviceType: ServiceType.SEA,
     timeline: [
       {
-        title: "Order Received",
+        status: ShipmentStatus.PENDING,
         location: "Shanghai Port",
         date: "Dec 15, 2025",
         time: "11:00 AM",
         completed: true,
       },
       {
-        title: "Customs Cleared",
+        status: ShipmentStatus.ACCEPTED,
         location: "Shanghai Port",
         date: "Dec 16, 2025",
         time: "03:30 PM",
         completed: true,
       },
       {
-        title: "In Transit - Sea Freight",
+        status: ShipmentStatus.IN_TRANSIT,
         location: "Indian Ocean",
         date: "Dec 20, 2025",
         time: "06:00 AM",
         completed: true,
       },
       {
-        title: "Arrived at Port",
+        status: ShipmentStatus.IN_TRANSIT,
         location: "Apapa Port, Lagos",
         date: "Jan 2, 2026",
         time: "02:15 PM",
         completed: true,
       },
       {
-        title: "Delivered",
+        status: ShipmentStatus.DELIVERED,
         location: "Lagos, Victoria Island",
         date: "Jan 3, 2026",
         time: "04:30 PM",
@@ -201,46 +209,22 @@ export default function TrackPackage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "delivered":
-        return "var(--status-delivered)";
-      case "in-transit":
-        return "var(--status-in-transit)";
-      case "pending":
-        return "var(--status-pending)";
-      case "failed":
-        return "var(--status-failed)";
-      default:
-        return "var(--text-secondary)";
-    }
-  };
+  const getStatusColor = (status: ShipmentStatus) => STATUS_COLORS[status].text;
 
-  const getStatusBg = (status: string) => {
-    switch (status) {
-      case "delivered":
-        return "rgba(46,196,182,0.15)";
-      case "in-transit":
-        return "rgba(78,168,222,0.15)";
-      case "pending":
-        return "rgba(244,162,97,0.15)";
-      case "failed":
-        return "rgba(239,71,111,0.15)";
-      default:
-        return "rgba(255,255,255,0.05)";
-    }
-  };
+  const getStatusBg = (status: ShipmentStatus) => STATUS_COLORS[status].bg;
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: ShipmentStatus) => {
     switch (status) {
-      case "delivered":
+      case ShipmentStatus.DELIVERED:
         return CheckCircle;
-      case "in-transit":
-        return Truck;
-      case "pending":
-        return Clock;
-      case "failed":
+      case ShipmentStatus.CANCELLED:
         return AlertCircle;
+      case ShipmentStatus.IN_TRANSIT:
+      case ShipmentStatus.PICKED_UP:
+        return Truck;
+      case ShipmentStatus.PENDING:
+      case ShipmentStatus.QUOTED:
+      case ShipmentStatus.ACCEPTED:
       default:
         return Package;
     }
@@ -473,7 +457,7 @@ export default function TrackPackage() {
                     color: getStatusColor(trackingData.status),
                   }}
                 >
-                  {trackingData.status.replace("-", " ")}
+                  {STATUS_LABELS[trackingData.status]}
                 </span>
               </div>
 
@@ -650,7 +634,7 @@ export default function TrackPackage() {
                       className="font-semibold text-sm"
                       style={{ color: "var(--text-primary)" }}
                     >
-                      {trackingData.service}
+                      {SERVICE_TYPE_LABELS[trackingData.serviceType]}
                     </div>
                   </div>
 
@@ -745,7 +729,7 @@ export default function TrackPackage() {
                               : "var(--text-secondary)",
                           }}
                         >
-                          {event.title}
+                          {STATUS_LABELS[event.status]}
                         </div>
                         <div className="flex items-start gap-2 text-xs sm:text-sm mb-1">
                           <MapPin

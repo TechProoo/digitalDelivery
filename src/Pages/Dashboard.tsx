@@ -24,6 +24,14 @@ import {
 } from "lucide-react";
 import BottomNav from "../components/dashboard/bottom-nav";
 
+import {
+  ShipmentStatus,
+  ServiceType,
+  STATUS_COLORS,
+  STATUS_LABELS,
+  SERVICE_TYPE_LABELS,
+} from "../types/shipment";
+
 export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -35,11 +43,19 @@ export default function Dashboard() {
       est: "Jan 16, 2024 - 2:00 PM",
       progress: 60,
       steps: [
-        { title: "Order Received", date: "Jan 15, 9:00 AM", done: true },
-        { title: "Processed", date: "Jan 15, 11:30 AM", done: true },
-        { title: "In Transit", date: "Jan 15, 2:00 PM", done: true },
-        { title: "Arriving", date: "", done: false },
-        { title: "Delivered", date: "", done: false },
+        { status: ShipmentStatus.PENDING, date: "Jan 15, 9:00 AM", done: true },
+        {
+          status: ShipmentStatus.ACCEPTED,
+          date: "Jan 15, 11:30 AM",
+          done: true,
+        },
+        {
+          status: ShipmentStatus.IN_TRANSIT,
+          date: "Jan 15, 2:00 PM",
+          done: true,
+        },
+        { status: ShipmentStatus.IN_TRANSIT, date: "", done: false },
+        { status: ShipmentStatus.DELIVERED, date: "", done: false },
       ],
     },
     {
@@ -48,11 +64,19 @@ export default function Dashboard() {
       est: "Jan 17, 2024 - 10:00 AM",
       progress: 40,
       steps: [
-        { title: "Order Received", date: "Jan 16, 9:00 AM", done: true },
-        { title: "Processed", date: "Jan 16, 11:30 AM", done: true },
-        { title: "In Transit", date: "Jan 16, 2:00 PM", done: false },
-        { title: "Arriving", date: "", done: false },
-        { title: "Delivered", date: "", done: false },
+        { status: ShipmentStatus.PENDING, date: "Jan 16, 9:00 AM", done: true },
+        {
+          status: ShipmentStatus.ACCEPTED,
+          date: "Jan 16, 11:30 AM",
+          done: true,
+        },
+        {
+          status: ShipmentStatus.IN_TRANSIT,
+          date: "Jan 16, 2:00 PM",
+          done: false,
+        },
+        { status: ShipmentStatus.IN_TRANSIT, date: "", done: false },
+        { status: ShipmentStatus.DELIVERED, date: "", done: false },
       ],
     },
   ];
@@ -62,40 +86,40 @@ export default function Dashboard() {
       id: "DD-2024-001",
       pickup: "Lagos, Ikeja",
       dest: "Abuja, Wuse",
-      service: "Air",
-      status: "In Transit",
+      serviceType: ServiceType.AIR,
+      status: ShipmentStatus.IN_TRANSIT,
       date: "2024-01-15",
     },
     {
       id: "DD-2024-002",
       pickup: "Port Harcourt",
       dest: "Lagos, VI",
-      service: "Road",
-      status: "Delivered",
+      serviceType: ServiceType.ROAD,
+      status: ShipmentStatus.DELIVERED,
       date: "2024-01-14",
     },
     {
       id: "DD-2024-003",
       pickup: "Kano",
       dest: "Lagos, Lekki",
-      service: "Air",
-      status: "Pending",
+      serviceType: ServiceType.AIR,
+      status: ShipmentStatus.PENDING,
       date: "2024-01-14",
     },
     {
       id: "DD-2024-004",
       pickup: "Calabar",
       dest: "Enugu",
-      service: "Road",
-      status: "In Transit",
+      serviceType: ServiceType.ROAD,
+      status: ShipmentStatus.IN_TRANSIT,
       date: "2024-01-13",
     },
     {
       id: "DD-2024-005",
       pickup: "Lagos, Apapa",
       dest: "Accra, Ghana",
-      service: "Sea",
-      status: "Pending",
+      serviceType: ServiceType.SEA,
+      status: ShipmentStatus.PENDING,
       date: "2024-01-12",
     },
   ];
@@ -617,7 +641,7 @@ export default function Dashboard() {
                               : "var(--text-secondary)",
                           }}
                         >
-                          {step.title}
+                          {STATUS_LABELS[step.status]}
                         </div>
                         {step.date && (
                           <div
@@ -648,7 +672,7 @@ export default function Dashboard() {
                               className="text-xs font-medium"
                               style={{ color: "var(--text-primary)" }}
                             >
-                              {step.title}
+                              {STATUS_LABELS[step.status]}
                             </div>
                             {step.date && (
                               <div
@@ -783,12 +807,12 @@ export default function Dashboard() {
                       </td>
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-2">
-                          {order.service === "Air" ? (
+                          {order.serviceType === ServiceType.AIR ? (
                             <Plane
                               className="h-4 w-4"
                               style={{ color: "var(--accent-teal)" }}
                             />
-                          ) : order.service === "Sea" ? (
+                          ) : order.serviceType === ServiceType.SEA ? (
                             <Ship
                               className="h-4 w-4"
                               style={{ color: "var(--accent-teal)" }}
@@ -803,7 +827,7 @@ export default function Dashboard() {
                             className="text-sm font-medium"
                             style={{ color: "var(--text-primary)" }}
                           >
-                            {order.service}
+                            {SERVICE_TYPE_LABELS[order.serviceType]}
                           </span>
                         </div>
                       </td>
@@ -811,28 +835,18 @@ export default function Dashboard() {
                         <span
                           className="px-3 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1.5"
                           style={{
-                            background:
-                              order.status === "Delivered"
-                                ? "rgba(46,196,182,0.15)"
-                                : order.status === "Pending"
-                                ? "rgba(244,162,97,0.15)"
-                                : "rgba(78,168,222,0.15)",
-                            color:
-                              order.status === "Delivered"
-                                ? "var(--status-delivered)"
-                                : order.status === "Pending"
-                                ? "var(--status-pending)"
-                                : "var(--status-in-transit)",
+                            background: STATUS_COLORS[order.status].bg,
+                            color: STATUS_COLORS[order.status].text,
                           }}
                         >
-                          {order.status === "Delivered" ? (
+                          {order.status === ShipmentStatus.DELIVERED ? (
                             <CheckCircle className="h-3 w-3" />
-                          ) : order.status === "Pending" ? (
+                          ) : order.status === ShipmentStatus.PENDING ? (
                             <Clock className="h-3 w-3" />
                           ) : (
                             <Truck className="h-3 w-3" />
                           )}
-                          {order.status}
+                          {STATUS_LABELS[order.status]}
                         </span>
                       </td>
                       <td
@@ -996,21 +1010,11 @@ export default function Dashboard() {
                     <span
                       className="px-2 py-0.5 rounded-full text-xs font-medium"
                       style={{
-                        background:
-                          order.status === "Delivered"
-                            ? "rgba(46,196,182,0.15)"
-                            : order.status === "Pending"
-                            ? "rgba(244,162,97,0.15)"
-                            : "rgba(78,168,222,0.15)",
-                        color:
-                          order.status === "Delivered"
-                            ? "var(--status-delivered)"
-                            : order.status === "Pending"
-                            ? "var(--status-pending)"
-                            : "var(--status-in-transit)",
+                        background: STATUS_COLORS[order.status].bg,
+                        color: STATUS_COLORS[order.status].text,
                       }}
                     >
-                      {order.status}
+                      {STATUS_LABELS[order.status]}
                     </span>
                   </div>
 
@@ -1033,14 +1037,14 @@ export default function Dashboard() {
                     style={{ color: "var(--text-secondary)" }}
                   >
                     <div className="flex items-center gap-1.5">
-                      {order.service === "Air" ? (
+                      {order.serviceType === ServiceType.AIR ? (
                         <Plane className="h-3 w-3" />
-                      ) : order.service === "Sea" ? (
+                      ) : order.serviceType === ServiceType.SEA ? (
                         <Ship className="h-3 w-3" />
                       ) : (
                         <Truck className="h-3 w-3" />
                       )}
-                      {order.service}
+                      {SERVICE_TYPE_LABELS[order.serviceType]}
                     </div>
                     <span>{order.date}</span>
                   </div>

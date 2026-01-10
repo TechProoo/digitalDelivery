@@ -9,27 +9,26 @@ import {
   Ruler,
   Clock,
   Zap,
-  Shield,
+  Ship,
   ArrowRight,
   ArrowLeft,
   MessageCircle,
 } from "lucide-react";
 import BottomNav from "../components/dashboard/bottom-nav";
 
-type PackageType = "parcel" | "pallet" | "container" | "full-freight";
-type ServiceLevel = "standard" | "express" | "priority";
+import { ServiceType, SERVICE_TYPE_LABELS } from "../types/shipment";
 
 interface FormData {
   originCity: string;
   originCountry: string;
   destCity: string;
   destCountry: string;
-  packageType: PackageType | "";
+  packageType: string;
   weight: string;
   length: string;
   width: string;
   height: string;
-  serviceLevel: ServiceLevel | "";
+  serviceType: ServiceType | "";
   userWhatsApp: string;
 }
 
@@ -45,7 +44,7 @@ export default function NewDelivery() {
     length: "",
     width: "",
     height: "",
-    serviceLevel: "",
+    serviceType: "",
     userWhatsApp: "",
   });
 
@@ -56,19 +55,24 @@ export default function NewDelivery() {
     { id: "full-freight", label: "Full Freight", icon: Truck },
   ];
 
-  const serviceLevels = [
+  const serviceTypes = [
     {
-      id: "standard",
-      label: "Standard",
+      id: ServiceType.ROAD,
+      label: SERVICE_TYPE_LABELS[ServiceType.ROAD],
       icon: Clock,
       time: "5-7 business days",
     },
-    { id: "express", label: "Express", icon: Zap, time: "2-3 business days" },
     {
-      id: "priority",
-      label: "Priority",
-      icon: Shield,
-      time: "1-2 business days",
+      id: ServiceType.AIR,
+      label: SERVICE_TYPE_LABELS[ServiceType.AIR],
+      icon: Zap,
+      time: "2-3 business days",
+    },
+    {
+      id: ServiceType.SEA,
+      label: SERVICE_TYPE_LABELS[ServiceType.SEA],
+      icon: Ship,
+      time: "7-14 business days",
     },
   ];
 
@@ -86,7 +90,7 @@ export default function NewDelivery() {
   };
 
   const canProceedStep2 = () => {
-    return formData.packageType && formData.weight && formData.serviceLevel;
+    return formData.packageType && formData.weight && formData.serviceType;
   };
 
   const canProceedStep3 = () => {
@@ -97,7 +101,11 @@ export default function NewDelivery() {
     // Company WhatsApp number (replace with actual number)
     const companyWhatsApp = "2348012345678"; // Replace with your WhatsApp number
 
-    const message = `Hello! I would like to get a quote for my shipment:\n\n*Shipment Details:*\nOrigin: ${formData.originCity}, ${formData.originCountry}\nDestination: ${formData.destCity}, ${formData.destCountry}\n\n*Package Information:*\nType: ${formData.packageType}\nWeight: ${formData.weight} kg\nDimensions: ${formData.length}×${formData.width}×${formData.height} cm\nService Level: ${formData.serviceLevel}\n\n*My WhatsApp:* ${formData.userWhatsApp}\n\nPlease provide pricing for this shipment. Thank you!`;
+    const serviceTypeLabel = formData.serviceType
+      ? SERVICE_TYPE_LABELS[formData.serviceType]
+      : "";
+
+    const message = `Hello! I would like to get a quote for my shipment:\n\n*Shipment Details:*\nOrigin: ${formData.originCity}, ${formData.originCountry}\nDestination: ${formData.destCity}, ${formData.destCountry}\n\n*Package Information:*\nType: ${formData.packageType}\nWeight: ${formData.weight} kg\nDimensions: ${formData.length}×${formData.width}×${formData.height} cm\nService Type: ${serviceTypeLabel}\n\n*My WhatsApp:* ${formData.userWhatsApp}\n\nPlease provide pricing for this shipment. Thank you!`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${companyWhatsApp}?text=${encodedMessage}`;
@@ -527,29 +535,29 @@ export default function NewDelivery() {
                   </div>
                 </div>
 
-                {/* Service Level */}
+                {/* Service Type */}
                 <div className="mb-4 sm:mb-6">
                   <label
                     className="block text-xs sm:text-sm font-medium mb-3 uppercase"
                     style={{ color: "var(--text-secondary)" }}
                   >
-                    Service Level
+                    Service Type
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                    {serviceLevels.map((service) => (
+                    {serviceTypes.map((service) => (
                       <button
                         key={service.id}
                         onClick={() =>
-                          updateFormData("serviceLevel", service.id)
+                          updateFormData("serviceType", service.id)
                         }
                         className="p-3 sm:p-4 rounded-xl transition-all hover:scale-105 active:scale-95"
                         style={{
                           background:
-                            formData.serviceLevel === service.id
+                            formData.serviceType === service.id
                               ? "rgba(23,199,189,0.15)"
                               : "rgba(0,0,0,0.2)",
                           border:
-                            formData.serviceLevel === service.id
+                            formData.serviceType === service.id
                               ? "2px solid var(--accent-teal)"
                               : "1px solid var(--border-soft)",
                         }}
@@ -559,7 +567,7 @@ export default function NewDelivery() {
                             className="h-4 w-4 sm:h-5 sm:w-5"
                             style={{
                               color:
-                                formData.serviceLevel === service.id
+                                formData.serviceType === service.id
                                   ? "var(--accent-teal)"
                                   : "var(--text-secondary)",
                             }}
@@ -568,7 +576,7 @@ export default function NewDelivery() {
                             className="font-semibold text-sm sm:text-base"
                             style={{
                               color:
-                                formData.serviceLevel === service.id
+                                formData.serviceType === service.id
                                   ? "var(--text-primary)"
                                   : "var(--text-secondary)",
                             }}
@@ -759,13 +767,15 @@ export default function NewDelivery() {
                       className="text-xs uppercase mb-1"
                       style={{ color: "var(--text-secondary)" }}
                     >
-                      Service Level
+                      Service Type
                     </div>
                     <div
                       className="font-semibold capitalize text-sm sm:text-base"
                       style={{ color: "var(--accent-teal)" }}
                     >
-                      {formData.serviceLevel}
+                      {formData.serviceType
+                        ? SERVICE_TYPE_LABELS[formData.serviceType]
+                        : ""}
                     </div>
                   </div>
                 </div>
@@ -874,7 +884,6 @@ export default function NewDelivery() {
         </div>
         <BottomNav />
       </div>
-
     </Sidebar>
   );
 }
