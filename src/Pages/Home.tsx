@@ -37,7 +37,7 @@ const Home = () => {
     }, 900);
   };
   return (
-    <div style={{ padding: "1.5rem" }}>
+    <div>
       <div className="home_container">
         <Navbar />
         <Hero />

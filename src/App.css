@@ -101,7 +101,6 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  border-radius: 30px;
   font-family: "Alegreya", serif;
   background-blend-mode: darken;
   background-color: var(--text-primary);
