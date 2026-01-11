@@ -1,5 +1,5 @@
 import Footer from "../components/home/Footer";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Sidebar from "../components/dashboard/sidebar";
 import {
   Package,
@@ -8,6 +8,7 @@ import {
   Clock,
   Truck,
   CheckCircle,
+  AlertCircle,
   DollarSign,
   Search,
   List,
@@ -25,6 +26,8 @@ import {
 import BottomNav from "../components/dashboard/bottom-nav";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { shipmentsApi } from "../api";
+import type { ShipmentWithRelations } from "../types/shipment";
 
 import {
   ShipmentStatus,
@@ -37,6 +40,12 @@ import {
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const [shipmentsData, setShipmentsData] = useState<ShipmentWithRelations[]>(
+    []
+  );
+  const [isLoadingShipments, setIsLoadingShipments] = useState(false);
+  const [shipmentsError, setShipmentsError] = useState<string | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -55,100 +64,126 @@ export default function Dashboard() {
     user?.email?.trim()?.split("@")?.[0] ||
     "there";
 
-  const demoShipments = [
-    {
-      code: "DD-2024-001",
-      location: "Abuja, Wuse",
-      est: "Jan 16, 2024 - 2:00 PM",
-      progress: 60,
-      steps: [
-        { status: ShipmentStatus.PENDING, date: "Jan 15, 9:00 AM", done: true },
-        {
-          status: ShipmentStatus.ACCEPTED,
-          date: "Jan 15, 11:30 AM",
-          done: true,
-        },
-        {
-          status: ShipmentStatus.IN_TRANSIT,
-          date: "Jan 15, 2:00 PM",
-          done: true,
-        },
-        { status: ShipmentStatus.IN_TRANSIT, date: "", done: false },
-        { status: ShipmentStatus.DELIVERED, date: "", done: false },
-      ],
-    },
-    {
-      code: "DD-2024-004",
-      location: "Enugu",
-      est: "Jan 17, 2024 - 10:00 AM",
-      progress: 40,
-      steps: [
-        { status: ShipmentStatus.PENDING, date: "Jan 16, 9:00 AM", done: true },
-        {
-          status: ShipmentStatus.ACCEPTED,
-          date: "Jan 16, 11:30 AM",
-          done: true,
-        },
-        {
-          status: ShipmentStatus.IN_TRANSIT,
-          date: "Jan 16, 2:00 PM",
-          done: false,
-        },
-        { status: ShipmentStatus.IN_TRANSIT, date: "", done: false },
-        { status: ShipmentStatus.DELIVERED, date: "", done: false },
-      ],
-    },
+  const formatDateTime = (iso: string) => {
+    const d = new Date(iso);
+    return d.toLocaleString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const getProgressForStatus = (status: ShipmentStatus) => {
+    switch (status) {
+      case ShipmentStatus.DELIVERED:
+        return 100;
+      case ShipmentStatus.IN_TRANSIT:
+        return 80;
+      case ShipmentStatus.PICKED_UP:
+        return 60;
+      case ShipmentStatus.ACCEPTED:
+        return 40;
+      case ShipmentStatus.QUOTED:
+        return 30;
+      case ShipmentStatus.PENDING:
+        return 20;
+      case ShipmentStatus.CANCELLED:
+      default:
+        return 0;
+    }
+  };
+
+  const STATUS_STEPS: ShipmentStatus[] = [
+    ShipmentStatus.PENDING,
+    ShipmentStatus.ACCEPTED,
+    ShipmentStatus.PICKED_UP,
+    ShipmentStatus.IN_TRANSIT,
+    ShipmentStatus.DELIVERED,
   ];
 
-  const demoRecentOrders = [
-    {
-      id: "DD-2024-001",
-      pickup: "Lagos, Ikeja",
-      dest: "Abuja, Wuse",
-      serviceType: ServiceType.AIR,
-      status: ShipmentStatus.IN_TRANSIT,
-      date: "2024-01-15",
-    },
-    {
-      id: "DD-2024-002",
-      pickup: "Port Harcourt",
-      dest: "Lagos, VI",
-      serviceType: ServiceType.ROAD,
-      status: ShipmentStatus.DELIVERED,
-      date: "2024-01-14",
-    },
-    {
-      id: "DD-2024-003",
-      pickup: "Kano",
-      dest: "Lagos, Lekki",
-      serviceType: ServiceType.AIR,
-      status: ShipmentStatus.PENDING,
-      date: "2024-01-14",
-    },
-    {
-      id: "DD-2024-004",
-      pickup: "Calabar",
-      dest: "Enugu",
-      serviceType: ServiceType.ROAD,
-      status: ShipmentStatus.IN_TRANSIT,
-      date: "2024-01-13",
-    },
-    {
-      id: "DD-2024-005",
-      pickup: "Lagos, Apapa",
-      dest: "Accra, Ghana",
-      serviceType: ServiceType.SEA,
-      status: ShipmentStatus.PENDING,
-      date: "2024-01-12",
-    },
-  ];
+  const statusRank = (status: ShipmentStatus) => {
+    if (status === ShipmentStatus.QUOTED) return 1;
+    const idx = STATUS_STEPS.indexOf(status);
+    return idx === -1 ? 0 : idx;
+  };
 
-  // Until shipments/orders are loaded from the backend, we keep demo data.
-  // New users get an onboarding empty-state experience.
-  const shipments = isNewUser ? [] : demoShipments;
-  const recentOrders = isNewUser ? [] : demoRecentOrders;
+  const loadShipments = async (customerId: string) => {
+    setIsLoadingShipments(true);
+    setShipmentsError(null);
 
-  const hasData = shipments.length > 0 || recentOrders.length > 0;
+    try {
+      const result = await shipmentsApi.list({ customerId });
+      setShipmentsData(result);
+    } catch (err: any) {
+      setShipmentsError(err?.message ?? "Failed to load shipments.");
+      setShipmentsData([]);
+    } finally {
+      setIsLoadingShipments(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!user?.id) return;
+    void loadShipments(user.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+  const { shipments, recentOrders, hasData, activeCount, deliveredCount } =
+    useMemo(() => {
+      const all = shipmentsData ?? [];
+
+      const active = all.filter(
+        (s) =>
+          s.status !== ShipmentStatus.DELIVERED &&
+          s.status !== ShipmentStatus.CANCELLED
+      );
+      const delivered = all.filter(
+        (s) => s.status === ShipmentStatus.DELIVERED
+      );
+
+      const shipmentsUi = active.slice(0, 5).map((s) => {
+        const rank = statusRank(s.status);
+        return {
+          code: s.trackingId,
+          location: s.destinationLocation,
+          est: formatDateTime(s.updatedAt ?? s.createdAt),
+          progress: getProgressForStatus(s.status),
+          steps: STATUS_STEPS.map((stepStatus, idx) => ({
+            status: stepStatus,
+            date:
+              idx === rank && s.statusHistory?.[0]?.timestamp
+                ? formatDateTime(s.statusHistory[0].timestamp)
+                : "",
+            done: idx <= rank && s.status !== ShipmentStatus.CANCELLED,
+          })),
+        };
+      });
+
+      const ordersUi = all.slice(0, 50).map((s) => ({
+        id: s.trackingId,
+        pickup: s.pickupLocation,
+        dest: s.destinationLocation,
+        serviceType: s.serviceType,
+        status: s.status,
+        date: new Date(s.createdAt).toISOString().slice(0, 10),
+      }));
+
+      return {
+        shipments: shipmentsUi,
+        recentOrders: ordersUi,
+        hasData: all.length > 0,
+        activeCount: active.length,
+        deliveredCount: delivered.length,
+      };
+    }, [shipmentsData]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recentOrders.length]);
 
   const dismissOnboarding = () => {
     try {
@@ -163,6 +198,72 @@ export default function Dashboard() {
     dismissOnboarding();
     navigate("/dashboard/new-delivery");
   };
+
+  if (isLoadingShipments) {
+    return (
+      <Sidebar>
+        <div
+          className="min-h-screen p-4 sm:p-6 lg:p-8 pb-20 lg:pb-8"
+          style={{ background: "var(--bg-primary)" }}
+        >
+          <div
+            className="rounded-2xl p-6 sm:p-8"
+            style={{
+              background: "var(--gradient-surface)",
+              border: "1px solid var(--border-soft)",
+              boxShadow: "var(--shadow-soft)",
+            }}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <div
+                  className="h-4 w-44 rounded-md animate-pulse"
+                  style={{ background: "rgba(255,255,255,0.06)" }}
+                />
+                <div
+                  className="h-3 w-64 rounded-md mt-3 animate-pulse"
+                  style={{ background: "rgba(255,255,255,0.05)" }}
+                />
+              </div>
+              <div
+                className="h-10 w-32 rounded-lg animate-pulse"
+                style={{ background: "rgba(46,196,182,0.10)" }}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl p-5"
+                  style={{
+                    border: "1px solid var(--border-soft)",
+                    background: "rgba(0,0,0,0.18)",
+                  }}
+                >
+                  <div
+                    className="h-10 w-10 rounded-xl mb-4 animate-pulse"
+                    style={{ background: "rgba(244,162,97,0.10)" }}
+                  />
+                  <div
+                    className="h-4 w-40 rounded-md animate-pulse"
+                    style={{ background: "rgba(255,255,255,0.06)" }}
+                  />
+                  <div
+                    className="h-3 w-56 rounded-md mt-3 animate-pulse"
+                    style={{ background: "rgba(255,255,255,0.05)" }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <BottomNav />
+          <Footer />
+        </div>
+      </Sidebar>
+    );
+  }
 
   if (!hasData) {
     return (
@@ -189,9 +290,17 @@ export default function Dashboard() {
                     color: "var(--accent-teal)",
                   }}
                 >
-                  <CheckCircle className="h-4 w-4" />
+                  {shipmentsError ? (
+                    <AlertCircle className="h-4 w-4" />
+                  ) : (
+                    <CheckCircle className="h-4 w-4" />
+                  )}
                   <span className="text-xs sm:text-sm font-semibold">
-                    Account created successfully
+                    {shipmentsError
+                      ? "We couldn't load your shipments"
+                      : isNewUser
+                      ? "Account created successfully"
+                      : "No shipments yet"}
                   </span>
                 </div>
 
@@ -206,14 +315,19 @@ export default function Dashboard() {
                   className="text-sm sm:text-base"
                   style={{ color: "var(--text-secondary)" }}
                 >
-                  Your dashboard is empty for now — create your first delivery
-                  to start tracking shipments here.
+                  {shipmentsError
+                    ? shipmentsError
+                    : "Your dashboard is empty for now — create your first delivery to start tracking shipments here."}
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto">
                 <button
-                  onClick={startFirstDelivery}
+                  onClick={() =>
+                    shipmentsError && user?.id
+                      ? loadShipments(user.id)
+                      : startFirstDelivery()
+                  }
                   className="rounded-lg px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold shadow-md flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
                   style={{
                     background: "var(--gradient-primary)",
@@ -222,7 +336,11 @@ export default function Dashboard() {
                   }}
                 >
                   <Package className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span>Send your first package</span>
+                  <span>
+                    {shipmentsError
+                      ? "Retry loading"
+                      : "Send your first package"}
+                  </span>
                   <ArrowRight className="h-4 w-4" />
                 </button>
 
@@ -381,7 +499,7 @@ export default function Dashboard() {
                       className="text-lg sm:text-xl font-bold"
                       style={{ color: "var(--text-primary)" }}
                     >
-                      23
+                      {activeCount}
                     </div>
                     <div
                       className="text-xs"
@@ -407,13 +525,13 @@ export default function Dashboard() {
                       className="text-lg sm:text-xl font-bold"
                       style={{ color: "var(--text-primary)" }}
                     >
-                      3
+                      {deliveredCount}
                     </div>
                     <div
                       className="text-xs"
                       style={{ color: "var(--text-secondary)" }}
                     >
-                      Arriving today
+                      Delivered
                     </div>
                   </div>
                 </div>
@@ -457,7 +575,7 @@ export default function Dashboard() {
           {[
             {
               label: "Total Deliveries",
-              value: "1,247",
+              value: String(shipmentsData.length),
               change: "+12%",
               trend: "up",
               icon: Package,
@@ -465,7 +583,7 @@ export default function Dashboard() {
             },
             {
               label: "Active Shipments",
-              value: "23",
+              value: String(activeCount),
               change: "+8%",
               trend: "up",
               icon: Truck,
@@ -473,7 +591,7 @@ export default function Dashboard() {
             },
             {
               label: "Completed Orders",
-              value: "1,189",
+              value: String(deliveredCount),
               change: "+5%",
               trend: "up",
               icon: CheckCircle,
@@ -701,7 +819,7 @@ export default function Dashboard() {
                   color: "var(--accent-amber)",
                 }}
               >
-                {shipments.length} active
+                {activeCount} active
               </span>
             </div>
 

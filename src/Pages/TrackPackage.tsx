@@ -251,6 +251,7 @@ export default function TrackPackage() {
   const [trackingData, setTrackingData] = useState<TrackingData | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
 
   const handleSearch = async (param?: string) => {
@@ -259,6 +260,7 @@ export default function TrackPackage() {
 
     setIsSearching(true);
     setNotFound(false);
+    setErrorMessage(null);
 
     try {
       const shipment = await shipmentsApi.findByTrackingId(num);
@@ -266,8 +268,10 @@ export default function TrackPackage() {
       setTrackingNumber(num);
       setNotFound(false);
     } catch (err: any) {
-      // Optional dev-only fallback to sample data
-      if (import.meta.env.DEV) {
+      const status = err?.status as number | undefined;
+
+      // Optional dev-only fallback to sample data when 404
+      if (import.meta.env.DEV && status === 404) {
         const data = sampleTrackingData[num];
         if (data) {
           setTrackingData(data);
@@ -279,7 +283,14 @@ export default function TrackPackage() {
       }
 
       setTrackingData(null);
-      setNotFound(true);
+      if (status === 404) {
+        setNotFound(true);
+      } else {
+        setNotFound(false);
+        setErrorMessage(
+          err?.message ?? "Something went wrong. Please try again."
+        );
+      }
     } finally {
       setIsSearching(false);
     }
@@ -377,7 +388,7 @@ export default function TrackPackage() {
                   placeholder="Enter tracking number (e.g., DD-2024-001)"
                   value={trackingNumber}
                   onChange={(e) => setTrackingNumber(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
                   style={{
                     background: "rgba(0,0,0,0.3)",
@@ -420,33 +431,211 @@ export default function TrackPackage() {
             </div>
 
             {/* Quick Search Examples */}
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              <span
-                className="text-xs sm:text-sm"
+            {import.meta.env.DEV ? (
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <span
+                  className="text-xs sm:text-sm"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Demo:
+                </span>
+                {Object.keys(sampleTrackingData).map((code) => (
+                  <button
+                    key={code}
+                    onClick={() => {
+                      setTrackingNumber(code);
+                      handleSearch(code);
+                    }}
+                    className="text-xs sm:text-sm px-2.5 sm:px-3 py-1 rounded-lg transition-all hover:scale-105 active:scale-95"
+                    style={{
+                      background: "rgba(23,199,189,0.1)",
+                      border: "1px solid var(--accent-teal)",
+                      color: "var(--accent-teal)",
+                    }}
+                  >
+                    {code}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div
+                className="mt-4 text-xs sm:text-sm"
                 style={{ color: "var(--text-secondary)" }}
               >
-                Try:
-              </span>
-              {Object.keys(sampleTrackingData).map((code) => (
-                <button
-                  key={code}
-                  onClick={() => {
-                    setTrackingNumber(code);
-                    handleSearch(code);
-                  }}
-                  className="text-xs sm:text-sm px-2.5 sm:px-3 py-1 rounded-lg transition-all hover:scale-105 active:scale-95"
-                  style={{
-                    background: "rgba(23,199,189,0.1)",
-                    border: "1px solid var(--accent-teal)",
-                    color: "var(--accent-teal)",
-                  }}
-                >
-                  {code}
-                </button>
-              ))}
-            </div>
+                Tip: You can find your tracking number in your Orders and New
+                Delivery confirmation.
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Error Message */}
+        {errorMessage && (
+          <div className="max-w-5xl mx-auto mb-6">
+            <div
+              className="p-4 sm:p-6 rounded-xl sm:rounded-2xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(239,71,111,0.12), rgba(244,162,97,0.06))",
+                border: "1px solid rgba(239,71,111,0.35)",
+                boxShadow: "var(--shadow-soft)",
+              }}
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    style={{ background: "rgba(239,71,111,0.18)" }}
+                  >
+                    <AlertCircle
+                      className="h-5 w-5"
+                      style={{ color: "var(--status-failed)" }}
+                    />
+                  </div>
+                  <div>
+                    <div
+                      className="text-sm sm:text-base font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Unable to load tracking
+                    </div>
+                    <div
+                      className="text-xs sm:text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      {errorMessage}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <button
+                    onClick={() => handleSearch(trackingNumber)}
+                    className="px-4 py-2.5 rounded-lg text-sm font-semibold transition-all hover:scale-105 active:scale-95"
+                    style={{
+                      background: "var(--accent-teal)",
+                      color: "var(--text-inverse)",
+                    }}
+                  >
+                    Retry
+                  </button>
+                  <button
+                    onClick={() =>
+                      (window.location.href = "/dashboard/new-delivery")
+                    }
+                    className="px-4 py-2.5 rounded-lg text-sm font-semibold transition-all hover:scale-105 active:scale-95"
+                    style={{
+                      background: "transparent",
+                      border: "1px solid var(--border-medium)",
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    Create shipment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!trackingData && !notFound && !errorMessage && !isSearching && (
+          <div className="max-w-5xl mx-auto">
+            <div
+              className="p-6 sm:p-8 rounded-xl sm:rounded-2xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(46,196,182,0.10), rgba(78,168,222,0.06))",
+                border: "1px solid var(--border-soft)",
+                boxShadow: "var(--shadow-soft)",
+              }}
+            >
+              <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+                <div className="flex-1">
+                  <div
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3"
+                    style={{
+                      background: "rgba(46,196,182,0.12)",
+                      color: "var(--accent-teal)",
+                    }}
+                  >
+                    <Search className="h-4 w-4" />
+                    <span className="text-xs sm:text-sm font-semibold">
+                      Track in seconds
+                    </span>
+                  </div>
+
+                  <h2
+                    className="text-xl sm:text-2xl font-extrabold mb-2"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    Enter your tracking number
+                  </h2>
+                  <p
+                    className="text-sm sm:text-base"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    We’ll show the current status, route, and recent updates.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-130">
+                  {[
+                    {
+                      title: "Status",
+                      desc: "Pending → Delivered",
+                      icon: CheckCircle,
+                      bg: "rgba(244,162,97,0.10)",
+                      fg: "var(--accent-amber)",
+                    },
+                    {
+                      title: "Route",
+                      desc: "Pickup & destination",
+                      icon: MapPin,
+                      bg: "rgba(78,168,222,0.10)",
+                      fg: "var(--accent-sky)",
+                    },
+                    {
+                      title: "Updates",
+                      desc: "Checkpoints & notes",
+                      icon: Calendar,
+                      bg: "rgba(46,196,182,0.10)",
+                      fg: "var(--accent-teal)",
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.title}
+                      className="rounded-xl p-4"
+                      style={{
+                        background: "rgba(0,0,0,0.18)",
+                        border: "1px solid var(--border-soft)",
+                      }}
+                    >
+                      <div
+                        className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
+                        style={{ background: item.bg, color: item.fg }}
+                      >
+                        <item.icon className="h-5 w-5" />
+                      </div>
+                      <div
+                        className="text-sm font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {item.title}
+                      </div>
+                      <div
+                        className="text-xs mt-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        {item.desc}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Not Found Message */}
         {notFound && (
@@ -482,6 +671,32 @@ export default function TrackPackage() {
                 We couldn't find a shipment with tracking number "
                 {trackingNumber}". Please check and try again.
               </p>
+
+              <div className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-2">
+                <button
+                  onClick={() => handleSearch(trackingNumber)}
+                  className="px-4 sm:px-5 py-2.5 rounded-lg font-semibold text-sm transition-all hover:scale-105 active:scale-95"
+                  style={{
+                    background: "var(--accent-teal)",
+                    color: "var(--text-inverse)",
+                  }}
+                >
+                  Try again
+                </button>
+                <button
+                  onClick={() =>
+                    (window.location.href = "/dashboard/new-delivery")
+                  }
+                  className="px-4 sm:px-5 py-2.5 rounded-lg font-semibold text-sm transition-all hover:scale-105 active:scale-95"
+                  style={{
+                    background: "transparent",
+                    border: "1px solid var(--border-medium)",
+                    color: "var(--text-primary)",
+                  }}
+                >
+                  Create shipment
+                </button>
+              </div>
             </div>
           </div>
         )}
