@@ -3,10 +3,14 @@ import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/logo_2.png";
+import { authApi } from "../api";
+import { setAccessToken } from "../lib/authToken";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -18,10 +22,31 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    navigate("/dashboard");
+
+    setError(null);
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const result = await authApi.register({
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      setAccessToken(result.accessToken, "local");
+      navigate("/dashboard");
+    } catch (err: any) {
+      setError(err?.message ?? "Signup failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const navigate = useNavigate();
@@ -51,6 +76,11 @@ const Signup = () => {
                 </div>
               </div>
               <form onSubmit={handleSubmit} className="space-y-5 mt-10">
+                {error ? (
+                  <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                    {error}
+                  </div>
+                ) : null}
                 {/* Full Name */}
                 <div>
                   <label className="block text-sm font-medium text-(--text-primary) mb-2">
@@ -185,9 +215,10 @@ const Signup = () => {
                 {/* Submit Button */}
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full py-3 rounded-xl bg-(--bg-tertiary) text-(--text-primary) border border-(--border-soft) font-semibold shadow-lg hover:opacity-90 transition"
                 >
-                  Create Account
+                  {isSubmitting ? "Creating account..." : "Create Account"}
                 </button>
               </form>
 

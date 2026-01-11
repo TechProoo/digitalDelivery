@@ -3,6 +3,8 @@ import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/logo_2.png";
+import { authApi } from "../api";
+import { setAccessToken } from "../lib/authToken";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,16 +13,32 @@ const Login = () => {
     password: "",
   });
   const [rememberMe, setRememberMe] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login submitted:", formData);
-    navigate("/dashboard");
+
+    setError(null);
+    setIsSubmitting(true);
+    try {
+      const result = await authApi.login({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      setAccessToken(result.accessToken, rememberMe ? "local" : "session");
+      navigate("/dashboard");
+    } catch (err: any) {
+      setError(err?.message ?? "Login failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -47,6 +65,11 @@ const Login = () => {
                 </div>
               </div>
               <form onSubmit={handleSubmit} className="space-y-5 mt-10">
+                {error ? (
+                  <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                    {error}
+                  </div>
+                ) : null}
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-(--text-primary) mb-2">
@@ -128,9 +151,10 @@ const Login = () => {
                 {/* Submit Button */}
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full py-3 rounded-xl bg-(--bg-tertiary) text-(--text-primary) border border-(--border-soft) font-semibold shadow-lg hover:opacity-90 transition"
                 >
-                  Sign In
+                  {isSubmitting ? "Signing in..." : "Sign In"}
                 </button>
               </form>
 
