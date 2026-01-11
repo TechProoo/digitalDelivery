@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Sidebar } from "../components/dashboard/sidebar";
 import {
   MapPin,
@@ -17,6 +17,8 @@ import {
 import BottomNav from "../components/dashboard/bottom-nav";
 
 import { ServiceType, SERVICE_TYPE_LABELS } from "../types/shipment";
+import { shipmentsApi } from "../api";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   originCity: string;
@@ -33,7 +35,10 @@ interface FormData {
 }
 
 export default function NewDelivery() {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     originCity: "",
     originCountry: "",
@@ -92,6 +97,49 @@ export default function NewDelivery() {
 
   const canProceedStep3 = () => {
     return formData.userWhatsApp.trim().length > 0;
+  };
+
+  const pickupLocation = useMemo(
+    () => `${formData.originCity}, ${formData.originCountry}`.trim(),
+    [formData.originCity, formData.originCountry]
+  );
+  const destinationLocation = useMemo(
+    () => `${formData.destCity}, ${formData.destCountry}`.trim(),
+    [formData.destCity, formData.destCountry]
+  );
+
+  const dimensions = useMemo(() => {
+    const l = formData.length?.trim();
+    const w = formData.width?.trim();
+    const h = formData.height?.trim();
+    if (!l || !w || !h) return "";
+    return `${l}x${w}x${h} cm`;
+  }, [formData.length, formData.width, formData.height]);
+
+  const handleCreateShipment = async () => {
+    if (!canProceedStep1() || !canProceedStep2() || !canProceedStep3()) return;
+
+    setSubmitError(null);
+    setIsSubmitting(true);
+    try {
+      const shipment = await shipmentsApi.create({
+        serviceType: formData.serviceType as ServiceType,
+        pickupLocation,
+        destinationLocation,
+        packageType: formData.packageType,
+        weight: formData.weight,
+        dimensions,
+        phone: formData.userWhatsApp.trim(),
+      });
+
+      navigate(
+        `/dashboard/track?tn=${encodeURIComponent(shipment.trackingId)}`
+      );
+    } catch (err: any) {
+      setSubmitError(err?.message ?? "Failed to create shipment.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleWhatsAppRedirect = () => {
@@ -581,7 +629,6 @@ export default function NewDelivery() {
                             {service.label}
                           </span>
                         </div>
-                       
                       </button>
                     ))}
                   </div>
@@ -803,6 +850,12 @@ export default function NewDelivery() {
                   </p>
                 </div>
 
+                {submitError ? (
+                  <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                    {submitError}
+                  </div>
+                ) : null}
+
                 {/* Info Box */}
                 <div
                   className="p-3 sm:p-4 rounded-lg mb-4 sm:mb-6"
@@ -850,24 +903,51 @@ export default function NewDelivery() {
                   </button>
 
                   <button
-                    onClick={handleWhatsAppRedirect}
-                    disabled={!canProceedStep3()}
+                    onClick={handleCreateShipment}
+                    disabled={!canProceedStep3() || isSubmitting}
                     className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all text-sm sm:text-base order-1 sm:order-2"
                     style={{
-                      background: canProceedStep3()
-                        ? "var(--accent-teal)"
-                        : "rgba(255,255,255,0.05)",
-                      color: canProceedStep3()
-                        ? "var(--text-inverse)"
-                        : "var(--text-secondary)",
-                      cursor: canProceedStep3() ? "pointer" : "not-allowed",
+                      background:
+                        canProceedStep3() && !isSubmitting
+                          ? "var(--accent-teal)"
+                          : "rgba(255,255,255,0.05)",
+                      color:
+                        canProceedStep3() && !isSubmitting
+                          ? "var(--text-inverse)"
+                          : "var(--text-secondary)",
+                      cursor:
+                        canProceedStep3() && !isSubmitting
+                          ? "pointer"
+                          : "not-allowed",
                     }}
                   >
-                    <MessageCircle className="h-4 w-4" />
+                    <Truck className="h-4 w-4" />
                     <span className="hidden sm:inline">
-                      Get Quote on WhatsApp
+                      {isSubmitting ? "Creating..." : "Create Shipment"}
                     </span>
-                    <span className="sm:hidden">Get Quote</span>
+                    <span className="sm:hidden">
+                      {isSubmitting ? "Creating..." : "Create"}
+                    </span>
+                  </button>
+                </div>
+
+                <div className="mt-3 text-center">
+                  <button
+                    type="button"
+                    onClick={handleWhatsAppRedirect}
+                    disabled={!canProceedStep3() || isSubmitting}
+                    className="text-xs sm:text-sm underline"
+                    style={{
+                      color: canProceedStep3()
+                        ? "var(--text-secondary)"
+                        : "var(--text-tertiary)",
+                      cursor:
+                        canProceedStep3() && !isSubmitting
+                          ? "pointer"
+                          : "not-allowed",
+                    }}
+                  >
+                    Or get a quote on WhatsApp
                   </button>
                 </div>
               </div>

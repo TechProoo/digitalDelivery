@@ -22,6 +22,8 @@ import {
   STATUS_LABELS,
   SERVICE_TYPE_LABELS,
 } from "../types/shipment";
+import type { ShipmentWithRelations } from "../types/shipment";
+import { shipmentsApi } from "../api";
 
 interface TrackingData {
   trackingNumber: string;
@@ -48,6 +50,78 @@ interface TrackingData {
     name: string;
     phone: string;
     address: string;
+  };
+}
+
+function formatDateParts(iso: string): { date: string; time: string } {
+  const dateObj = new Date(iso);
+  return {
+    date: dateObj.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }),
+    time: dateObj.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+  };
+}
+
+function toTrackingData(shipment: ShipmentWithRelations): TrackingData {
+  const latestCheckpoint = shipment.checkpoints.reduce<
+    { location: string; timestamp: string } | undefined
+  >((latest, checkpoint) => {
+    if (!latest)
+      return { location: checkpoint.location, timestamp: checkpoint.timestamp };
+    return new Date(checkpoint.timestamp) > new Date(latest.timestamp)
+      ? { location: checkpoint.location, timestamp: checkpoint.timestamp }
+      : latest;
+  }, undefined);
+
+  const timeline = [...shipment.statusHistory]
+    .sort(
+      (a, b) =>
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    )
+    .map((item) => {
+      const { date, time } = formatDateParts(item.timestamp);
+      return {
+        status: item.status,
+        location:
+          item.status === ShipmentStatus.DELIVERED
+            ? shipment.destinationLocation
+            : shipment.pickupLocation,
+        date,
+        time,
+        completed: true,
+      };
+    });
+
+  return {
+    trackingNumber: shipment.trackingId,
+    status: shipment.status,
+    currentLocation:
+      latestCheckpoint?.location ??
+      (shipment.status === ShipmentStatus.DELIVERED
+        ? shipment.destinationLocation
+        : shipment.pickupLocation),
+    origin: shipment.pickupLocation,
+    destination: shipment.destinationLocation,
+    estimatedDelivery: "—",
+    packageType: shipment.packageType,
+    weight: shipment.weight,
+    serviceType: shipment.serviceType,
+    timeline,
+    sender: {
+      name: shipment.customer?.name ?? "Sender",
+      phone: shipment.customer?.phone ?? shipment.phone,
+    },
+    receiver: {
+      name: "Receiver",
+      phone: shipment.phone,
+      address: shipment.destinationLocation,
+    },
   };
 }
 
@@ -179,26 +253,36 @@ export default function TrackPackage() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchParams] = useSearchParams();
 
-  const handleSearch = (param?: string) => {
+  const handleSearch = async (param?: string) => {
     const num = (param ?? trackingNumber).trim();
     if (!num) return;
 
     setIsSearching(true);
     setNotFound(false);
 
-    // Simulate API call
-    setTimeout(() => {
-      const data = sampleTrackingData[num];
-      if (data) {
-        setTrackingData(data);
-        setNotFound(false);
-        setTrackingNumber(num);
-      } else {
-        setTrackingData(null);
-        setNotFound(true);
+    try {
+      const shipment = await shipmentsApi.findByTrackingId(num);
+      setTrackingData(toTrackingData(shipment));
+      setTrackingNumber(num);
+      setNotFound(false);
+    } catch (err: any) {
+      // Optional dev-only fallback to sample data
+      if (import.meta.env.DEV) {
+        const data = sampleTrackingData[num];
+        if (data) {
+          setTrackingData(data);
+          setTrackingNumber(num);
+          setNotFound(false);
+          setIsSearching(false);
+          return;
+        }
       }
+
+      setTrackingData(null);
+      setNotFound(true);
+    } finally {
       setIsSearching(false);
-    }, 800);
+    }
   };
 
   useEffect(() => {
