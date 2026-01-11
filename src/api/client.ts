@@ -28,7 +28,7 @@ apiClient.interceptors.response.use(
     const data = response.data;
 
     // Your backend uses a global ResponseInterceptor:
-    // { success: true, data: <payload>, timestamp: ... }
+    // { success: true, data: <payload>, message: ... }
     if (
       data &&
       typeof data === "object" &&

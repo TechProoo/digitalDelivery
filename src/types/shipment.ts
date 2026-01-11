@@ -65,6 +65,7 @@ export interface ShipmentNote {
 export interface Shipment {
   id: string;
   trackingId: string;
+  phone: string;
   customerId: string;
   serviceType: ServiceType;
   status: ShipmentStatus;
@@ -136,6 +137,7 @@ export interface CreateShipmentRequest {
   packageType: string;
   weight: string;
   dimensions: string;
+  phone: string;
 }
 
 // Update shipment status request

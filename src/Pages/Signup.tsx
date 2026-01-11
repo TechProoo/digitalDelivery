@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/logo_2.png";
-import { authApi } from "../api";
-import { setAccessToken } from "../lib/authToken";
+import { useAuth } from "../auth/AuthContext";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,11 +11,26 @@ const Signup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    fullName: "",
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
+  const navigate = useNavigate();
+  const { register, isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-(--bg-primary) flex items-center justify-center text-(--text-primary)">
+        Loading...
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,13 +48,11 @@ const Signup = () => {
 
     setIsSubmitting(true);
     try {
-      const result = await authApi.register({
-        name: formData.fullName,
+      await register({
+        name: formData.name,
         email: formData.email,
         password: formData.password,
       });
-
-      setAccessToken(result.accessToken, "local");
       navigate("/dashboard");
     } catch (err: any) {
       setError(err?.message ?? "Signup failed. Please try again.");
@@ -49,11 +61,9 @@ const Signup = () => {
     }
   };
 
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-(--bg-primary) grid grid-cols-12">
-      <div className="md:col-span-6 min-h-screen">
+      <div className="md:col-span-6 min-h-screen  hidden md:block">
         <div className="signup_img min-h-screen"></div>
       </div>
       <div className="md:col-span-6 col-span-12">
@@ -81,10 +91,10 @@ const Signup = () => {
                     {error}
                   </div>
                 ) : null}
-                {/* Full Name */}
+                {/* Name */}
                 <div>
                   <label className="block text-sm font-medium text-(--text-primary) mb-2">
-                    Full Name
+                    Name
                   </label>
                   <div className="relative">
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 text-(--text-tertiary)">
@@ -92,8 +102,8 @@ const Signup = () => {
                     </div>
                     <input
                       type="text"
-                      name="fullName"
-                      value={formData.fullName}
+                      name="name"
+                      value={formData.name}
                       onChange={handleChange}
                       placeholder="John Doe"
                       className="w-full pl-11 pr-4 py-3 bg-(--bg-primary) border border-(--border-soft) rounded-xl text-(--text-primary) placeholder:text-(--text-tertiary) focus:outline-none focus:border-(--accent-sky) transition"

@@ -10,6 +10,7 @@ import { Routes, Route } from "react-router-dom";
 import Services from "./Pages/Services";
 import HowItWorks from "./Pages/HowItWorks";
 import Contact from "./Pages/Contact";
+import { RequireAuth } from "./auth/RequireAuth";
 
 function App() {
   return (
@@ -22,15 +23,64 @@ function App() {
       <Route path="/how-it-works" element={<HowItWorks />} />
 
       {/* Dashboard routes */}
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/dashboard/new-delivery" element={<NewDelivery />} />
-      <Route path="/dashboard/track" element={<TrackPackage />} />
-      <Route path="/dashboard/orders" element={<MyOrders />} />
+      <Route
+        path="/dashboard"
+        element={
+          <RequireAuth>
+            <Dashboard />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/dashboard/new-delivery"
+        element={
+          <RequireAuth>
+            <NewDelivery />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/dashboard/track"
+        element={
+          <RequireAuth>
+            <TrackPackage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/dashboard/orders"
+        element={
+          <RequireAuth>
+            <MyOrders />
+          </RequireAuth>
+        }
+      />
 
       {/* Legacy routes for backward compatibility */}
-      <Route path="/new-delivery" element={<NewDelivery />} />
-      <Route path="/track-package" element={<TrackPackage />} />
-      <Route path="/my-orders" element={<MyOrders />} />
+      <Route
+        path="/new-delivery"
+        element={
+          <RequireAuth>
+            <NewDelivery />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/track-package"
+        element={
+          <RequireAuth>
+            <TrackPackage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/my-orders"
+        element={
+          <RequireAuth>
+            <MyOrders />
+          </RequireAuth>
+        }
+      />
     </Routes>
   );
 }

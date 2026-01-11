@@ -1,25 +1,30 @@
-export type AuthTokenStorage = "local" | "session";
-
 const ACCESS_TOKEN_KEY = "dd_access_token";
+const TOKEN_CHANGED_EVENT = "dd-auth-token-changed";
 
-export function getAccessToken(): string | null {
-  return (
-    sessionStorage.getItem(ACCESS_TOKEN_KEY) ??
-    localStorage.getItem(ACCESS_TOKEN_KEY)
-  );
+function notifyTokenChanged() {
+  // Custom event for same-tab listeners (e.g., AuthProvider)
+  window.dispatchEvent(new Event(TOKEN_CHANGED_EVENT));
 }
 
-export function setAccessToken(token: string, storage: AuthTokenStorage) {
+export function getAccessToken(): string | null {
+  // Session-only auth (clears when the browser/tab closes)
+  return sessionStorage.getItem(ACCESS_TOKEN_KEY);
+}
+
+export function setAccessToken(token: string) {
   clearAccessToken();
 
-  if (storage === "local") {
-    localStorage.setItem(ACCESS_TOKEN_KEY, token);
-  } else {
-    sessionStorage.setItem(ACCESS_TOKEN_KEY, token);
-  }
+  sessionStorage.setItem(ACCESS_TOKEN_KEY, token);
+
+  notifyTokenChanged();
 }
 
 export function clearAccessToken() {
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
   sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+
+  notifyTokenChanged();
+}
+
+export function getAuthTokenChangedEventName() {
+  return TOKEN_CHANGED_EVENT;
 }

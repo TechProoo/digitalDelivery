@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo_2.png";
-import { authApi } from "../api";
-import { setAccessToken } from "../lib/authToken";
+import { useAuth } from "../auth/AuthContext";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,10 +11,23 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [rememberMe, setRememberMe] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login, isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-(--bg-primary) flex items-center justify-center text-(--text-primary)">
+        Loading...
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,13 +39,15 @@ const Login = () => {
     setError(null);
     setIsSubmitting(true);
     try {
-      const result = await authApi.login({
+      await login({
         email: formData.email,
         password: formData.password,
       });
 
-      setAccessToken(result.accessToken, rememberMe ? "local" : "session");
-      navigate("/dashboard");
+      const fromPath = (location.state as any)?.from?.pathname as
+        | string
+        | undefined;
+      navigate(fromPath || "/dashboard", { replace: true });
     } catch (err: any) {
       setError(err?.message ?? "Login failed. Please try again.");
     } finally {
@@ -123,23 +137,8 @@ const Login = () => {
                   </div>
                 </div>
 
-                {/* Remember Me and Forgot Password */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id="remember"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                      className="w-4 h-4 rounded border-(--border-soft) text-(--accent-sky) focus:ring-(--accent-sky)"
-                    />
-                    <label
-                      htmlFor="remember"
-                      className="text-sm text-(--text-secondary)"
-                    >
-                      Remember me
-                    </label>
-                  </div>
+                {/* Forgot Password */}
+                <div className="flex items-center justify-end">
                   <a
                     href="#"
                     className="text-sm text-(--accent-sky) hover:underline"

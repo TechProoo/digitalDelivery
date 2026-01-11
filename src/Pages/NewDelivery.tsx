@@ -60,19 +60,16 @@ export default function NewDelivery() {
       id: ServiceType.ROAD,
       label: SERVICE_TYPE_LABELS[ServiceType.ROAD],
       icon: Clock,
-      time: "5-7 business days",
     },
     {
       id: ServiceType.AIR,
       label: SERVICE_TYPE_LABELS[ServiceType.AIR],
       icon: Zap,
-      time: "2-3 business days",
     },
     {
       id: ServiceType.SEA,
       label: SERVICE_TYPE_LABELS[ServiceType.SEA],
       icon: Ship,
-      time: "7-14 business days",
     },
   ];
 
@@ -584,12 +581,7 @@ export default function NewDelivery() {
                             {service.label}
                           </span>
                         </div>
-                        <p
-                          className="text-xs sm:text-sm"
-                          style={{ color: "var(--text-secondary)" }}
-                        >
-                          {service.time}
-                        </p>
+                       
                       </button>
                     ))}
                   </div>

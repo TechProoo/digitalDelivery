@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Home, Package, MapPin, Clock, LogOut, Menu, X } from "lucide-react";
+import { useAuth } from "../../auth/AuthContext";
 
 // simple className merger
 function cn(...classes: (string | boolean | undefined)[]) {
@@ -8,11 +9,40 @@ function cn(...classes: (string | boolean | undefined)[]) {
 }
 
 export function Sidebar({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
   const [isOpen, setIsOpen] = useState(false); // mobile
   const [isCollapsed, setIsCollapsed] = useState(false); // desktop collapsed
   const [isLarge, setIsLarge] = useState<boolean>(
     typeof window !== "undefined" ? window.innerWidth >= 1024 : true
   );
+
+  const displayName = user?.name?.trim() || "Account";
+  const email = user?.email?.trim() || "";
+  const initials = (() => {
+    const fromName = displayName
+      .split(" ")
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((w) => w[0]?.toUpperCase())
+      .join("");
+    if (fromName) return fromName;
+
+    const fromEmail = email.split("@")[0]?.slice(0, 2) || "DD";
+    return fromEmail.toUpperCase();
+  })();
+
+  const handleLogout = () => {
+    logout();
+    try {
+      // clear onboarding flag for this session
+      sessionStorage.removeItem("dd_is_new_user");
+    } catch {
+      // ignore
+    }
+    navigate("/login", { replace: true });
+  };
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
@@ -170,7 +200,8 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
                       : "var(--text-secondary)",
                   })}
                   onMouseEnter={(e) => {
-                    const isActive = e.currentTarget.getAttribute("aria-current") === "page";
+                    const isActive =
+                      e.currentTarget.getAttribute("aria-current") === "page";
                     if (!isActive) {
                       e.currentTarget.style.backgroundColor =
                         "rgba(46,196,182,0.08)";
@@ -178,7 +209,8 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
                     }
                   }}
                   onMouseLeave={(e) => {
-                    const isActive = e.currentTarget.getAttribute("aria-current") === "page";
+                    const isActive =
+                      e.currentTarget.getAttribute("aria-current") === "page";
                     e.currentTarget.style.backgroundColor = isActive
                       ? "var(--bg-tertiary)"
                       : "transparent";
@@ -244,19 +276,22 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
                     fontWeight: 600,
                   }}
                 >
-                  TP
+                  {initials}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">TechPro</div>
+                  <div className="text-sm font-medium truncate">
+                    {displayName}
+                  </div>
                   <div
                     className="text-xs truncate"
                     style={{ color: "var(--text-secondary)" }}
                   >
-                    techpro@email.com
+                    {email || "—"}
                   </div>
                 </div>
               </div>
               <button
+                onClick={handleLogout}
                 className="w-full px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-destructive/10 transition-colors"
                 style={{
                   color: "var(--status-failed)",
@@ -280,9 +315,13 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
                   fontWeight: 600,
                 }}
               >
-                TP
+                {initials}
               </div>
-              <button className="p-2 rounded relative group hover:bg-destructive/10 transition-colors">
+              <button
+                onClick={handleLogout}
+                className="p-2 rounded relative group hover:bg-destructive/10 transition-colors"
+                aria-label="Logout"
+              >
                 <LogOut
                   className="h-5 w-5"
                   style={{ color: "var(--status-failed)" }}

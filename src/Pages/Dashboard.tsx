@@ -23,6 +23,8 @@ import {
   TrendingDown,
 } from "lucide-react";
 import BottomNav from "../components/dashboard/bottom-nav";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 
 import {
   ShipmentStatus,
@@ -33,10 +35,27 @@ import {
 } from "../types/shipment";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const shipments = [
+  const NEW_USER_KEY = "dd_is_new_user";
+  const [isNewUser, setIsNewUser] = useState(() => {
+    try {
+      return sessionStorage.getItem(NEW_USER_KEY) === "1";
+    } catch {
+      return false;
+    }
+  });
+
+  const displayName =
+    user?.name?.trim()?.split(" ")?.[0] ||
+    user?.email?.trim()?.split("@")?.[0] ||
+    "there";
+
+  const demoShipments = [
     {
       code: "DD-2024-001",
       location: "Abuja, Wuse",
@@ -81,7 +100,7 @@ export default function Dashboard() {
     },
   ];
 
-  const recentOrders = [
+  const demoRecentOrders = [
     {
       id: "DD-2024-001",
       pickup: "Lagos, Ikeja",
@@ -123,6 +142,167 @@ export default function Dashboard() {
       date: "2024-01-12",
     },
   ];
+
+  // Until shipments/orders are loaded from the backend, we keep demo data.
+  // New users get an onboarding empty-state experience.
+  const shipments = isNewUser ? [] : demoShipments;
+  const recentOrders = isNewUser ? [] : demoRecentOrders;
+
+  const hasData = shipments.length > 0 || recentOrders.length > 0;
+
+  const dismissOnboarding = () => {
+    try {
+      sessionStorage.setItem(NEW_USER_KEY, "0");
+    } catch {
+      // ignore
+    }
+    setIsNewUser(false);
+  };
+
+  const startFirstDelivery = () => {
+    dismissOnboarding();
+    navigate("/dashboard/new-delivery");
+  };
+
+  if (!hasData) {
+    return (
+      <Sidebar>
+        <div
+          className="min-h-screen p-4 sm:p-6 lg:p-8 pb-20 lg:pb-8"
+          style={{ background: "var(--bg-primary)" }}
+        >
+          <div
+            className="rounded-2xl p-5 sm:p-7"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(46,196,182,0.10), rgba(244,162,97,0.06))",
+              border: "1px solid var(--border-soft)",
+              boxShadow: "var(--shadow-soft)",
+            }}
+          >
+            <div className="flex flex-col lg:flex-row lg:items-center gap-5">
+              <div className="flex-1">
+                <div
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3"
+                  style={{
+                    background: "rgba(46,196,182,0.12)",
+                    color: "var(--accent-teal)",
+                  }}
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  <span className="text-xs sm:text-sm font-semibold">
+                    Account created successfully
+                  </span>
+                </div>
+
+                <h1
+                  className="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-2"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Welcome, {displayName}
+                </h1>
+
+                <p
+                  className="text-sm sm:text-base"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Your dashboard is empty for now — create your first delivery
+                  to start tracking shipments here.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto">
+                <button
+                  onClick={startFirstDelivery}
+                  className="rounded-lg px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold shadow-md flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+                  style={{
+                    background: "var(--gradient-primary)",
+                    color: "var(--text-inverse)",
+                    boxShadow: "var(--glow-accent)",
+                  }}
+                >
+                  <Package className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span>Send your first package</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+
+                <button
+                  onClick={() => navigate("/dashboard/track")}
+                  className="rounded-lg px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold border transition-all hover:scale-105 active:scale-95 whitespace-nowrap flex items-center justify-center gap-2"
+                  style={{
+                    background: "transparent",
+                    color: "var(--text-primary)",
+                    borderColor: "var(--border-medium)",
+                  }}
+                >
+                  <MapPin className="h-4 w-4 sm:h-5 sm:w-5" />
+                  Track a package
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            {[
+              {
+                title: "Create a delivery",
+                desc: "Fill pickup, destination, and package details.",
+                icon: Package,
+                accentBg: "rgba(244,162,97,0.10)",
+                accent: "var(--accent-amber)",
+              },
+              {
+                title: "Track updates",
+                desc: "See status changes and delivery progress in real time.",
+                icon: Truck,
+                accentBg: "rgba(78,168,222,0.10)",
+                accent: "var(--accent-sky)",
+              },
+              {
+                title: "Manage orders",
+                desc: "View history, receipts, and shipment details anytime.",
+                icon: List,
+                accentBg: "rgba(46,196,182,0.10)",
+                accent: "var(--accent-teal)",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl p-5"
+                style={{
+                  background: "var(--gradient-surface)",
+                  border: "1px solid var(--border-soft)",
+                  boxShadow: "var(--shadow-soft)",
+                }}
+              >
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center mb-3"
+                  style={{ background: item.accentBg, color: item.accent }}
+                >
+                  <item.icon className="h-5 w-5" />
+                </div>
+                <div
+                  className="text-base font-semibold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  {item.title}
+                </div>
+                <div
+                  className="text-sm mt-1"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  {item.desc}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <BottomNav />
+          <Footer />
+        </div>
+      </Sidebar>
+    );
+  }
 
   const paginatedOrders = recentOrders.slice(
     (currentPage - 1) * itemsPerPage,
@@ -172,7 +352,9 @@ export default function Dashboard() {
                 style={{ color: "var(--text-primary)" }}
               >
                 Welcome back,{" "}
-                <span style={{ color: "var(--accent-coral)" }}>John!</span>
+                <span style={{ color: "var(--accent-coral)" }}>
+                  {displayName}!
+                </span>
               </h1>
 
               <p
@@ -241,9 +423,7 @@ export default function Dashboard() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto">
               <button
-                onClick={() =>
-                  (window.location.href = "/dashboard/new-delivery")
-                }
+                onClick={() => navigate("/dashboard/new-delivery")}
                 className="rounded-lg px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold shadow-md flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
                 style={{
                   background: "var(--gradient-primary)",
@@ -257,7 +437,7 @@ export default function Dashboard() {
               </button>
 
               <button
-                onClick={() => (window.location.href = "/dashboard/track")}
+                onClick={() => navigate("/dashboard/track")}
                 className="rounded-lg px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold border transition-all hover:scale-105 active:scale-95 whitespace-nowrap flex items-center justify-center gap-2"
                 style={{
                   background: "transparent",
