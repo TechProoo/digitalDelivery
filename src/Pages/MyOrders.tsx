@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Sidebar } from "../components/dashboard/sidebar";
 import {
   Package,
@@ -20,6 +20,9 @@ import {
   ArrowRight,
 } from "lucide-react";
 import BottomNav from "../components/dashboard/bottom-nav";
+import { shipmentsApi } from "../api";
+import type { ShipmentWithRelations } from "../types/shipment";
+import { useAuth } from "../auth/AuthContext";
 
 import {
   ShipmentStatus,
@@ -153,6 +156,12 @@ const sampleOrders: Order[] = [
 ];
 
 export default function MyOrders() {
+  const { user } = useAuth();
+
+  const [ordersData, setOrdersData] = useState<ShipmentWithRelations[]>([]);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(false);
+  const [ordersError, setOrdersError] = useState<string | null>(null);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ShipmentStatus | "all">(
     "all"
@@ -164,8 +173,97 @@ export default function MyOrders() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const itemsPerPage = 5;
 
+  const formatShortDate = (iso: string) => {
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  const loadOrders = async (customerId: string) => {
+    setIsLoadingOrders(true);
+    setOrdersError(null);
+
+    try {
+      const result = await shipmentsApi.list({ customerId });
+      setOrdersData(result);
+    } catch (err: any) {
+      // Optional dev-only fallback to sample orders to keep UI demoable
+      if (import.meta.env.DEV) {
+        setOrdersData(
+          sampleOrders.map(
+            (o) =>
+              ({
+                trackingId: o.trackingNumber,
+                id: o.id,
+                phone: "",
+                customerId,
+                serviceType: o.service,
+                status: o.status,
+                pickupLocation: o.origin,
+                destinationLocation: o.destination,
+                packageType: o.packageType,
+                weight: o.weight,
+                dimensions: "—",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                customer: {
+                  id: customerId,
+                  name: "Demo Customer",
+                  email: "demo@example.com",
+                  phone: null,
+                  createdAt: new Date().toISOString(),
+                  updatedAt: new Date().toISOString(),
+                },
+                statusHistory: [],
+                checkpoints: [],
+                notes: [],
+              } as unknown as ShipmentWithRelations)
+          )
+        );
+      } else {
+        setOrdersData([]);
+      }
+      setOrdersError(err?.message ?? "Failed to load orders.");
+    } finally {
+      setIsLoadingOrders(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!user?.id) return;
+    void loadOrders(user.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+  const orders: Order[] = useMemo(() => {
+    const mapped = (ordersData ?? []).map((shipment) => {
+      const status = shipment.status;
+      const service = shipment.serviceType;
+
+      return {
+        id: shipment.trackingId,
+        origin: shipment.pickupLocation,
+        destination: shipment.destinationLocation,
+        packageType: shipment.packageType,
+        weight: shipment.weight,
+        service,
+        status,
+        date: formatShortDate(shipment.createdAt),
+        amount: "—",
+        estimatedDelivery: "—",
+        trackingNumber: shipment.trackingId,
+      };
+    });
+
+    return mapped;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ordersData]);
+
   // Filter orders
-  const filteredOrders = sampleOrders.filter((order) => {
+  const filteredOrders = orders.filter((order) => {
     const matchesSearch =
       order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.origin.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -187,15 +285,179 @@ export default function MyOrders() {
 
   // Stats
   const stats = {
-    total: sampleOrders.length,
-    delivered: sampleOrders.filter((o) => o.status === ShipmentStatus.DELIVERED)
+    total: orders.length,
+    delivered: orders.filter((o) => o.status === ShipmentStatus.DELIVERED)
       .length,
-    inTransit: sampleOrders.filter(
-      (o) => o.status === ShipmentStatus.IN_TRANSIT
-    ).length,
-    pending: sampleOrders.filter((o) => o.status === ShipmentStatus.PENDING)
+    inTransit: orders.filter((o) => o.status === ShipmentStatus.IN_TRANSIT)
       .length,
+    pending: orders.filter((o) => o.status === ShipmentStatus.PENDING).length,
   };
+
+  const hasAnyOrders = orders.length > 0;
+
+  if (isLoadingOrders) {
+    return (
+      <Sidebar>
+        <div
+          className="min-h-screen p-4 sm:p-6 lg:p-8"
+          style={{ background: "var(--bg-primary)" }}
+        >
+          <div
+            className="rounded-2xl p-6 sm:p-8"
+            style={{
+              background: "var(--gradient-surface)",
+              border: "1px solid var(--border-soft)",
+              boxShadow: "var(--shadow-soft)",
+            }}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <div
+                  className="h-5 w-44 rounded-md animate-pulse"
+                  style={{ background: "rgba(255,255,255,0.06)" }}
+                />
+                <div
+                  className="h-3 w-64 rounded-md mt-3 animate-pulse"
+                  style={{ background: "rgba(255,255,255,0.05)" }}
+                />
+              </div>
+              <div
+                className="h-10 w-32 rounded-lg animate-pulse"
+                style={{ background: "rgba(46,196,182,0.10)" }}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-xl p-4"
+                  style={{
+                    border: "1px solid var(--border-soft)",
+                    background: "rgba(0,0,0,0.18)",
+                  }}
+                >
+                  <div
+                    className="h-3 w-24 rounded-md animate-pulse"
+                    style={{ background: "rgba(255,255,255,0.05)" }}
+                  />
+                  <div
+                    className="h-7 w-16 rounded-md mt-3 animate-pulse"
+                    style={{ background: "rgba(255,255,255,0.06)" }}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 rounded-xl overflow-hidden">
+              <div
+                className="h-56 animate-pulse"
+                style={{ background: "rgba(255,255,255,0.04)" }}
+              />
+            </div>
+          </div>
+
+          <BottomNav />
+        </div>
+      </Sidebar>
+    );
+  }
+
+  if (!hasAnyOrders) {
+    return (
+      <Sidebar>
+        <div
+          className="min-h-screen p-4 sm:p-6 lg:p-8"
+          style={{ background: "var(--bg-primary)" }}
+        >
+          <div
+            className="rounded-2xl p-6 sm:p-8"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(46,196,182,0.10), rgba(244,162,97,0.06))",
+              border: "1px solid var(--border-soft)",
+              boxShadow: "var(--shadow-soft)",
+            }}
+          >
+            <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+              <div className="flex-1">
+                <div
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3"
+                  style={{
+                    background: ordersError
+                      ? "rgba(239,71,111,0.12)"
+                      : "rgba(46,196,182,0.12)",
+                    color: ordersError
+                      ? "var(--status-failed)"
+                      : "var(--accent-teal)",
+                  }}
+                >
+                  {ordersError ? (
+                    <AlertCircle className="h-4 w-4" />
+                  ) : (
+                    <Package className="h-4 w-4" />
+                  )}
+                  <span className="text-xs sm:text-sm font-semibold">
+                    {ordersError ? "Couldn't load orders" : "No orders yet"}
+                  </span>
+                </div>
+
+                <h1
+                  className="text-2xl sm:text-3xl font-extrabold mb-2"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  My Orders
+                </h1>
+                <p
+                  className="text-sm sm:text-base"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  {ordersError
+                    ? ordersError
+                    : "Create your first shipment and it will appear here with tracking."}
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto">
+                <button
+                  onClick={() =>
+                    ordersError && user?.id
+                      ? loadOrders(user.id)
+                      : (window.location.href = "/dashboard/new-delivery")
+                  }
+                  className="rounded-lg px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold shadow-md flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+                  style={{
+                    background: "var(--gradient-primary)",
+                    color: "var(--text-inverse)",
+                    boxShadow: "var(--glow-accent)",
+                  }}
+                >
+                  <Package className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span>{ordersError ? "Retry" : "Create shipment"}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+
+                <button
+                  onClick={() => (window.location.href = "/dashboard/track")}
+                  className="rounded-lg px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold border transition-all hover:scale-105 active:scale-95 whitespace-nowrap flex items-center justify-center gap-2"
+                  style={{
+                    background: "transparent",
+                    color: "var(--text-primary)",
+                    borderColor: "var(--border-medium)",
+                  }}
+                >
+                  <MapPin className="h-4 w-4 sm:h-5 sm:w-5" />
+                  Track a package
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <BottomNav />
+        </div>
+      </Sidebar>
+    );
+  }
 
   const getStatusColor = (status: ShipmentStatus) => STATUS_COLORS[status].text;
 

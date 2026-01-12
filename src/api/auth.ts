@@ -11,7 +11,6 @@ export type Customer = {
 };
 
 export type AuthResponse = {
-  accessToken: string;
   customer: Customer;
 };
 
@@ -38,6 +37,14 @@ export async function register(input: RegisterInput): Promise<AuthResponse> {
 export async function login(input: LoginInput): Promise<AuthResponse> {
   try {
     return await apiClient.post("/auth/login", input);
+  } catch (err) {
+    throw toApiError(err);
+  }
+}
+
+export async function logout(): Promise<{ ok: boolean }> {
+  try {
+    return await apiClient.post("/auth/logout");
   } catch (err) {
     throw toApiError(err);
   }

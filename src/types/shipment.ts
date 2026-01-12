@@ -66,6 +66,7 @@ export interface Shipment {
   id: string;
   trackingId: string;
   phone: string;
+  receiverPhone: string | null;
   customerId: string;
   serviceType: ServiceType;
   status: ShipmentStatus;
@@ -138,6 +139,7 @@ export interface CreateShipmentRequest {
   weight: string;
   dimensions: string;
   phone: string;
+  receiverPhone?: string;
 }
 
 // Update shipment status request

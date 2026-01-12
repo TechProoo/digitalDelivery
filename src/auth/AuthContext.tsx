@@ -7,12 +7,6 @@ import React, {
 } from "react";
 import { authApi } from "../api";
 import type { ApiError } from "../api";
-import {
-  clearAccessToken,
-  getAccessToken,
-  getAuthTokenChangedEventName,
-  setAccessToken,
-} from "../lib/authToken";
 
 export type AuthUser = authApi.Customer;
 
@@ -44,18 +38,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refresh = async () => {
     setError(null);
 
-    const token = getAccessToken();
-    if (!token) {
-      setUser(null);
-      return;
-    }
-
     try {
       const result = await authApi.me();
       setUser(result.customer);
     } catch (err: any) {
-      // apiClient already clears token on 401; keep state consistent.
-      clearAccessToken();
       setUser(null);
       setError(err);
     }
@@ -72,20 +58,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     })();
 
-    const onTokenChanged = () => {
-      refresh().catch(() => {
-        // refresh already normalizes state; ignore here
-      });
-    };
-
-    window.addEventListener(getAuthTokenChangedEventName(), onTokenChanged);
-
     return () => {
       isActive = false;
-      window.removeEventListener(
-        getAuthTokenChangedEventName(),
-        onTokenChanged
-      );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -95,7 +69,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const result = await authApi.login({ email, password });
-      setAccessToken(result.accessToken);
       setUser(result.customer);
     } catch (err: any) {
       setError(err);
@@ -112,7 +85,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const result = await authApi.register({ name, email, password });
-      setAccessToken(result.accessToken);
       setUser(result.customer);
 
       // Used by Dashboard to show a first-time empty-state experience.
@@ -124,7 +96,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    clearAccessToken();
+    authApi.logout().catch(() => {
+      // ignore network errors; we still clear local state
+    });
     setUser(null);
     setError(null);
   };

@@ -1,6 +1,5 @@
 import axios from "axios";
 import type { AxiosInstance } from "axios";
-import { clearAccessToken, getAccessToken } from "../lib/authToken";
 
 function getBaseUrl() {
   const envUrl = (import.meta as any).env?.VITE_API_URL as string | undefined;
@@ -9,18 +8,10 @@ function getBaseUrl() {
 
 export const apiClient: AxiosInstance = axios.create({
   baseURL: getBaseUrl(),
+  withCredentials: true,
   headers: {
     Accept: "application/json",
   },
-});
-
-apiClient.interceptors.request.use((config) => {
-  const token = getAccessToken();
-  if (token) {
-    config.headers = config.headers ?? {};
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
 });
 
 apiClient.interceptors.response.use(
@@ -41,11 +32,6 @@ apiClient.interceptors.response.use(
     return data;
   },
   (error) => {
-    // If token is invalid/expired, clear it to avoid looping failures.
-    const status = error?.response?.status;
-    if (status === 401) {
-      clearAccessToken();
-    }
     return Promise.reject(error);
   }
 );

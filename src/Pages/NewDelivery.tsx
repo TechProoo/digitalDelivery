@@ -32,6 +32,7 @@ interface FormData {
   height: string;
   serviceType: ServiceType | "";
   userWhatsApp: string;
+  receiverWhatsApp: string;
 }
 
 export default function NewDelivery() {
@@ -51,6 +52,7 @@ export default function NewDelivery() {
     height: "",
     serviceType: "",
     userWhatsApp: "",
+    receiverWhatsApp: "",
   });
 
   const packageTypes = [
@@ -96,7 +98,10 @@ export default function NewDelivery() {
   };
 
   const canProceedStep3 = () => {
-    return formData.userWhatsApp.trim().length > 0;
+    return (
+      formData.userWhatsApp.trim().length > 0 &&
+      formData.receiverWhatsApp.trim().length > 0
+    );
   };
 
   const pickupLocation = useMemo(
@@ -130,6 +135,7 @@ export default function NewDelivery() {
         weight: formData.weight,
         dimensions,
         phone: formData.userWhatsApp.trim(),
+        receiverPhone: formData.receiverWhatsApp.trim(),
       });
 
       navigate(
@@ -143,19 +149,54 @@ export default function NewDelivery() {
   };
 
   const handleWhatsAppRedirect = () => {
-    // Company WhatsApp number (replace with actual number)
-    const companyWhatsApp = "2348012345678"; // Replace with your WhatsApp number
+    // Validate required fields before sending
+    if (!formData.originCity || !formData.destCity || !formData.packageType) {
+      alert("Please fill in all required fields before sending to WhatsApp");
+      return;
+    }
+
+    const companyWhatsApp = "2349010191502";
 
     const serviceTypeLabel = formData.serviceType
       ? SERVICE_TYPE_LABELS[formData.serviceType]
-      : "";
+      : "Not specified";
 
-    const message = `Hello! I would like to get a quote for my shipment:\n\n*Shipment Details:*\nOrigin: ${formData.originCity}, ${formData.originCountry}\nDestination: ${formData.destCity}, ${formData.destCountry}\n\n*Package Information:*\nType: ${formData.packageType}\nWeight: ${formData.weight} kg\nDimensions: ${formData.length}×${formData.width}×${formData.height} cm\nService Type: ${serviceTypeLabel}\n\n*My WhatsApp:* ${formData.userWhatsApp}\n\nPlease provide pricing for this shipment. Thank you!`;
+    const message = `Hello! I would like to get a quote for my shipment:
+
+📦 *SHIPMENT DETAILS*
+━━━━━━━━━━━━━━━━━━
+📍 Origin: ${formData.originCity}, ${formData.originCountry}
+📍 Destination: ${formData.destCity}, ${formData.destCountry}
+
+📋 *PACKAGE INFORMATION*
+━━━━━━━━━━━━━━━━━━
+Type: ${formData.packageType}
+Weight: ${formData.weight} kg
+Dimensions: ${formData.length}×${formData.width}×${formData.height} cm
+Service: ${serviceTypeLabel}
+
+📱 *MY CONTACT*
+━━━━━━━━━━━━━━━━━━
+WhatsApp: ${formData.userWhatsApp}
+
+📱 *RECEIVER CONTACT*
+━━━━━━━━━━━━━━━━━━
+WhatsApp: ${formData.receiverWhatsApp}
+
+Please provide pricing for this shipment. Thank you! 🙏`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${companyWhatsApp}?text=${encodedMessage}`;
 
+    // Open WhatsApp
     window.open(whatsappUrl, "_blank");
+
+    // Optional: Track analytics
+    console.log("WhatsApp quote request sent:", {
+      origin: `${formData.originCity}, ${formData.originCountry}`,
+      destination: `${formData.destCity}, ${formData.destCountry}`,
+      timestamp: new Date().toISOString(),
+    });
   };
 
   return (
@@ -827,6 +868,37 @@ export default function NewDelivery() {
                   >
                     <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />
                     Your WhatsApp Number
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="e.g., +234 801 234 5678"
+                    value={formData.receiverWhatsApp}
+                    onChange={(e) =>
+                      updateFormData("receiverWhatsApp", e.target.value)
+                    }
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none text-sm sm:text-base"
+                    style={{
+                      background: "rgba(0,0,0,0.3)",
+                      border: "1px solid var(--border-soft)",
+                      color: "var(--text-primary)",
+                    }}
+                  />
+                  <p
+                    className="text-xs mt-2"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Include country code (e.g., +234 for Nigeria)
+                  </p>
+                </div>
+
+                {/* Receiver's WhatsApp Input */}
+                <div className="mb-4 sm:mb-6">
+                  <label
+                    className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-2 uppercase"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />
+                    Receiver's WhatsApp Number
                   </label>
                   <input
                     type="tel"
