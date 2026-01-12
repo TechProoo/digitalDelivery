@@ -121,46 +121,17 @@ export default function NewDelivery() {
     return `${l}x${w}x${h} cm`;
   }, [formData.length, formData.width, formData.height]);
 
-  const handleCreateShipment = async () => {
-    if (!canProceedStep1() || !canProceedStep2() || !canProceedStep3()) return;
-
-    setSubmitError(null);
-    setIsSubmitting(true);
-    try {
-      const shipment = await shipmentsApi.create({
-        serviceType: formData.serviceType as ServiceType,
-        pickupLocation,
-        destinationLocation,
-        packageType: formData.packageType,
-        weight: formData.weight,
-        dimensions,
-        phone: formData.userWhatsApp.trim(),
-        receiverPhone: formData.receiverWhatsApp.trim(),
-      });
-
-      navigate(
-        `/dashboard/track?tn=${encodeURIComponent(shipment.trackingId)}`
-      );
-    } catch (err: any) {
-      setSubmitError(err?.message ?? "Failed to create shipment.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleWhatsAppRedirect = () => {
-    // Validate required fields before sending
-    if (!formData.originCity || !formData.destCity || !formData.packageType) {
-      alert("Please fill in all required fields before sending to WhatsApp");
-      return;
-    }
-
+  const buildWhatsAppMessage = (opts?: { trackingId?: string }) => {
     const companyWhatsApp = "2349010191502";
     const serviceTypeLabel = formData.serviceType
       ? SERVICE_TYPE_LABELS[formData.serviceType]
       : "Not specified";
 
-    const message = `Hello! I would like to get a quote for my shipment:
+    const trackingLine = opts?.trackingId
+      ? `\nTracking Number: ${opts.trackingId}`
+      : "";
+
+    const message = `Hello! I would like to get a quote for my shipment:${trackingLine}
 
 📦 *SHIPMENT DETAILS*
 ━━━━━━━━━━━━━━━━━━
@@ -176,16 +147,72 @@ Service: ${serviceTypeLabel}
 
 📱 *MY CONTACT*
 ━━━━━━━━━━━━━━━━━━
-WhatsApp: ${formData.receiverWhatsApp}
+WhatsApp: ${formData.userWhatsApp}
 
 📱 *RECEIVER CONTACT*
 ━━━━━━━━━━━━━━━━━━
-WhatsApp: ${formData.userWhatsApp}
+WhatsApp: ${formData.receiverWhatsApp}
 
-Please provide pricing for this shipment. Thank you! 🙏`;
+Please provide pricing for this shipment. Thank you!`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${companyWhatsApp}?text=${encodedMessage}`;
+
+    return { message, whatsappUrl };
+  };
+
+  const handleCreateShipment = async () => {
+    if (!canProceedStep1() || !canProceedStep2() || !canProceedStep3()) return;
+
+    // Open a tab immediately (popup-safe), then fill it after the async call.
+    const waWindow = window.open("about:blank", "_blank");
+
+    setSubmitError(null);
+    setIsSubmitting(true);
+    try {
+      const shipment = await shipmentsApi.create({
+        serviceType: formData.serviceType as ServiceType,
+        pickupLocation,
+        destinationLocation,
+        packageType: formData.packageType,
+        weight: formData.weight,
+        dimensions,
+        phone: formData.userWhatsApp.trim(),
+        receiverPhone: formData.receiverWhatsApp.trim(),
+      });
+
+      const { whatsappUrl } = buildWhatsAppMessage({
+        trackingId: shipment.trackingId,
+      });
+
+      if (waWindow && !waWindow.closed) {
+        waWindow.location.href = whatsappUrl;
+      } else {
+        // Popup blocked - fallback attempt
+        window.open(whatsappUrl, "_blank");
+      }
+
+      navigate(
+        `/dashboard/track?tn=${encodeURIComponent(shipment.trackingId)}`
+      );
+    } catch (err: any) {
+      if (waWindow && !waWindow.closed) {
+        waWindow.close();
+      }
+      setSubmitError(err?.message ?? "Failed to create shipment.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleWhatsAppRedirect = () => {
+    // Validate required fields before sending
+    if (!formData.originCity || !formData.destCity || !formData.packageType) {
+      alert("Please fill in all required fields before sending to WhatsApp");
+      return;
+    }
+
+    const { whatsappUrl } = buildWhatsAppMessage();
 
     // Open WhatsApp with better error handling
     const newWindow = window.open(whatsappUrl, "_blank");
