@@ -156,7 +156,6 @@ export default function NewDelivery() {
     }
 
     const companyWhatsApp = "2349010191502";
-
     const serviceTypeLabel = formData.serviceType
       ? SERVICE_TYPE_LABELS[formData.serviceType]
       : "Not specified";
@@ -177,19 +176,29 @@ Service: ${serviceTypeLabel}
 
 📱 *MY CONTACT*
 ━━━━━━━━━━━━━━━━━━
-WhatsApp: ${formData.userWhatsApp}
+WhatsApp: ${formData.receiverWhatsApp}
 
 📱 *RECEIVER CONTACT*
 ━━━━━━━━━━━━━━━━━━
-WhatsApp: ${formData.receiverWhatsApp}
+WhatsApp: ${formData.userWhatsApp}
 
 Please provide pricing for this shipment. Thank you! 🙏`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${companyWhatsApp}?text=${encodedMessage}`;
 
-    // Open WhatsApp
-    window.open(whatsappUrl, "_blank");
+    // Open WhatsApp with better error handling
+    const newWindow = window.open(whatsappUrl, "_blank");
+
+    if (
+      !newWindow ||
+      newWindow.closed ||
+      typeof newWindow.closed === "undefined"
+    ) {
+      // Popup blocked - fallback
+      alert("Pop-up blocked! Opening WhatsApp in this tab.");
+      window.location.href = whatsappUrl;
+    }
 
     // Optional: Track analytics
     console.log("WhatsApp quote request sent:", {
@@ -872,9 +881,9 @@ Please provide pricing for this shipment. Thank you! 🙏`;
                   <input
                     type="tel"
                     placeholder="e.g., +234 801 234 5678"
-                    value={formData.receiverWhatsApp}
+                    value={formData.userWhatsApp}
                     onChange={(e) =>
-                      updateFormData("receiverWhatsApp", e.target.value)
+                      updateFormData("userWhatsApp", e.target.value)
                     }
                     className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none text-sm sm:text-base"
                     style={{
@@ -903,9 +912,9 @@ Please provide pricing for this shipment. Thank you! 🙏`;
                   <input
                     type="tel"
                     placeholder="e.g., +234 801 234 5678"
-                    value={formData.userWhatsApp}
+                    value={formData.receiverWhatsApp}
                     onChange={(e) =>
-                      updateFormData("userWhatsApp", e.target.value)
+                      updateFormData("receiverWhatsApp", e.target.value)
                     }
                     className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none text-sm sm:text-base"
                     style={{
