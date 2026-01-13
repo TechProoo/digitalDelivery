@@ -261,7 +261,7 @@ Please provide pricing for this shipment. Thank you!`;
                 className="text-xl sm:text-2xl font-bold"
                 style={{ color: "var(--text-primary)" }}
               >
-                DigitalDelivery
+                DigitalLogistics
               </h1>
               <p
                 className="text-sm sm:text-base"

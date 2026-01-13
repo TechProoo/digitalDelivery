@@ -81,7 +81,7 @@ const ServicesComponent = () => {
             </div>
             <div className="services_right_sub mt-5">
               <p>
-                Digital Delivery simplifies cargo dispatch and delivery—from
+                Digital Logistics simplifies cargo dispatch and delivery—from
                 packaging and pickup to transportation by road, air, and
                 sea—ensuring your goods arrive safely and on time.
               </p>
@@ -93,7 +93,11 @@ const ServicesComponent = () => {
                   </span>
                 </button>
               </div>
-              <img src={Design} className="mt-10 absolute bottom-0 right-0" alt="" />
+              <img
+                src={Design}
+                className="mt-10 absolute bottom-0 right-0"
+                alt=""
+              />
             </div>
           </div>
         </div>

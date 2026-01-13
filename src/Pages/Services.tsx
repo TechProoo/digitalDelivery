@@ -1,14 +1,26 @@
-import {  Search, Truck, Globe, ShieldCheck } from "lucide-react";
+import { Search, Truck, Globe, ShieldCheck } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 
 import ServicesComponent from "../components/home/ServicesComponent";
 import DeliveryFlow from "../components/home/DeliveryFlow";
 import Cta from "../components/home/Cta";
 import Footer from "../components/home/Footer";
+import { useState } from "react";
+// import { useAuth } from "@/auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Services = () => {
+  const navigate = useNavigate();
+
+  const [tn, setTn] = useState("");
+  // const { isAuthenticated } = useAuth();
+  const handleSubmit = () => {
+    const value = tn?.trim();
+    if (!value) return;
+    navigate(`/dashboard/track?tn=${encodeURIComponent(value)}`);
+  };
   return (
-    <div className="p-6.25">
+    <div className="">
       <div className="services_container">
         <Navbar />
         <div className="hero_container md:p-10 p-3">
@@ -41,10 +53,17 @@ const Services = () => {
                   <input
                     type="text"
                     placeholder="Enter tracking number..."
+                    value={tn}
+                    onChange={(e) => setTn(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleSubmit();
+                    }}
                     className="bg-transparent outline-none border-none text-gray-300 placeholder-gray-400 w-full text-lg"
                     style={{ paddingLeft: 0 }}
                   />
-                  <button className="rounded-md">Track</button>
+                  <button className="rounded-md" onClick={handleSubmit}>
+                    Track
+                  </button>
                 </div>
               </div>
             </div>
@@ -52,78 +71,83 @@ const Services = () => {
         </div>
       </div>
 
-      <DeliveryFlow />
-      <ServicesComponent />
-      {/* Feature Highlights */}
-      <section className="mx-auto my-12 max-w-6xl px-4 sm:px-6">
-        <div className="mb-8 text-center">
-          <h3
-            className="text-md font-semibold uppercase header"
-            style={{ color: "var(--accent-teal)" }}
-          >
-            Why choose us
-          </h3>
-          <h2
-            className="mt-2 text-2xl font-bold header"
-            style={{ color: "var(--text-primary)" }}
-          >
-            End-to-end logistics built for speed and reliability
-          </h2>
+      <div className="p-5">
+        <DeliveryFlow />
+        <ServicesComponent />
+        {/* Feature Highlights */}
+        <section className="mx-auto my-12 max-w-6xl px-4 sm:px-6">
+          <div className="mb-8 text-center">
+            <h3
+              className="text-md font-semibold uppercase header"
+              style={{ color: "var(--accent-teal)" }}
+            >
+              Why choose us
+            </h3>
+            <h2
+              className="mt-2 text-2xl font-bold header"
+              style={{ color: "var(--text-primary)" }}
+            >
+              End-to-end logistics built for speed and reliability
+            </h2>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-3">
+            <div className="rounded-lg border border-(--border-soft) bg-(--bg-secondary) p-6 text-left shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="rounded-md bg-(--bg-primary) p-3 text-(--accent-teal)">
+                  <Truck className="h-6 w-6" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-(--text-primary)">
+                    Flexible Transport
+                  </h4>
+                  <p className="text-sm text-(--text-secondary)">
+                    Road, air, and sea options to match your timeline and
+                    budget.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-(--border-soft) bg-(--bg-secondary) p-6 text-left shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="rounded-md bg-(--bg-primary) p-3 text-(--accent-teal)">
+                  <Globe className="h-6 w-6" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-(--text-primary)">
+                    Global Reach
+                  </h4>
+                  <p className="text-sm text-(--text-secondary)">
+                    Networked hubs and partners for smooth cross-border
+                    deliveries.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-(--border-soft) bg-(--bg-secondary) p-6 text-left shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="rounded-md bg-(--bg-primary) p-3 text-(--accent-teal)">
+                  <ShieldCheck className="h-6 w-6" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-(--text-primary)">
+                    Secure Handling
+                  </h4>
+                  <p className="text-sm text-(--text-secondary)">
+                    Insurance and careful handling for valuable shipments.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <div className="p-5">
+          <Cta />
         </div>
-
-        <div className="grid gap-6 sm:grid-cols-3">
-          <div className="rounded-lg border border-(--border-soft) bg-(--bg-secondary) p-6 text-left shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="rounded-md bg-(--bg-primary) p-3 text-(--accent-teal)">
-                <Truck className="h-6 w-6" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-(--text-primary)">
-                  Flexible Transport
-                </h4>
-                <p className="text-sm text-(--text-secondary)">
-                  Road, air, and sea options to match your timeline and budget.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-(--border-soft) bg-(--bg-secondary) p-6 text-left shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="rounded-md bg-(--bg-primary) p-3 text-(--accent-teal)">
-                <Globe className="h-6 w-6" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-(--text-primary)">
-                  Global Reach
-                </h4>
-                <p className="text-sm text-(--text-secondary)">
-                  Networked hubs and partners for smooth cross-border
-                  deliveries.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-(--border-soft) bg-(--bg-secondary) p-6 text-left shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="rounded-md bg-(--bg-primary) p-3 text-(--accent-teal)">
-                <ShieldCheck className="h-6 w-6" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-(--text-primary)">
-                  Secure Handling
-                </h4>
-                <p className="text-sm text-(--text-secondary)">
-                  Insurance and careful handling for valuable shipments.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <Cta />
-      <Footer />
+        <Footer />
+      </div>
     </div>
   );
 };

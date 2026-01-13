@@ -6,7 +6,7 @@ import Footer from "../components/home/Footer";
 
 const HowItWorks = () => {
   return (
-    <section className="hiw_cover md:p-10 p-5">
+    <section className="hiw_cover">
       <div className="hiw_container">
         <Navbar />
         <div className="hero_container p-10">
@@ -49,9 +49,9 @@ const HowItWorks = () => {
         </div>
       </div>
 
-      <HowItWorksComponents />
+      <div className="p-5"><HowItWorksComponents />
       {/* Feature highlights — refined visuals */}
-      <div className="grid gap-6 sm:grid-cols-3 mb-8 mt-5">
+      <div className="grid gap-6 sm:grid-cols-3 mb-8 mt-5 md:p-10">
         <div className="group p-6 rounded-xl bg-(--bg-secondary) border border-(--border-soft) shadow-sm transform transition hover:-translate-y-1 hover:shadow-lg">
           <div className="flex items-start gap-4">
             <div
@@ -131,8 +131,10 @@ const HowItWorks = () => {
           </div>
         </div>
       </div>
-      <Cta />
-      <Footer />
+      <div className="md:p-5">
+        <Cta />
+        <Footer />
+      </div></div>
     </section>
   );
 };

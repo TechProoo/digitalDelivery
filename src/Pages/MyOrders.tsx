@@ -58,7 +58,7 @@ const sampleOrders: Order[] = [
     service: ServiceType.DOOR_TO_DOOR,
     status: ShipmentStatus.IN_TRANSIT,
     date: "Jan 2, 2026",
-    amount: "$125.00",
+    amount: "₦125,000",
     estimatedDelivery: "Jan 8, 2026",
     trackingNumber: "DD-2024-001",
   },
@@ -71,7 +71,7 @@ const sampleOrders: Order[] = [
     service: ServiceType.SEA,
     status: ShipmentStatus.DELIVERED,
     date: "Dec 15, 2025",
-    amount: "$2,768.00",
+    amount: "₦2,768,000",
     estimatedDelivery: "Jan 3, 2026",
     trackingNumber: "DD-2024-002",
   },
@@ -84,7 +84,7 @@ const sampleOrders: Order[] = [
     service: ServiceType.ROAD,
     status: ShipmentStatus.DELIVERED,
     date: "Dec 28, 2025",
-    amount: "$85.00",
+    amount: "₦85,000",
     estimatedDelivery: "Jan 1, 2026",
     trackingNumber: "DD-2024-003",
   },
@@ -97,7 +97,7 @@ const sampleOrders: Order[] = [
     service: ServiceType.AIR,
     status: ShipmentStatus.DELIVERED,
     date: "Dec 20, 2025",
-    amount: "$210.00",
+    amount: "₦210,000",
     estimatedDelivery: "Dec 25, 2025",
     trackingNumber: "DD-2024-004",
   },
@@ -110,7 +110,7 @@ const sampleOrders: Order[] = [
     service: ServiceType.ROAD,
     status: ShipmentStatus.PENDING,
     date: "Jan 4, 2026",
-    amount: "$45.00",
+    amount: "₦45,000",
     estimatedDelivery: "Jan 10, 2026",
     trackingNumber: "DD-2024-005",
   },
@@ -123,7 +123,7 @@ const sampleOrders: Order[] = [
     service: ServiceType.AIR,
     status: ShipmentStatus.IN_TRANSIT,
     date: "Jan 1, 2026",
-    amount: "$890.00",
+    amount: "₦890,000",
     estimatedDelivery: "Jan 6, 2026",
     trackingNumber: "DD-2024-006",
   },
@@ -136,7 +136,7 @@ const sampleOrders: Order[] = [
     service: ServiceType.DOOR_TO_DOOR,
     status: ShipmentStatus.CANCELLED,
     date: "Dec 18, 2025",
-    amount: "$35.00",
+    amount: "₦35,000",
     estimatedDelivery: "Dec 22, 2025",
     trackingNumber: "DD-2024-007",
   },
@@ -149,7 +149,7 @@ const sampleOrders: Order[] = [
     service: ServiceType.SEA,
     status: ShipmentStatus.IN_TRANSIT,
     date: "Dec 10, 2025",
-    amount: "$3,200.00",
+    amount: "₦3,200,000",
     estimatedDelivery: "Jan 15, 2026",
     trackingNumber: "DD-2024-008",
   },
@@ -182,6 +182,11 @@ export default function MyOrders() {
     });
   };
 
+  const formatNairaAmount = (amount: number | null | undefined) => {
+    if (amount == null || amount <= 0) return "Pending";
+    return `₦${amount.toLocaleString("en-NG")}`;
+  };
+
   const loadOrders = async (customerId: string) => {
     setIsLoadingOrders(true);
     setOrdersError(null);
@@ -207,6 +212,7 @@ export default function MyOrders() {
                 packageType: o.packageType,
                 weight: o.weight,
                 dimensions: "—",
+                amount: 0,
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 customer: {
@@ -252,7 +258,7 @@ export default function MyOrders() {
         service,
         status,
         date: formatShortDate(shipment.createdAt),
-        amount: "—",
+        amount: formatNairaAmount(shipment.amount),
         estimatedDelivery: "—",
         trackingNumber: shipment.trackingId,
       };

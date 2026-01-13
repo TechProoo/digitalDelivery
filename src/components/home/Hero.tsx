@@ -1,11 +1,12 @@
 import { MoveRight, Search } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../../auth/AuthContext";
 
 export default function Hero() {
   const navigate = useNavigate();
   const [tn, setTn] = useState("");
-
+  const { isAuthenticated } = useAuth();
   const handleSubmit = () => {
     const value = tn?.trim();
     if (!value) return;
@@ -27,22 +28,26 @@ export default function Hero() {
           </h1>
           <p className="mt-5 md:w-7/12">
             From urgent airport shipments to door-to-door delivery,
-            DigitalDelivery ensures your packages reach their destination—fast,
+            DigitalLogistics ensures your packages reach their destination—fast,
             safe, and hassle-free.
           </p>
         </div>
         <div className="md:flex justify-between items-center">
           <div className="hero_button mt-5 sm:flex items-center gap-5">
-            <Link
-              to="/signup"
-              className="flex justify-center items-center gap-2 group"
-            >
-              <span>Get Started</span>
-              <span className="transition-transform duration-300 group-hover:translate-x-2">
-                <MoveRight />
-              </span>
-            </Link>
-            <Link to="/signup" className="mt-2 inline-block">
+            {isAuthenticated ? (
+              <Link to={"/dashboard"}>Dashboard</Link>
+            ) : (
+              <Link
+                to="/signup"
+                className="flex justify-center items-center gap-2 group"
+              >
+                <span>Get Started</span>
+                <span className="transition-transform duration-300 group-hover:translate-x-2">
+                  <MoveRight />
+                </span>
+              </Link>
+            )}
+            <Link to={isAuthenticated ? "/dashboard/track" : "signup"} className="mt-2 inline-block">
               Track Your Package
             </Link>
           </div>

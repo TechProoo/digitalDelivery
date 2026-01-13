@@ -61,7 +61,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       isActive = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const login: AuthContextValue["login"] = async ({ email, password }) => {

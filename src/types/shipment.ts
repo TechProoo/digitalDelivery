@@ -67,6 +67,7 @@ export interface Shipment {
   trackingId: string;
   phone: string;
   receiverPhone: string | null;
+  amount: number;
   customerId: string;
   serviceType: ServiceType;
   status: ShipmentStatus;
@@ -140,6 +141,8 @@ export interface CreateShipmentRequest {
   dimensions: string;
   phone: string;
   receiverPhone?: string;
+  /** Amount in Nigerian Naira (whole number). Optional; can be set later by admin. */
+  amount?: number;
 }
 
 // Update shipment status request

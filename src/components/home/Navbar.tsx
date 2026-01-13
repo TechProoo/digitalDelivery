@@ -32,7 +32,7 @@ const Navbar = () => {
           <div className="w-full flex justify-between items-center">
             {/* Logo */}
             <div className="nav_logo">
-              <img className="w-100" src={Logo} alt="Digital Delivery Logo" />
+              <img className="w-100" src={Logo} alt="Digital Logistics Logo" />
             </div>
 
             {/* Desktop Navigation */}

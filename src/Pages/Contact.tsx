@@ -35,7 +35,7 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto">
         <div className="services_container">
           <Navbar />
           <div className="hero_container md:p-10 p-3">
@@ -48,7 +48,7 @@ export default function Contact() {
 
               <div className="hero_text">
                 <h1 className="md:text-5xl text-4xl mt-5 header md:w-9/12">
-                  Get in Touch with Digital Delivery{" "}
+                  Get in Touch with Digital Logistics{" "}
                 </h1>
                 <p className="mt-5 md:w-7/12">
                   Have questions about our services, need a shipping quote, or
@@ -169,7 +169,7 @@ export default function Contact() {
                 <div>
                   <div className="text-sm text-(--text-tertiary)">Email</div>
                   <div className="font-medium text-(--text-primary)">
-                    hello@digitaldelivery.com
+                    hello@DigitalLogistics.com
                   </div>
                 </div>
               </div>
@@ -212,7 +212,7 @@ export default function Contact() {
           </aside>
         </main>
 
-        <div className="mt-12">
+        <div className="mt-12 md:m-10 m-5">
           <Cta />
         </div>
 

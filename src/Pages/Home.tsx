@@ -179,7 +179,7 @@ const Home = () => {
               <div>
                 <div className="text-sm text-(--text-tertiary)">Email</div>
                 <div className="font-medium text-(--text-primary)">
-                  hello@digitaldelivery.com
+                  hello@DigitalLogistics.com
                 </div>
               </div>
             </div>
