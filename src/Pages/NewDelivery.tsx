@@ -19,6 +19,7 @@ import BottomNav from "../components/dashboard/bottom-nav";
 import { ServiceType, SERVICE_TYPE_LABELS } from "../types/shipment";
 import { shipmentsApi } from "../api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 
 interface FormData {
   originCity: string;
@@ -37,6 +38,7 @@ interface FormData {
 
 export default function NewDelivery() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -196,6 +198,11 @@ Please provide pricing for this shipment. Thank you!`;
         `/dashboard/track?tn=${encodeURIComponent(shipment.trackingId)}`
       );
     } catch (err: any) {
+      if (err?.status === 401) {
+        logout();
+        navigate("/login", { replace: true });
+        return;
+      }
       if (waWindow && !waWindow.closed) {
         waWindow.close();
       }

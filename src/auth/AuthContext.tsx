@@ -7,6 +7,11 @@ import React, {
 } from "react";
 import { authApi } from "../api";
 import type { ApiError } from "../api";
+import { clearAccessToken, setAccessToken } from "../lib/authToken";
+
+function isUnauthorized(err: unknown): boolean {
+  return Boolean(err) && typeof err === "object" && (err as any).status === 401;
+}
 
 export type AuthUser = authApi.Customer;
 
@@ -42,6 +47,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const result = await authApi.me();
       setUser(result.customer);
     } catch (err: any) {
+      // /auth/me returns 401 when not logged in; treat that as normal.
+      if (isUnauthorized(err)) {
+        clearAccessToken();
+        setUser(null);
+        return;
+      }
+
       setUser(null);
       setError(err);
     }
@@ -68,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const result = await authApi.login({ email, password });
+      if (result.accessToken) setAccessToken(result.accessToken);
       setUser(result.customer);
     } catch (err: any) {
       setError(err);
@@ -84,6 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const result = await authApi.register({ name, email, password });
+      if (result.accessToken) setAccessToken(result.accessToken);
       setUser(result.customer);
 
       // Used by Dashboard to show a first-time empty-state experience.
@@ -98,6 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     authApi.logout().catch(() => {
       // ignore network errors; we still clear local state
     });
+    clearAccessToken();
     setUser(null);
     setError(null);
   };

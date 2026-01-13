@@ -12,6 +12,7 @@ export type Customer = {
 
 export type AuthResponse = {
   customer: Customer;
+  accessToken?: string;
 };
 
 export type RegisterInput = {
