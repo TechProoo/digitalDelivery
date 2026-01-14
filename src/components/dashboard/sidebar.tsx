@@ -97,7 +97,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
       <div
         onClick={() => setIsOpen(false)}
         className={cn(
-          "fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity lg:hidden",
+          "fixed inset-0 z-70 bg-black/50 backdrop-blur-sm transition-opacity lg:hidden",
           isOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -107,7 +107,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
       {/* sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-50 flex flex-col transition-all duration-300 overflow-x-hidden no-scrollbar",
+          "fixed left-0 top-0 z-80 flex flex-col transition-all duration-300 overflow-x-hidden no-scrollbar",
           // MOBILE: full height, full width sidebar
           "h-screen w-64",
           // DESKTOP: sticky, adjust width based on collapsed state
