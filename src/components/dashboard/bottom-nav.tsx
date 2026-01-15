@@ -14,7 +14,7 @@ export type BottomNavProps = {
   defaultIndex?: number;
 };
 
-const navItems = [
+const navItems = [ 
   { label: "Dashboard", icon: Home, href: "/dashboard" },
   { label: "New Order", icon: Package, href: "/dashboard/new-delivery" },
   { label: "Track", icon: MapPin, href: "/dashboard/track" },

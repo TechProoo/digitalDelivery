@@ -76,6 +76,21 @@ export default function Dashboard() {
     });
   };
 
+  const formatNairaCompact = (amount: number) => {
+    const safe = Number.isFinite(amount) ? amount : 0;
+    try {
+      return new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
+        notation: "compact",
+        compactDisplay: "short",
+        maximumFractionDigits: safe >= 1_000_000 ? 1 : 0,
+      }).format(safe);
+    } catch {
+      return `₦${Math.round(safe).toLocaleString("en-NG")}`;
+    }
+  };
+
   const getProgressForStatus = (status: ShipmentStatus) => {
     switch (status) {
       case ShipmentStatus.DELIVERED:
@@ -131,8 +146,16 @@ export default function Dashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
-  const { shipments, recentOrders, hasData, activeCount, deliveredCount } =
-    useMemo(() => {
+  const {
+    shipments,
+    recentOrders,
+    hasData,
+    activeCount,
+    deliveredCount,
+    totalSpentLabel,
+    totalSpentChangeLabel,
+    totalSpentTrend,
+  } = useMemo(() => {
       const all = shipmentsData ?? [];
 
       const active = all.filter(
@@ -171,12 +194,52 @@ export default function Dashboard() {
         date: new Date(s.createdAt).toISOString().slice(0, 10),
       }));
 
+      const amounts = all
+        .map((s) => (typeof s.amount === "number" ? s.amount : 0))
+        .filter((a) => Number.isFinite(a) && a > 0);
+
+      const totalSpent = amounts.reduce((sum, a) => sum + a, 0);
+
+      const DAY_MS = 24 * 60 * 60 * 1000;
+      const now = Date.now();
+      const last30Start = now - 30 * DAY_MS;
+      const prev30Start = now - 60 * DAY_MS;
+
+      const sumInRange = (startMs: number, endMs: number) =>
+        all.reduce((sum, s) => {
+          const ts = new Date(s.createdAt).getTime();
+          const a = typeof s.amount === "number" ? s.amount : 0;
+          if (!Number.isFinite(ts) || ts < startMs || ts >= endMs) return sum;
+          if (!Number.isFinite(a) || a <= 0) return sum;
+          return sum + a;
+        }, 0);
+
+      const spentLast30 = sumInRange(last30Start, now);
+      const spentPrev30 = sumInRange(prev30Start, last30Start);
+
+      const changePct =
+        spentPrev30 > 0
+          ? ((spentLast30 - spentPrev30) / spentPrev30) * 100
+          : spentLast30 > 0
+            ? 100
+            : 0;
+
+      const roundedPct = Math.round(changePct);
+      const trend: "up" | "down" = roundedPct >= 0 ? "up" : "down";
+      const changeLabel =
+        totalSpent > 0
+          ? `${roundedPct >= 0 ? "+" : ""}${roundedPct}%`
+          : "—";
+
       return {
         shipments: shipmentsUi,
         recentOrders: ordersUi,
         hasData: all.length > 0,
         activeCount: active.length,
         deliveredCount: delivered.length,
+        totalSpentLabel: formatNairaCompact(totalSpent),
+        totalSpentChangeLabel: changeLabel,
+        totalSpentTrend: trend,
       };
     }, [shipmentsData]);
 
@@ -599,9 +662,9 @@ export default function Dashboard() {
             },
             {
               label: "Total Spent",
-              value: "₦2.4M",
-              change: "-15%",
-              trend: "down",
+              value: totalSpentLabel,
+              change: totalSpentChangeLabel,
+              trend: totalSpentTrend,
               icon: DollarSign,
               color: "#ef6a6a",
             },
