@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Home, Package, MapPin, Clock } from "lucide-react";
+import { Home, Package, MapPin, Clock, LogOut } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../auth/AuthContext";
 
 // Simple className merger
 function cn(...classes: (string | false | undefined)[]) {
@@ -18,6 +19,7 @@ const navItems = [
   { label: "New Order", icon: Package, href: "/dashboard/new-delivery" },
   { label: "Track", icon: MapPin, href: "/dashboard/track" },
   { label: "Orders", icon: Clock, href: "/dashboard/orders" },
+  { label: "Logout", icon: LogOut, href: "/login" },
 ];
 
 export const BottomNav: React.FC<BottomNavProps> = ({
@@ -30,6 +32,17 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   );
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout: authLogout } = useAuth();
+
+  const handleLogout = () => {
+    authLogout();
+    try {
+      sessionStorage.removeItem("dd_is_new_user");
+    } catch {
+      // ignore
+    }
+    navigate("/login", { replace: true });
+  };
 
   // Track screen size
   React.useEffect(() => {
@@ -87,10 +100,15 @@ export const BottomNav: React.FC<BottomNavProps> = ({
             type="button"
             aria-label={item.label}
             onClick={() => {
+              if (item.label === "Logout") {
+                handleLogout();
+                return;
+              }
+
               setActiveIndex(idx);
               try {
                 navigate(item.href);
-              } catch (e) {
+              } catch {
                 /* noop */
               }
             }}
