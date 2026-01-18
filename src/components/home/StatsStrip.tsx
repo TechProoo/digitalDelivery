@@ -19,7 +19,8 @@ export default function StatsStrip() {
         <div
           className="relative overflow-hidden rounded-3xl"
           style={{
-            background: "linear-gradient(180deg, hsl(var(--background) / 0.30), hsl(var(--background) / 0.65))",
+            background:
+              "linear-gradient(180deg, hsl(var(--background) / 0.30), hsl(var(--background) / 0.65))",
             border: "1px solid hsl(var(--primary) / 0.18)",
             boxShadow: "0 30px 80px rgba(0,0,0,0.55)",
             backdropFilter: "blur(18px)",

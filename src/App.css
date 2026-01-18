@@ -245,6 +245,62 @@ body {
   }
 }
 
+@keyframes globeBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.025);
+    filter: brightness(1.06);
+  }
+}
+
+@keyframes globeDotFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+.globe-breathe {
+  animation: globeBreathe 3.6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.globe-dot {
+  animation: globeDotFloat 2.6s ease-in-out infinite;
+}
+
+.globe-ring-1,
+.globe-ring-2,
+.globe-ring-3 {
+  border-radius: 9999px;
+  border: 1px solid hsl(var(--primary) / 0.18);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12) inset;
+  opacity: 0.9;
+}
+
+.globe-ring-1 {
+  transform: scale(1.02);
+}
+
+.globe-ring-2 {
+  transform: scale(1.1);
+  border-color: hsl(var(--primary) / 0.14);
+}
+
+.globe-ring-3 {
+  transform: scale(1.18);
+  border-color: hsl(var(--primary) / 0.1);
+}
+
 .badge_design:before {
   content: "";
   position: absolute;

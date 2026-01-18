@@ -1,11 +1,5 @@
 import type { ComponentType, ReactNode } from "react";
-import {
-  ArrowRight,
-  Boxes,
-  Clock,
-  DollarSign,
-  TrendingUp,
-} from "lucide-react";
+import { ArrowRight, Boxes, Clock, DollarSign, TrendingUp } from "lucide-react";
 
 import RetailImg from "../../assets/services_img.jpg";
 import ManufacturingImg from "../../assets/road.jpg";
@@ -33,7 +27,10 @@ function MetricItem({ icon: Icon, value, label }: Metric): ReactNode {
         <Icon className="mt-0.5 h-5 w-5" />
       </span>
       <div>
-        <div className="text-xl font-semibold" style={{ color: "var(--text-primary)" }}>
+        <div
+          className="text-xl font-semibold"
+          style={{ color: "var(--text-primary)" }}
+        >
           {value}
         </div>
         <div className="text-sm" style={{ color: "var(--text-tertiary)" }}>
@@ -113,7 +110,10 @@ export default function SuccessStoriesSection() {
             className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
           >
-            See How <span style={{ color: "var(--accent-teal)" }}>Industry Leaders</span>
+            See How{" "}
+            <span style={{ color: "var(--accent-teal)" }}>
+              Industry Leaders
+            </span>
             <br />
             Succeed
           </h2>
@@ -122,14 +122,18 @@ export default function SuccessStoriesSection() {
             className="mt-5 text-base sm:text-lg leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
           >
-            Discover how enterprises across industries are transforming their logistics operations with
-            Digital Logistics.
+            Discover how enterprises across industries are transforming their
+            logistics operations with Digital Logistics.
           </p>
         </div>
 
         <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3">
           {stories.map((story) => (
-            <article key={story.title} className="overflow-hidden rounded-3xl" style={cardStyle}>
+            <article
+              key={story.title}
+              className="overflow-hidden rounded-3xl"
+              style={cardStyle}
+            >
               <div className="relative h-44 sm:h-52">
                 <img
                   src={story.image}
@@ -161,15 +165,24 @@ export default function SuccessStoriesSection() {
               </div>
 
               <div className="p-7 sm:p-8">
-                <div className="text-sm" style={{ color: "var(--text-tertiary)" }}>
+                <div
+                  className="text-sm"
+                  style={{ color: "var(--text-tertiary)" }}
+                >
                   {story.company}
                 </div>
 
-                <h3 className="mt-3 text-2xl font-semibold" style={{ color: "var(--text-primary)" }}>
+                <h3
+                  className="mt-3 text-2xl font-semibold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   {story.title}
                 </h3>
 
-                <p className="mt-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+                <p
+                  className="mt-4 leading-relaxed"
+                  style={{ color: "var(--text-tertiary)" }}
+                >
                   {story.description}
                 </p>
 
