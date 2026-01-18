@@ -1,166 +1,144 @@
-import { ArrowUpRight, MoveRight } from "lucide-react";
-import Design from "../../assets/three.png";
-import Card from "../Card";
-import DoorImg from "../../assets/door.jpg";
-import RoadImg from "../../assets/road.jpg";
-import AeroImg from "../../assets/ecom.jpg";
-import BoatImg from "../../assets/aero.jpg";
-import Box from "../../assets/box.png";
-import Two from "../../assets/247.png";
-import Live from "../../assets/live.png";
-import Del from "../../assets/delivery.png";
-import Card_two from "../Card_two";
+import React from "react";
+import { ArrowRight, Plane, Ship, Truck } from "lucide-react";
 
 const ServicesComponent = () => {
+  const cardStyle: React.CSSProperties = {
+    background: "hsl(var(--card) / 0.50)",
+    border: "1px solid var(--border-soft)",
+    boxShadow: "var(--shadow-card)",
+    backdropFilter: "blur(12px)",
+  };
+
+  const services = [
+    {
+      title: "Air Freight",
+      description:
+        "Express delivery across continents. Perfect for time-sensitive and high-value cargo requiring rapid transit.",
+      bullets: [
+        "Same-day dispatch",
+        "Temperature-controlled options",
+        "Customs clearance included",
+      ],
+      icon: Plane,
+      tileBg: "linear-gradient(145deg, #0ea5e9, #2563eb)",
+      featured: false,
+    },
+    {
+      title: "Ground Freight",
+      description:
+        "Reliable land transportation with extensive network coverage. Cost-effective for domestic and regional deliveries.",
+      bullets: ["Door-to-door service", "Real-time GPS tracking", "Flexible scheduling"],
+      icon: Truck,
+      tileBg: "linear-gradient(145deg, #f59e0b, #f97316)",
+      featured: true,
+    },
+    {
+      title: "Ocean Freight",
+      description:
+        "Global sea transport for large volume shipments. Economical solution for international trade.",
+      bullets: ["FCL & LCL options", "Port-to-port service", "Container tracking"],
+      icon: Ship,
+      tileBg: "linear-gradient(145deg, #10b981, #06b6d4)",
+      featured: false,
+    },
+  ] as const;
+
   return (
-    <div className=" md:p-10">
-      <div className="flex justify-center mt-10">
-        <div className="badge_design text-center">
-          Our Services
-          <span></span>
-        </div>
-      </div>
-      <div className="services_title mt-3">
-        <p className="text-center">
-          Reliable shipping solutions tailored to your needs—by air, by road,
-          and door-to-door.
-        </p>
-      </div>
-      <div className="services_info mt-15">
-        <div className="grid grid-cols-12 md:gap-10">
-          <div className="col-span-12 md:col-span-7">
-            <div className="services_info_inner flex justify-between items-center pb-5 border-b border-[#7fa6b4]">
-              <div className="services_num">
-                <h1 className="text-6xl">01</h1>
-              </div>
-
-              <div className="services_mode text-center">
-                <h1 className="whitespace-nowrap header text-4xl">By Road</h1>
-                <span>Cost-effective nationwide road transport</span>
-              </div>
-
-              <div className="services_arrow">
-                <ArrowUpRight />
-              </div>
-            </div>
-            <div className="services_info_inner flex justify-between items-center mt-10 pb-5 border-b border-[#7fa6b4]">
-              <div className="services_num">
-                <h1 className="text-6xl">02</h1>
-              </div>
-
-              <div className="services_mode text-center">
-                <h1 className="whitespace-nowrap header text-4xl">By Air</h1>
-                <span>Fast air cargo for urgent deliveries</span>
-              </div>
-
-              <div className="services_arrow">
-                <ArrowUpRight />
-              </div>
-            </div>
-            <div className="services_info_inner flex justify-between items-center mt-10 pb-5 border-b border-[#7fa6b4]">
-              <div className="services_num">
-                <h1 className="md:text-6xl text-5xl">03</h1>
-              </div>
-
-              <div className="services_mode text-center">
-                <h1 className="whitespace-nowrap header md:text-4xl text-3xl">
-                  By Sea
-                </h1>
-                <span>Cost-effective shipping for large consignments</span>
-              </div>
-
-              <div className="services_arrow">
-                <ArrowUpRight />
-              </div>
+    <section className="px-4 sm:px-6 lg:px-10">
+      <div className="mx-auto max-w-7xl py-14 sm:py-18">
+        <div className="mx-auto max-w-4xl text-center">
+          <div className="flex justify-center">
+            <div
+              className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
+              style={{
+                background: "hsl(var(--card) / 0.55)",
+                border: "1px solid var(--border-soft)",
+                color: "hsl(var(--accent))",
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              Our Services
             </div>
           </div>
 
-          <div className="col-span-12 md:col-span-5 md:mt-0 mt-10 relative">
-            <div className="services_right_head header text-4xl">
-              <h1>Smart Logistics Solutions Built for Speed and Reliability</h1>
-            </div>
-            <div className="services_right_sub mt-5">
-              <p>
-                Digital Logistics simplifies cargo dispatch and delivery—from
-                packaging and pickup to transportation by road, air, and
-                sea—ensuring your goods arrive safely and on time.
+          <h2
+            className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Move Cargo <span style={{ color: "var(--accent-teal)" }}>Your Way</span>
+          </h2>
+
+          <p
+            className="mt-5 text-base sm:text-lg leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Choose from our comprehensive range of freight solutions. Whatever your needs, we have the
+            perfect shipping option.
+          </p>
+        </div>
+
+        <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3">
+          {services.map((s) => (
+            <article
+              key={s.title}
+              className="rounded-3xl p-7 sm:p-8 transition-colors"
+              style={{
+                ...cardStyle,
+                border: s.featured
+                  ? "1px solid hsl(var(--primary) / 0.55)"
+                  : "1px solid var(--border-soft)",
+              }}
+            >
+              <div
+                className="grid place-items-center rounded-2xl"
+                style={{
+                  width: 64,
+                  height: 64,
+                  background: s.tileBg,
+                  boxShadow: "0 16px 34px rgba(0,0,0,0.45)",
+                }}
+              >
+                <s.icon className="h-8 w-8 text-white" />
+              </div>
+
+              <h3 className="mt-7 text-2xl font-semibold" style={{ color: "var(--text-primary)" }}>
+                {s.title}
+              </h3>
+              <p className="mt-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+                {s.description}
               </p>
-              <div className="hero_button mt-5 flex gap-5">
-                <button className="flex justify-center items-center gap-2 group">
-                  <span>More Info</span>{" "}
-                  <span className="transition-transform duration-300 group-hover:translate-x-2">
-                    <MoveRight />
-                  </span>
+
+              <ul className="mt-7 space-y-3">
+                {s.bullets.map((b) => (
+                  <li key={b} className="flex items-center gap-3" style={{ color: "var(--text-tertiary)" }}>
+                    <span
+                      className="inline-block rounded-full"
+                      style={{ width: 6, height: 6, background: "hsl(var(--primary))" }}
+                    />
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-10">
+                <button
+                  className="group flex w-full items-center justify-center gap-3 rounded-xl px-5 py-3 font-semibold"
+                  style={{
+                    background: "hsl(var(--background) / 0.45)",
+                    border: "1px solid var(--border-soft)",
+                    color: "var(--text-primary)",
+                  }}
+                  type="button"
+                >
+                  <span>Get Quote</span>
+                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </button>
               </div>
-              <img
-                src={Design}
-                className="mt-10 absolute bottom-0 right-0"
-                alt=""
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div className="services_card mt-20">
-          <div className="grid grid-cols-12 gap-6 justify-center m-auto">
-            {[
-              {
-                image: DoorImg,
-                title: "Door Pickup",
-                description: "Convenient pickup from your doorstep",
-              },
-              {
-                image: RoadImg,
-                title: "Destination Delivery",
-                description: "Terminal pickup with safe final delivery",
-              },
-              {
-                image: AeroImg,
-                title: "E-commerce Fulfilment",
-                description: "Complete order packaging and dispatch",
-              },
-              {
-                image: BoatImg,
-                title: "Worldwide Delivery",
-                description:
-                  "Global shipping with seamless pickup and delivery to any address.",
-              },
-            ].map((card, idx) => (
-              <div
-                className="col-span-12 justify-center m-auto sm:col-span-6 md:col-span-4 lg:col-span-3 card_container gap-3"
-                key={idx}
-              >
-                <Card
-                  image={card.image}
-                  title={card.title}
-                  description={card.description}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div className="services_end mt-20 pl-5">
-        <h1 className="text-4xl header">
-          Deliver Your Logistics <br />
-          Safely and Quickly
-        </h1>
-        <div className="services_card_two mt-10 grid grid-cols-12 gap-6">
-          {[
-            { title: "Always Protected Your Packages", image: Box },
-            { title: "Our customer Service 24/7", image: Two },
-            { title: "Live Tracking Your Packages", image: Live },
-            { title: "Safely Deliverey To The Pickup", image: Del },
-          ].map((card, idx) => (
-            <div className="col-span-12 md:col-span-6 lg:col-span" key={idx}>
-              <Card_two title={card.title} image={card.image} />
-            </div>
+            </article>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
