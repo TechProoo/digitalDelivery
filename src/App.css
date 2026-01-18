@@ -119,6 +119,8 @@ body {
   font-family: "Alegreya", serif;
   background-blend-mode: darken;
   background-color: var(--text-primary);
+  background-blend-mode: overlay;
+  background-color: #123f52;
 }
 
 .nav_logo {

@@ -1,15 +1,19 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Logo from "../../assets/logo.png";
-import { MoveRight, Menu, X } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { Globe, Menu, Moon, Sun, X } from "lucide-react";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+  const location = useLocation();
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Services", path: "/services" },
-    { name: "How it works", path: "/how-it-works" },
+    { name: "Solutions", path: "/services" },
+    { name: "About", path: "/how-it-works" },
+    { name: "Resources", path: "/services" },
+    { name: "Haul With Us", path: "/contact" },
+    { name: "Support", path: "/contact" },
     { name: "Contact", path: "/contact" },
   ];
 
@@ -25,35 +29,72 @@ const Navbar = () => {
     };
   }, [isMobileMenuOpen]);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
   return (
     <>
-      <div className="navbar_container px-4 sm:px-6 lg:px-10">
-        <div className="navbar">
-          <div className="w-full flex justify-between items-center">
-            {/* Logo */}
-            <div className="nav_logo">
-              <img className="w-100" src={Logo} alt="Digital Logistics Logo" />
-            </div>
+      <header
+        className="sticky top-0 z-50 w-full"
+        style={{
+          background:
+            "linear-gradient(180deg, hsl(var(--background) / 0.90) 0%, hsl(var(--background) / 0.70) 100%)",
+          borderBottom: "1px solid var(--border-soft)",
+          backdropFilter: "blur(14px)",
+        }}
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+          <nav className="h-16 flex items-center gap-4">
+            {/* Brand */}
+            <NavLink
+              to="/"
+              className="flex items-center gap-3 shrink-0"
+              aria-label="Go to home"
+            >
+              <span
+                className="grid place-items-center rounded-xl"
+                style={{
+                  width: 40,
+                  height: 40,
+                  background: "var(--gradient-primary)",
+                  boxShadow: "var(--glow-primary)",
+                }}
+              >
+                <img
+                  src={Logo}
+                  alt="Digital Logistics"
+                  className="h-7 w-7"
+                  style={{ filter: "drop-shadow(0 1px 6px rgba(0,0,0,0.35))" }}
+                />
+              </span>
+              <div className="leading-tight">
+                <div
+                  className="font-semibold tracking-tight"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Digital
+                  <span style={{ color: "var(--accent-teal)" }}>Logistics</span>
+                </div>
+              </div>
+            </NavLink>
 
-            {/* Desktop Navigation */}
-            <div className="nav_list hidden lg:block">
-              <ul>
+            {/* Center Links (desktop) */}
+            <div className="hidden lg:flex flex-1 justify-center">
+              <ul className="flex items-center gap-8">
                 {navLinks.map((link) => (
                   <li key={link.name}>
                     <NavLink
                       to={link.path}
                       className={({ isActive }) =>
-                        `nav_links${isActive ? " active" : ""}`
+                        [
+                          "text-sm font-medium transition-colors",
+                          isActive
+                            ? "text-(--text-primary)"
+                            : "text-(--text-secondary) hover:text-(--text-primary)",
+                        ].join(" ")
                       }
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                      }}
                     >
-                      <span className="nav_icon_wrapper">
-                        <MoveRight size={25} />
-                      </span>
                       {link.name}
                     </NavLink>
                   </li>
@@ -61,86 +102,227 @@ const Navbar = () => {
               </ul>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-accent transition-colors"
-              aria-label="Toggle menu"
-              style={{ color: "var(--text-primary)" }}
-            >
-              <Menu className="h-6 w-6" />
-            </button>
-          </div>
+            {/* Right actions */}
+            <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+              <div
+                className="hidden md:flex items-center gap-2 rounded-full px-3 py-1.5"
+                style={{
+                  background: "hsl(var(--card) / 0.7)",
+                  border: "1px solid var(--border-soft)",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                <Globe className="h-4 w-4" />
+                <span className="text-xs font-medium">us</span>
+                <span
+                  className="text-xs font-semibold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  EN
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsDark((v) => !v)}
+                className="hidden sm:grid place-items-center rounded-full h-10 w-10 transition"
+                style={{
+                  border: "1px solid var(--border-soft)",
+                  background: "hsl(var(--card) / 0.65)",
+                  color: "var(--text-primary)",
+                }}
+                aria-label="Toggle theme"
+                title="Toggle theme"
+              >
+                {isDark ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )}
+              </button>
+
+              <NavLink
+                to="/login"
+                className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium transition-colors"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Sign In
+              </NavLink>
+
+              <NavLink
+                to="/contact"
+                className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
+                style={{
+                  background: "hsl(var(--primary))",
+                  color: "var(--primary-foreground)",
+                  boxShadow: "var(--glow-primary)",
+                }}
+              >
+                Get a Quote
+              </NavLink>
+
+              <button
+                onClick={() => setIsMobileMenuOpen((v) => !v)}
+                className="lg:hidden grid place-items-center rounded-full h-10 w-10"
+                aria-label="Toggle menu"
+                style={{
+                  border: "1px solid var(--border-soft)",
+                  background: "hsl(var(--card) / 0.65)",
+                  color: "var(--text-primary)",
+                }}
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+            </div>
+          </nav>
         </div>
-      </div>
+      </header>
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <>
-          {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 z-40 lg:hidden"
             onClick={() => setIsMobileMenuOpen(false)}
+            style={{ background: "rgba(0,0,0,0.55)" }}
           />
 
-          {/* Mobile Menu Panel */}
           <div
-            className="fixed top-0 right-0 h-full w-80 max-w-[85vw] z-50 lg:hidden transition-transform duration-300"
+            className="fixed top-0 right-0 z-50 lg:hidden h-full w-[90vw] max-w-sm"
             style={{
-              backgroundColor: "var(--bg-secondary)",
-              borderLeft: "1px solid var(--border-medium)",
-              boxShadow: "var(--shadow-soft)",
+              background: "hsl(var(--background) / 0.98)",
+              borderLeft: "1px solid var(--border-soft)",
+              boxShadow: "var(--shadow-strong)",
             }}
           >
-            {/* Menu Header */}
             <div
-              className="flex items-center justify-between p-4 border-b"
-              style={{ borderColor: "var(--border-medium)" }}
+              className="h-16 px-4 flex items-center justify-between"
+              style={{ borderBottom: "1px solid var(--border-soft)" }}
             >
-              <h2
-                className="text-lg font-semibold"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Menu
-              </h2>
+              <div className="flex items-center gap-2">
+                <span
+                  className="grid place-items-center rounded-lg"
+                  style={{
+                    width: 34,
+                    height: 34,
+                    background: "var(--gradient-primary)",
+                    boxShadow: "var(--glow-primary)",
+                  }}
+                >
+                  <img src={Logo} alt="Digital Logistics" className="h-6 w-6" />
+                </span>
+                <div
+                  className="font-semibold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Digital
+                  <span style={{ color: "var(--accent-teal)" }}>Logistics</span>
+                </div>
+              </div>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="p-2 rounded-lg hover:bg-accent transition-colors"
+                className="grid place-items-center rounded-full h-10 w-10"
                 aria-label="Close menu"
-                style={{ color: "var(--text-primary)" }}
+                style={{
+                  border: "1px solid var(--border-soft)",
+                  background: "hsl(var(--card) / 0.65)",
+                  color: "var(--text-primary)",
+                }}
               >
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
-            {/* Menu Items */}
-            <nav className="p-4">
-              <ul className="space-y-2">
-                {navLinks.map((link) => (
-                  <li key={link.name}>
-                    <NavLink
-                      to={link.path}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={({ isActive }) =>
-                        `nav_links block py-3 px-4 rounded-lg text-(--text-primary) transition-all${
-                          isActive ? " active" : ""
-                        }`
-                      }
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.75rem",
-                      }}
-                    >
-                      <span className="nav_icon_wrapper">
-                        <MoveRight size={20} />
-                      </span>
-                      {link.name}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            <div className="p-4">
+              <div
+                className="flex items-center justify-between rounded-xl px-4 py-3"
+                style={{
+                  background: "hsl(var(--card) / 0.6)",
+                  border: "1px solid var(--border-soft)",
+                }}
+              >
+                <div
+                  className="flex items-center gap-2"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  <Globe className="h-4 w-4" />
+                  <span className="text-sm font-medium">us</span>
+                  <span
+                    className="text-sm font-semibold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    EN
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsDark((v) => !v)}
+                  className="grid place-items-center rounded-full h-10 w-10"
+                  style={{
+                    border: "1px solid var(--border-soft)",
+                    background: "hsl(var(--background) / 0.6)",
+                    color: "var(--text-primary)",
+                  }}
+                  aria-label="Toggle theme"
+                >
+                  {isDark ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
+
+              <nav className="mt-4">
+                <ul className="space-y-1">
+                  {navLinks.map((link) => (
+                    <li key={link.name}>
+                      <NavLink
+                        to={link.path}
+                        className={({ isActive }) =>
+                          [
+                            "block rounded-xl px-4 py-3 text-sm font-medium transition-colors",
+                            isActive
+                              ? "text-(--text-primary)"
+                              : "text-(--text-secondary) hover:text-(--text-primary)",
+                          ].join(" ")
+                        }
+                        style={{
+                          background: "transparent",
+                        }}
+                      >
+                        {link.name}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
+              <div className="mt-6 grid gap-2">
+                <NavLink
+                  to="/login"
+                  className="rounded-full px-4 py-3 text-center text-sm font-semibold"
+                  style={{
+                    border: "1px solid var(--border-soft)",
+                    background: "hsl(var(--card) / 0.6)",
+                    color: "var(--text-primary)",
+                  }}
+                >
+                  Sign In
+                </NavLink>
+                <NavLink
+                  to="/contact"
+                  className="rounded-full px-4 py-3 text-center text-sm font-semibold"
+                  style={{
+                    background: "hsl(var(--primary))",
+                    color: "var(--primary-foreground)",
+                    boxShadow: "var(--glow-primary)",
+                  }}
+                >
+                  Get a Quote
+                </NavLink>
+              </div>
+            </div>
           </div>
         </>
       )}
