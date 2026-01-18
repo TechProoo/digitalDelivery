@@ -14,28 +14,32 @@ export default function ProcessSection() {
     {
       number: "01",
       title: "Request a Quote",
-      description: "Tell us what you’re shipping and where it’s going — get pricing instantly.",
+      description:
+        "Tell us what you’re shipping and where it’s going — get pricing instantly.",
       icon: ClipboardList,
       tileBg: "linear-gradient(145deg, #0ea5e9, #2563eb)",
     },
     {
       number: "02",
       title: "Schedule Pickup",
-      description: "Choose a pickup window and we’ll dispatch the best carrier for the job.",
+      description:
+        "Choose a pickup window and we’ll dispatch the best carrier for the job.",
       icon: Truck,
       tileBg: "linear-gradient(145deg, #f59e0b, #f97316)",
     },
     {
       number: "03",
       title: "Track in Real-Time",
-      description: "Monitor your freight with live status updates and proactive notifications.",
+      description:
+        "Monitor your freight with live status updates and proactive notifications.",
       icon: MapPin,
       tileBg: "linear-gradient(145deg, #10b981, #06b6d4)",
     },
     {
       number: "04",
       title: "Delivery Confirmed",
-      description: "Proof of delivery and full shipment history available in one place.",
+      description:
+        "Proof of delivery and full shipment history available in one place.",
       icon: CheckCircle2,
       tileBg: "linear-gradient(145deg, #8b5cf6, #a855f7)",
     },
@@ -63,15 +67,19 @@ export default function ProcessSection() {
             className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
           >
-            How <span style={{ color: "var(--accent-teal)" }}>Digital Logistics</span> Works
+            How{" "}
+            <span style={{ color: "var(--accent-teal)" }}>
+              Digital Logistics
+            </span>{" "}
+            Works
           </h2>
 
           <p
             className="mt-5 text-base sm:text-lg leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
           >
-            Getting started is easy. Our streamlined process takes you from quote to delivery in just
-            four simple steps.
+            Getting started is easy. Our streamlined process takes you from
+            quote to delivery in just four simple steps.
           </p>
         </div>
 
@@ -79,7 +87,10 @@ export default function ProcessSection() {
           {/* Icon tiles */}
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
             {steps.map((s) => (
-              <div key={s.number} className="flex justify-center lg:justify-start">
+              <div
+                key={s.number}
+                className="flex justify-center lg:justify-start"
+              >
                 <div className="relative">
                   <div
                     className="grid place-items-center rounded-3xl"
@@ -115,7 +126,8 @@ export default function ProcessSection() {
           <div
             className="mt-12 hidden h-px w-full lg:block"
             style={{
-              background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.55), transparent)",
+              background:
+                "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.55), transparent)",
             }}
           />
 
@@ -123,10 +135,16 @@ export default function ProcessSection() {
           <div className="mt-8 grid grid-cols-1 gap-10 text-center sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:text-left">
             {steps.map((s) => (
               <div key={s.number}>
-                <div className="text-2xl font-semibold" style={{ color: "var(--text-primary)" }}>
+                <div
+                  className="text-2xl font-semibold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   {s.title}
                 </div>
-                <p className="mt-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+                <p
+                  className="mt-4 leading-relaxed"
+                  style={{ color: "var(--text-tertiary)" }}
+                >
                   {s.description}
                 </p>
               </div>

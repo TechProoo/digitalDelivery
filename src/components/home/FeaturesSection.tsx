@@ -1,5 +1,14 @@
 import React from "react";
-import { Bell, Globe, Headset, LineChart, MapPin, ShieldCheck, Truck, Zap } from "lucide-react";
+import {
+  Bell,
+  Globe,
+  Headset,
+  LineChart,
+  MapPin,
+  ShieldCheck,
+  Truck,
+  Zap,
+} from "lucide-react";
 
 type FeatureCard = {
   title: string;
@@ -97,7 +106,10 @@ export default function FeaturesSection() {
                 <f.icon className="h-7 w-7" />
               </div>
 
-              <div className="mt-6 text-xl font-semibold" style={{ color: "var(--text-primary)" }}>
+              <div
+                className="mt-6 text-xl font-semibold"
+                style={{ color: "var(--text-primary)" }}
+              >
                 {f.title}
               </div>
               <div className="mt-2" style={{ color: "var(--text-tertiary)" }}>
@@ -126,14 +138,18 @@ export default function FeaturesSection() {
             className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
           >
-            Everything You Need to <span style={{ color: "var(--accent-teal)" }}>Move</span>
+            Everything You Need to{" "}
+            <span style={{ color: "var(--accent-teal)" }}>Move</span>
             <br />
             <span style={{ color: "var(--accent-teal)" }}>Freight</span>
           </h2>
 
-          <p className="mt-5 text-base sm:text-lg leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            A complete logistics platform designed for modern businesses. Streamline operations, reduce costs,
-            and delight your customers.
+          <p
+            className="mt-5 text-base sm:text-lg leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            A complete logistics platform designed for modern businesses.
+            Streamline operations, reduce costs, and delight your customers.
           </p>
         </div>
 
@@ -152,7 +168,10 @@ export default function FeaturesSection() {
                 <f.icon className="h-7 w-7" />
               </div>
 
-              <div className="mt-6 text-xl font-semibold" style={{ color: "var(--text-primary)" }}>
+              <div
+                className="mt-6 text-xl font-semibold"
+                style={{ color: "var(--text-primary)" }}
+              >
                 {f.title}
               </div>
               <div className="mt-2" style={{ color: "var(--text-tertiary)" }}>
