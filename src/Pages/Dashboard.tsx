@@ -42,7 +42,7 @@ export default function Dashboard() {
   const { user } = useAuth();
 
   const [shipmentsData, setShipmentsData] = useState<ShipmentWithRelations[]>(
-    []
+    [],
   );
   const [isLoadingShipments, setIsLoadingShipments] = useState(false);
   const [shipmentsError, setShipmentsError] = useState<string | null>(null);
@@ -156,92 +156,88 @@ export default function Dashboard() {
     totalSpentChangeLabel,
     totalSpentTrend,
   } = useMemo(() => {
-      const all = shipmentsData ?? [];
+    const all = shipmentsData ?? [];
 
-      const active = all.filter(
-        (s) =>
-          s.status !== ShipmentStatus.DELIVERED &&
-          s.status !== ShipmentStatus.CANCELLED
-      );
-      const delivered = all.filter(
-        (s) => s.status === ShipmentStatus.DELIVERED
-      );
+    const active = all.filter(
+      (s) =>
+        s.status !== ShipmentStatus.DELIVERED &&
+        s.status !== ShipmentStatus.CANCELLED,
+    );
+    const delivered = all.filter((s) => s.status === ShipmentStatus.DELIVERED);
 
-      const shipmentsUi = active.slice(0, 5).map((s) => {
-        const rank = statusRank(s.status);
-        return {
-          code: s.trackingId,
-          location: s.destinationLocation,
-          est: formatDateTime(s.updatedAt ?? s.createdAt),
-          progress: getProgressForStatus(s.status),
-          steps: STATUS_STEPS.map((stepStatus, idx) => ({
-            status: stepStatus,
-            date:
-              idx === rank && s.statusHistory?.[0]?.timestamp
-                ? formatDateTime(s.statusHistory[0].timestamp)
-                : "",
-            done: idx <= rank && s.status !== ShipmentStatus.CANCELLED,
-          })),
-        };
-      });
-
-      const ordersUi = all.slice(0, 50).map((s) => ({
-        id: s.trackingId,
-        pickup: s.pickupLocation,
-        dest: s.destinationLocation,
-        serviceType: s.serviceType,
-        status: s.status,
-        date: new Date(s.createdAt).toISOString().slice(0, 10),
-      }));
-
-      const amounts = all
-        .map((s) => (typeof s.amount === "number" ? s.amount : 0))
-        .filter((a) => Number.isFinite(a) && a > 0);
-
-      const totalSpent = amounts.reduce((sum, a) => sum + a, 0);
-
-      const DAY_MS = 24 * 60 * 60 * 1000;
-      const now = Date.now();
-      const last30Start = now - 30 * DAY_MS;
-      const prev30Start = now - 60 * DAY_MS;
-
-      const sumInRange = (startMs: number, endMs: number) =>
-        all.reduce((sum, s) => {
-          const ts = new Date(s.createdAt).getTime();
-          const a = typeof s.amount === "number" ? s.amount : 0;
-          if (!Number.isFinite(ts) || ts < startMs || ts >= endMs) return sum;
-          if (!Number.isFinite(a) || a <= 0) return sum;
-          return sum + a;
-        }, 0);
-
-      const spentLast30 = sumInRange(last30Start, now);
-      const spentPrev30 = sumInRange(prev30Start, last30Start);
-
-      const changePct =
-        spentPrev30 > 0
-          ? ((spentLast30 - spentPrev30) / spentPrev30) * 100
-          : spentLast30 > 0
-            ? 100
-            : 0;
-
-      const roundedPct = Math.round(changePct);
-      const trend: "up" | "down" = roundedPct >= 0 ? "up" : "down";
-      const changeLabel =
-        totalSpent > 0
-          ? `${roundedPct >= 0 ? "+" : ""}${roundedPct}%`
-          : "—";
-
+    const shipmentsUi = active.slice(0, 5).map((s) => {
+      const rank = statusRank(s.status);
       return {
-        shipments: shipmentsUi,
-        recentOrders: ordersUi,
-        hasData: all.length > 0,
-        activeCount: active.length,
-        deliveredCount: delivered.length,
-        totalSpentLabel: formatNairaCompact(totalSpent),
-        totalSpentChangeLabel: changeLabel,
-        totalSpentTrend: trend,
+        code: s.trackingId,
+        location: s.destinationLocation,
+        est: formatDateTime(s.updatedAt ?? s.createdAt),
+        progress: getProgressForStatus(s.status),
+        steps: STATUS_STEPS.map((stepStatus, idx) => ({
+          status: stepStatus,
+          date:
+            idx === rank && s.statusHistory?.[0]?.timestamp
+              ? formatDateTime(s.statusHistory[0].timestamp)
+              : "",
+          done: idx <= rank && s.status !== ShipmentStatus.CANCELLED,
+        })),
       };
-    }, [shipmentsData]);
+    });
+
+    const ordersUi = all.slice(0, 50).map((s) => ({
+      id: s.trackingId,
+      pickup: s.pickupLocation,
+      dest: s.destinationLocation,
+      serviceType: s.serviceType,
+      status: s.status,
+      date: new Date(s.createdAt).toISOString().slice(0, 10),
+    }));
+
+    const amounts = all
+      .map((s) => (typeof s.amount === "number" ? s.amount : 0))
+      .filter((a) => Number.isFinite(a) && a > 0);
+
+    const totalSpent = amounts.reduce((sum, a) => sum + a, 0);
+
+    const DAY_MS = 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    const last30Start = now - 30 * DAY_MS;
+    const prev30Start = now - 60 * DAY_MS;
+
+    const sumInRange = (startMs: number, endMs: number) =>
+      all.reduce((sum, s) => {
+        const ts = new Date(s.createdAt).getTime();
+        const a = typeof s.amount === "number" ? s.amount : 0;
+        if (!Number.isFinite(ts) || ts < startMs || ts >= endMs) return sum;
+        if (!Number.isFinite(a) || a <= 0) return sum;
+        return sum + a;
+      }, 0);
+
+    const spentLast30 = sumInRange(last30Start, now);
+    const spentPrev30 = sumInRange(prev30Start, last30Start);
+
+    const changePct =
+      spentPrev30 > 0
+        ? ((spentLast30 - spentPrev30) / spentPrev30) * 100
+        : spentLast30 > 0
+          ? 100
+          : 0;
+
+    const roundedPct = Math.round(changePct);
+    const trend: "up" | "down" = roundedPct >= 0 ? "up" : "down";
+    const changeLabel =
+      totalSpent > 0 ? `${roundedPct >= 0 ? "+" : ""}${roundedPct}%` : "—";
+
+    return {
+      shipments: shipmentsUi,
+      recentOrders: ordersUi,
+      hasData: all.length > 0,
+      activeCount: active.length,
+      deliveredCount: delivered.length,
+      totalSpentLabel: formatNairaCompact(totalSpent),
+      totalSpentChangeLabel: changeLabel,
+      totalSpentTrend: trend,
+    };
+  }, [shipmentsData]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -362,8 +358,8 @@ export default function Dashboard() {
                     {shipmentsError
                       ? "We couldn't load your shipments"
                       : isNewUser
-                      ? "Account created successfully"
-                      : "No shipments yet"}
+                        ? "Account created successfully"
+                        : "No shipments yet"}
                   </span>
                 </div>
 
@@ -487,7 +483,7 @@ export default function Dashboard() {
 
   const paginatedOrders = recentOrders.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const totalPages = Math.ceil(recentOrders.length / itemsPerPage);

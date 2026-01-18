@@ -1,87 +1,102 @@
 :root {
-  --brand-primary: #082f3e;
-  --brand-primary-soft: #0d3f52;
-  --brand-primary-muted: #07cb0038;
-
-  --bg-primary: #061f29;
-  --bg-secondary: #082f3e;
-  --bg-tertiary: #0d3f52;
-  --bg-overlay: rgba(6, 31, 41, 0.92);
-
-  --text-primary: #e6f1f5;
-  --text-secondary: #b4d1db;
-  --text-tertiary: #7fa6b4;
-  --text-inverse: #061f29;
-
-  --accent-amber: #f4a261;
-  --accent-coral: #e76f51;
-  --accent-teal: #2ec4b6;
-  --accent-sky: #4ea8de;
-
-  --status-pending: #f4a261;
-  --status-in-transit: #4ea8de;
-  --status-delivered: #2ec4b6;
-  --status-failed: #e63946;
-  --status-neutral: #8da9b4;
-
-  --border-soft: rgba(255, 255, 255, 0.06);
-  --border-medium: rgba(255, 255, 255, 0.12);
-  --border-accent: rgba(244, 162, 97, 0.45);
-
-  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-strong: 0 16px 48px rgba(0, 0, 0, 0.55);
-  --glow-primary: 0 0 28px rgba(78, 168, 222, 0.25);
-  --glow-accent: 0 0 28px rgba(244, 162, 97, 0.3);
-
-  --gradient-primary: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
-  --brand-primary: #082f3e;
-  --brand-primary-soft: #0d3f52;
-  --brand-primary-muted: #123f52;
-
-  --bg-primary: #061f29;
-  --bg-secondary: #082f3e;
-  --bg-tertiary: #0d3f52;
-  --bg-overlay: rgba(6, 31, 41, 0.92);
-
-  --text-primary: #e6f1f5;
-  --text-secondary: #b4d1db;
-  --text-tertiary: #7fa6b4;
-  --text-inverse: #061f29;
-
-  --accent-amber: #f4a261;
-  --accent-coral: #e76f51;
-  --accent-teal: #2ec4b6;
-  --accent-sky: #4ea8de;
-
-  --status-pending: #f4a261;
-  --status-in-transit: #4ea8de;
-  --status-delivered: #2ec4b6;
-  --status-failed: #e63946;
-  --status-neutral: #8da9b4;
-
-  --border-soft: rgba(255, 255, 255, 0.06);
-  --border-medium: rgba(255, 255, 255, 0.12);
-  --border-accent: rgba(244, 162, 97, 0.45);
-
-  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-strong: 0 16px 48px rgba(0, 0, 0, 0.55);
-  --glow-primary: 0 0 28px rgba(78, 168, 222, 0.25);
-  --glow-accent: 0 0 28px rgba(244, 162, 97, 0.3);
-
-  --gradient-primary: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
-
-  --gradient-surface: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.05),
-    rgba(255, 255, 255, 0.01)
+  --background: 222 47% 5%;
+  --foreground: 210 40% 98%;
+  --card: 222 47% 7%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222 47% 8%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 187 92% 45%;
+  --primary-foreground: 222 47% 5%;
+  --secondary: 217 33% 15%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217 33% 12%;
+  --muted-foreground: 215 20% 55%;
+  --accent: 38 92% 50%;
+  --accent-foreground: 222 47% 5%;
+  --success: 158 64% 45%;
+  --success-foreground: 158 64% 95%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 38 92% 10%;
+  --info: 199 89% 48%;
+  --info-foreground: 199 89% 95%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217 33% 17%;
+  --input: 217 33% 17%;
+  --ring: 187 92% 45%;
+  --radius: 0.75rem;
+  --gradient-primary: linear-gradient(
+    135deg,
+    hsl(187, 92%, 45%),
+    hsl(199, 89%, 48%)
   );
+  --gradient-hero: linear-gradient(
+    180deg,
+    hsl(222, 47%, 8%) 0%,
+    hsl(222, 47%, 3%) 100%
+  );
+  --gradient-card: linear-gradient(
+    145deg,
+    hsl(222, 47%, 9%),
+    hsl(222, 47%, 6%)
+  );
+  --gradient-accent: linear-gradient(
+    135deg,
+    hsl(38, 92%, 50%),
+    hsl(28, 92%, 45%)
+  );
+  --gradient-success: linear-gradient(
+    135deg,
+    hsl(158, 64%, 45%),
+    hsl(168, 64%, 40%)
+  );
+  --glow-primary: 0 0 40px hsl(187, 92%, 45%, 0.3);
+  --glow-accent: 0 0 40px hsl(38, 92%, 50%, 0.3);
+  --shadow-elevated: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --sidebar-background: 222 47% 6%;
+  --sidebar-foreground: 210 40% 90%;
+  --sidebar-primary: 187 92% 45%;
+  --sidebar-primary-foreground: 222 47% 5%;
+  --sidebar-accent: 217 33% 12%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-border: 217 33% 15%;
+  --sidebar-ring: 187 92% 45%;
 
-  --gradient-brand: linear-gradient(135deg, #082f3e, #0d3f52);
+  /* Compatibility mapping for existing app styles */
+  --bg-primary: hsl(var(--background));
+  --bg-secondary: hsl(var(--card));
+  --bg-tertiary: hsl(var(--secondary));
+  --bg-overlay: hsl(var(--background) / 0.92);
 
-  --focus-ring: 0 0 0 2px rgba(244, 162, 97, 0.6);
-  --hover-overlay: rgba(255, 255, 255, 0.04);
-  --focus-ring: 0 0 0 2px rgba(244, 162, 97, 0.6);
-  --hover-overlay: rgba(255, 255, 255, 0.04);
+  --text-primary: hsl(var(--foreground));
+  --text-secondary: hsl(var(--foreground) / 0.78);
+  --text-tertiary: hsl(var(--muted-foreground));
+  --text-inverse: hsl(var(--primary-foreground));
+
+  --accent-teal: hsl(var(--primary));
+  --accent-sky: hsl(var(--info));
+  --accent-amber: hsl(var(--accent));
+  --accent-coral: hsl(var(--destructive));
+
+  --status-pending: hsl(var(--warning));
+  --status-in-transit: hsl(var(--info));
+  --status-delivered: hsl(var(--success));
+  --status-failed: hsl(var(--destructive));
+  --status-neutral: hsl(var(--muted-foreground));
+
+  --border-soft: hsl(var(--border) / 0.35);
+  --border-medium: hsl(var(--border) / 0.6);
+  --border-accent: hsl(var(--accent) / 0.45);
+
+  --shadow-soft: var(--shadow-card);
+  --shadow-strong: var(--shadow-elevated);
+
+  --gradient-surface: var(--gradient-card);
+  --gradient-brand: var(--gradient-hero);
+
+  --focus-ring: 0 0 0 2px hsl(var(--ring) / 0.55);
+  --hover-overlay: hsl(var(--foreground) / 0.04);
 }
 
 body {
@@ -133,7 +148,9 @@ body {
 .nav_icon_wrapper {
   display: flex;
   align-items: center;
-  transition: transform 0.3s, opacity 0.3s;
+  transition:
+    transform 0.3s,
+    opacity 0.3s;
   transform: translateX(-16px);
   opacity: 0;
   color: var(--text-primary);
