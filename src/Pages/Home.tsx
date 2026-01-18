@@ -5,6 +5,7 @@ import Footer from "../components/home/Footer";
 import Navbar from "../components/home/Navbar";
 import ServicesComponent from "../components/home/ServicesComponent";
 import HowItWorksComponents from "../components/home/HowItWorksComponents";
+import TrustedBy from "../components/home/TrustedBy";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { useState } from "react";
 
@@ -42,6 +43,7 @@ const Home = () => {
         <Navbar />
         <Hero />
       </div>
+      <TrustedBy />
       <ServicesComponent />
       <HowItWorksComponents />
       <TrackPackage />
