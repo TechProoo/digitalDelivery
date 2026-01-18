@@ -7,6 +7,7 @@ import ServicesComponent from "../components/home/ServicesComponent";
 import HowItWorksComponents from "../components/home/HowItWorksComponents";
 import TrustedBy from "../components/home/TrustedBy";
 import SolutionsSection from "../components/home/SolutionsSection";
+import FeaturesSection from "../components/home/FeaturesSection";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { useState } from "react";
 
@@ -48,6 +49,7 @@ const Home = () => {
         <TrustedBy />
       </div>
       <SolutionsSection />
+      <FeaturesSection />
       <ServicesComponent />
       <HowItWorksComponents />
       <TrackPackage />
