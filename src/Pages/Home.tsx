@@ -10,6 +10,7 @@ import SolutionsSection from "../components/home/SolutionsSection";
 import FeaturesSection from "../components/home/FeaturesSection";
 import ProcessSection from "../components/home/ProcessSection";
 import StatsStrip from "../components/home/StatsStrip";
+import SuccessStoriesSection from "../components/home/SuccessStoriesSection";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { useState } from "react";
 
@@ -55,6 +56,7 @@ const Home = () => {
       <ProcessSection />
       <ServicesComponent />
       <StatsStrip />
+      <SuccessStoriesSection />
       <HowItWorksComponents />
       <TrackPackage />
       <main className="mx-auto grid gap-8 lg:grid-cols-3 max-w-6xl">
