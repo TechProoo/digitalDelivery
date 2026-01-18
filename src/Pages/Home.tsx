@@ -6,6 +6,7 @@ import Navbar from "../components/home/Navbar";
 import ServicesComponent from "../components/home/ServicesComponent";
 import HowItWorksComponents from "../components/home/HowItWorksComponents";
 import TrustedBy from "../components/home/TrustedBy";
+import SolutionsSection from "../components/home/SolutionsSection";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { useState } from "react";
 
@@ -21,7 +22,7 @@ const Home = () => {
   const [sent, setSent] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setForm((s) => ({ ...s, [e.target.name]: e.target.value }));
   };
@@ -43,7 +44,10 @@ const Home = () => {
         <Navbar />
         <Hero />
       </div>
-      <TrustedBy />
+      <div className="my-20">
+        <TrustedBy />
+      </div>
+      <SolutionsSection />
       <ServicesComponent />
       <HowItWorksComponents />
       <TrackPackage />
