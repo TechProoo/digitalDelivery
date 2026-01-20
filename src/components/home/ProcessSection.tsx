@@ -83,7 +83,7 @@ export default function ProcessSection() {
           </p>
         </div>
 
-        <div className="mx-auto mt-14 max-w-6xl">
+        <div className=" mt-20 max-w-5xl p-auto mx-auto">
           {/* Icon tiles */}
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
             {steps.map((s) => (
