@@ -118,7 +118,9 @@ export default function FaqSection() {
                   className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
                   aria-expanded={isOpen}
                   aria-controls={contentId}
-                  onClick={() => setOpenIndex((cur) => (cur === idx ? -1 : idx))}
+                  onClick={() =>
+                    setOpenIndex((cur) => (cur === idx ? -1 : idx))
+                  }
                   style={{ color: "var(--text-primary)" }}
                 >
                   <span className="text-lg sm:text-xl font-semibold">
