@@ -12,8 +12,7 @@ const Navbar = () => {
     { name: "Solutions", path: "/services" },
     { name: "About", path: "/about" },
     { name: "Resources", path: "/resources" },
-    { name: "Haul With Us", path: "/contact" },
-    { name: "Support", path: "/contact" },
+    { name: "Support", path: "/support" },
     { name: "Contact", path: "/contact" },
   ];
 
@@ -104,24 +103,6 @@ const Navbar = () => {
 
             {/* Right actions */}
             <div className="flex items-center gap-2 sm:gap-3 ml-auto">
-              <div
-                className="hidden md:flex items-center gap-2 rounded-full px-3 py-1.5"
-                style={{
-                  background: "hsl(var(--card) / 0.7)",
-                  border: "1px solid var(--border-soft)",
-                  color: "var(--text-secondary)",
-                }}
-              >
-                <Globe className="h-4 w-4" />
-                <span className="text-xs font-medium">us</span>
-                <span
-                  className="text-xs font-semibold"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  EN
-                </span>
-              </div>
-
               <button
                 type="button"
                 onClick={() => setIsDark((v) => !v)}

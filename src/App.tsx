@@ -13,6 +13,8 @@ import Contact from "./Pages/Contact";
 import About from "./Pages/About";
 import { RequireAuth } from "./auth/RequireAuth";
 import Resources from "./Pages/Resources";
+import ResourceDetails from "./Pages/ResourceDetails";
+import Support from "./Pages/Support";
 
 function App() {
   return (
@@ -22,6 +24,9 @@ function App() {
       <Route path="/about" element={<About />} />
       <Route path="/resources" element={<Resources />} />
       <Route path="/resource" element={<Resources />} />
+      <Route path="/resources/:id" element={<ResourceDetails />} />
+      <Route path="/resource/:id" element={<ResourceDetails />} />
+      <Route path="/support" element={<Support />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />

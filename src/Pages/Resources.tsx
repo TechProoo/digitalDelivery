@@ -1,135 +1,27 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
 import {
   BookOpen,
+  Clock,
   Download,
   FileText,
   Search,
   Sparkles,
   Tag,
+  User,
+  ArrowRight,
 } from "lucide-react";
 
-type ResourceType = "Article" | "Guide" | "Whitepaper" | "Case Study";
+import {
+  ALL_CATEGORIES,
+  ALL_TYPES,
+  RESOURCES,
+  type ResourceType,
+  type ResourceCategory,
+} from "../data/resources";
 
-type ResourceCategory =
-  | "Technology"
-  | "Sustainability"
-  | "Operations"
-  | "Strategy"
-  | "Compliance"
-  | "E-Commerce"
-  | "Specialized"
-  | "Industry"
-  | "Guides";
-
-type ResourceItem = {
-  id: string;
-  title: string;
-  excerpt: string;
-  author: string;
-  readTimeMinutes: number;
-  category: ResourceCategory;
-  type: ResourceType;
-  imageUrl: string;
-};
-
-import ImgRoad from "../assets/road.jpg";
-import ImgAero from "../assets/aero.jpg";
-import ImgBoat from "../assets/boat.jpg";
-import ImgServices from "../assets/services_img.jpg";
-import ImgDoor from "../assets/door.jpg";
-import ImgEcom from "../assets/ecom.jpg";
-
-const ALL_CATEGORIES: Array<"All" | ResourceCategory> = [
-  "All",
-  "Technology",
-  "Sustainability",
-  "Operations",
-  "Strategy",
-  "Compliance",
-  "E-Commerce",
-  "Specialized",
-  "Industry",
-  "Guides",
-];
-
-const ALL_TYPES: Array<"All" | ResourceType> = [
-  "All",
-  "Article",
-  "Guide",
-  "Whitepaper",
-  "Case Study",
-];
-
-const RESOURCES: ResourceItem[] = [
-  {
-    id: "ai-ml-logistics",
-    title: "The Future of Freight: AI and Machine Learning in Logistics",
-    excerpt:
-      "Discover how artificial intelligence is transforming routing, forecasting, and last-mile efficiency across global supply chains.",
-    author: "Sarah Johnson",
-    readTimeMinutes: 8,
-    category: "Technology",
-    type: "Article",
-    imageUrl: ImgRoad,
-  },
-  {
-    id: "sustainable-shipping-carbon",
-    title: "Sustainable Shipping: Reducing Your Carbon Footprint",
-    excerpt:
-      "Practical steps to cut emissions with modal mix optimization, packaging improvements, and smarter consolidation strategies.",
-    author: "Michael Chen",
-    readTimeMinutes: 6,
-    category: "Sustainability",
-    type: "Guide",
-    imageUrl: ImgAero,
-  },
-  {
-    id: "global-trade-trends-2026",
-    title: "Global Trade Trends: What to Expect in 2026",
-    excerpt:
-      "An overview of shifting trade lanes, capacity outlook, port constraints, and how to plan for volatility.",
-    author: "Emily Davis",
-    readTimeMinutes: 10,
-    category: "Industry",
-    type: "Whitepaper",
-    imageUrl: ImgBoat,
-  },
-  {
-    id: "last-mile-innovations",
-    title: "Last-Mile Delivery: Innovations Transforming the Industry",
-    excerpt:
-      "From micro-fulfillment to route automation, learn what’s working right now to improve delivery speed and customer satisfaction.",
-    author: "Robert Wilson",
-    readTimeMinutes: 7,
-    category: "Operations",
-    type: "Article",
-    imageUrl: ImgServices,
-  },
-  {
-    id: "supply-chain-resilience",
-    title: "Supply Chain Resilience: Lessons from Recent Disruptions",
-    excerpt:
-      "How leading teams build resilient supply chains through risk mapping, buffers, multi-sourcing, and scenario planning.",
-    author: "Lisa Anderson",
-    readTimeMinutes: 9,
-    category: "Strategy",
-    type: "Case Study",
-    imageUrl: ImgDoor,
-  },
-  {
-    id: "customs-compliance-guide",
-    title: "Customs Compliance: A Complete Guide for Importers",
-    excerpt:
-      "Navigate HS classification, documentation, duties, and audits with a practical checklist you can adopt in a day.",
-    author: "David Kim",
-    readTimeMinutes: 12,
-    category: "Compliance",
-    type: "Guide",
-    imageUrl: ImgEcom,
-  },
-];
 
 function typeIcon(resourceType: ResourceType) {
   switch (resourceType) {
@@ -172,13 +64,17 @@ const Resources = () => {
   const [subscribed, setSubscribed] = useState(false);
 
   return (
-    <div className="min-h-screen" style={{ background: "hsl(var(--background))" }}>
+    <div
+      className="min-h-screen"
+      style={{ background: "hsl(var(--background))" }}
+    >
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
         {/* Hero */}
         <section className="pt-14 pb-10 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold"
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold"
             style={{
               background: "hsl(var(--card) / 0.7)",
               border: "1px solid var(--border-soft)",
@@ -189,17 +85,20 @@ const Resources = () => {
             Logistics
           </div>
 
-          <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight header"
+          <h1
+            className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
           >
-            Logistics <span style={{ color: "var(--accent-teal)" }}>Knowledge Hub</span>
+            Logistics{" "}
+            <span style={{ color: "var(--accent-teal)" }}>Knowledge Hub</span>
           </h1>
 
-          <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg"
+          <p
+            className="mx-auto mt-4 max-w-2xl text-base sm:text-lg"
             style={{ color: "var(--text-secondary)" }}
           >
-            Access industry insights, best practices, whitepapers, and guides to optimize
-            your supply chain operations.
+            Access industry insights, best practices, whitepapers, and guides to
+            optimize your supply chain operations.
           </p>
 
           {/* Search */}
@@ -212,7 +111,10 @@ const Resources = () => {
                 boxShadow: "var(--shadow-card)",
               }}
             >
-              <Search className="h-5 w-5" style={{ color: "var(--text-tertiary)" }} />
+              <Search
+                className="h-5 w-5"
+                style={{ color: "var(--text-tertiary)" }}
+              />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -266,7 +168,9 @@ const Resources = () => {
                   onClick={() => setActiveType(t)}
                   className="inline-flex items-center gap-2 text-sm font-semibold transition"
                   style={{
-                    color: active ? "var(--text-primary)" : "var(--text-tertiary)",
+                    color: active
+                      ? "var(--text-primary)"
+                      : "var(--text-tertiary)",
                   }}
                 >
                   {isAll ? (
@@ -277,7 +181,9 @@ const Resources = () => {
                           ? "hsl(var(--card) / 0.75)"
                           : "hsl(var(--card) / 0.45)",
                         border: "1px solid var(--border-soft)",
-                        color: active ? "var(--text-primary)" : "var(--text-secondary)",
+                        color: active
+                          ? "var(--text-primary)"
+                          : "var(--text-secondary)",
                       }}
                     >
                       All Types
@@ -309,40 +215,67 @@ const Resources = () => {
                   boxShadow: "var(--shadow-card)",
                 }}
               >
-                <div className="relative">
-                  <img
-                    src={item.imageUrl}
-                    alt={item.title}
-                    className="h-52 w-full object-cover"
-                  />
+                {item.cardVariant !== "text" && (
+                  <div className="relative">
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      className="h-52 w-full object-cover"
+                    />
 
-                  <div className="absolute left-4 top-4 flex items-center gap-2">
-                    <span
-                      className="rounded-full px-3 py-1 text-xs font-semibold"
-                      style={{
-                        background: "hsl(var(--card) / 0.7)",
-                        border: "1px solid var(--border-soft)",
-                        color: "var(--accent-sky)",
-                        backdropFilter: "blur(10px)",
-                      }}
-                    >
-                      {item.category}
-                    </span>
-                    <span
-                      className="rounded-full px-3 py-1 text-xs font-semibold"
-                      style={{
-                        background: "hsl(var(--card) / 0.7)",
-                        border: "1px solid var(--border-soft)",
-                        color: "var(--accent-amber)",
-                        backdropFilter: "blur(10px)",
-                      }}
-                    >
-                      {item.type}
-                    </span>
+                    <div className="absolute left-4 top-4 flex items-center gap-2">
+                      <span
+                        className="rounded-full px-3 py-1 text-xs font-semibold"
+                        style={{
+                          background: "hsl(var(--card) / 0.7)",
+                          border: "1px solid var(--border-soft)",
+                          color: "var(--accent-sky)",
+                          backdropFilter: "blur(10px)",
+                        }}
+                      >
+                        {item.category}
+                      </span>
+                      <span
+                        className="rounded-full px-3 py-1 text-xs font-semibold"
+                        style={{
+                          background: "hsl(var(--card) / 0.7)",
+                          border: "1px solid var(--border-soft)",
+                          color: "var(--accent-amber)",
+                          backdropFilter: "blur(10px)",
+                        }}
+                      >
+                        {item.type}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="p-6">
+                  {item.cardVariant === "text" && (
+                    <div className="mb-4 flex items-center gap-2">
+                      <span
+                        className="rounded-full px-3 py-1 text-xs font-semibold"
+                        style={{
+                          background: "hsl(var(--card) / 0.65)",
+                          border: "1px solid var(--border-soft)",
+                          color: "var(--accent-sky)",
+                        }}
+                      >
+                        {item.category}
+                      </span>
+                      <span
+                        className="rounded-full px-3 py-1 text-xs font-semibold"
+                        style={{
+                          background: "hsl(var(--card) / 0.65)",
+                          border: "1px solid var(--border-soft)",
+                          color: "var(--accent-amber)",
+                        }}
+                      >
+                        {item.type}
+                      </span>
+                    </div>
+                  )}
+
                   <h3
                     className="text-lg font-bold leading-snug"
                     style={{ color: "var(--text-primary)" }}
@@ -350,7 +283,10 @@ const Resources = () => {
                     {item.title}
                   </h3>
 
-                  <p className="mt-3 text-sm" style={{ color: "var(--text-secondary)" }}>
+                  <p
+                    className="mt-3 text-sm"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     {item.excerpt}
                   </p>
 
@@ -358,21 +294,29 @@ const Resources = () => {
                     className="mt-4 flex items-center justify-between text-xs"
                     style={{ color: "var(--text-tertiary)" }}
                   >
-                    <span>{item.author}</span>
-                    <span>{item.readTimeMinutes} min read</span>
+                    <span className="inline-flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      {item.author}
+                    </span>
+                    <span className="inline-flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      {item.readTimeMinutes} min read
+                    </span>
                   </div>
 
-                  <button
-                    type="button"
-                    className="mt-5 w-full rounded-xl px-4 py-2 text-sm font-semibold transition"
+                  <Link
+                    to={`/resources/${item.id}`}
+                    className="mt-5 w-full rounded-xl px-4 py-2 text-sm font-semibold transition inline-flex items-center justify-center gap-2"
                     style={{
                       border: "1px solid var(--border-soft)",
                       background: "hsl(var(--background) / 0.35)",
                       color: "var(--text-primary)",
+                      textDecoration: "none",
                     }}
                   >
                     Read More
-                  </button>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </div>
               </article>
             ))}
@@ -404,8 +348,8 @@ const Resources = () => {
               Subscribe to Our Newsletter
             </h2>
             <p className="mt-4" style={{ color: "var(--text-secondary)" }}>
-              Get the latest logistics insights, industry news, and exclusive content delivered
-              to your inbox.
+              Get the latest logistics insights, industry news, and exclusive
+              content delivered to your inbox.
             </p>
 
             <form
