@@ -22,9 +22,13 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 
 interface FormData {
+  originStreet: string;
   originCity: string;
+  originState: string;
   originCountry: string;
+  destStreet: string;
   destCity: string;
+  destState: string;
   destCountry: string;
   packageType: string;
   weight: string;
@@ -43,9 +47,13 @@ export default function NewDelivery() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
+    originStreet: "",
     originCity: "",
+    originState: "",
     originCountry: "",
+    destStreet: "",
     destCity: "",
+    destState: "",
     destCountry: "",
     packageType: "",
     weight: "",
@@ -88,9 +96,13 @@ export default function NewDelivery() {
 
   const canProceedStep1 = () => {
     return (
+      formData.originStreet &&
       formData.originCity &&
+      formData.originState &&
       formData.originCountry &&
+      formData.destStreet &&
       formData.destCity &&
+      formData.destState &&
       formData.destCountry
     );
   };
@@ -107,12 +119,24 @@ export default function NewDelivery() {
   };
 
   const pickupLocation = useMemo(
-    () => `${formData.originCity}, ${formData.originCountry}`.trim(),
-    [formData.originCity, formData.originCountry]
+    () =>
+      `${formData.originStreet}, ${formData.originCity}, ${formData.originState}, ${formData.originCountry}`.trim(),
+    [
+      formData.originStreet,
+      formData.originCity,
+      formData.originState,
+      formData.originCountry,
+    ],
   );
   const destinationLocation = useMemo(
-    () => `${formData.destCity}, ${formData.destCountry}`.trim(),
-    [formData.destCity, formData.destCountry]
+    () =>
+      `${formData.destStreet}, ${formData.destCity}, ${formData.destState}, ${formData.destCountry}`.trim(),
+    [
+      formData.destStreet,
+      formData.destCity,
+      formData.destState,
+      formData.destCountry,
+    ],
   );
 
   const dimensions = useMemo(() => {
@@ -137,8 +161,8 @@ export default function NewDelivery() {
 
 📦 *SHIPMENT DETAILS*
 ━━━━━━━━━━━━━━━━━━
-📍 Origin: ${formData.originCity}, ${formData.originCountry}
-📍 Destination: ${formData.destCity}, ${formData.destCountry}
+📍 Origin: ${formData.originStreet}, ${formData.originCity}, ${formData.originState}, ${formData.originCountry}
+📍 Destination: ${formData.destStreet}, ${formData.destCity}, ${formData.destState}, ${formData.destCountry}
 
 📋 *PACKAGE INFORMATION*
 ━━━━━━━━━━━━━━━━━━
@@ -195,7 +219,7 @@ Please provide pricing for this shipment. Thank you!`;
       }
 
       navigate(
-        `/dashboard/track?tn=${encodeURIComponent(shipment.trackingId)}`
+        `/dashboard/track?tn=${encodeURIComponent(shipment.trackingId)}`,
       );
     } catch (err: any) {
       if (err?.status === 401) {
@@ -214,7 +238,17 @@ Please provide pricing for this shipment. Thank you!`;
 
   const handleWhatsAppRedirect = () => {
     // Validate required fields before sending
-    if (!formData.originCity || !formData.destCity || !formData.packageType) {
+    if (
+      !formData.originStreet ||
+      !formData.originCity ||
+      !formData.originState ||
+      !formData.originCountry ||
+      !formData.destStreet ||
+      !formData.destCity ||
+      !formData.destState ||
+      !formData.destCountry ||
+      !formData.packageType
+    ) {
       alert("Please fill in all required fields before sending to WhatsApp");
       return;
     }
@@ -236,8 +270,8 @@ Please provide pricing for this shipment. Thank you!`;
 
     // Optional: Track analytics
     console.log("WhatsApp quote request sent:", {
-      origin: `${formData.originCity}, ${formData.originCountry}`,
-      destination: `${formData.destCity}, ${formData.destCountry}`,
+      origin: `${formData.originStreet}, ${formData.originCity}, ${formData.originState}, ${formData.originCountry}`,
+      destination: `${formData.destStreet}, ${formData.destCity}, ${formData.destState}, ${formData.destCountry}`,
       timestamp: new Date().toISOString(),
     });
   };
@@ -380,6 +414,29 @@ Please provide pricing for this shipment. Thank you!`;
                           className="block text-xs sm:text-sm font-medium mb-2 uppercase"
                           style={{ color: "var(--text-secondary)" }}
                         >
+                          Street
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., 12 Harbor Road"
+                          value={formData.originStreet}
+                          onChange={(e) =>
+                            updateFormData("originStreet", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
                           City
                         </label>
                         <input
@@ -388,6 +445,29 @@ Please provide pricing for this shipment. Thank you!`;
                           value={formData.originCity}
                           onChange={(e) =>
                             updateFormData("originCity", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          State
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., Guangdong"
+                          value={formData.originState}
+                          onChange={(e) =>
+                            updateFormData("originState", e.target.value)
                           }
                           className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
                           style={{
@@ -444,6 +524,29 @@ Please provide pricing for this shipment. Thank you!`;
                           className="block text-xs sm:text-sm font-medium mb-2 uppercase"
                           style={{ color: "var(--text-secondary)" }}
                         >
+                          Street
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., 500 Sunset Blvd"
+                          value={formData.destStreet}
+                          onChange={(e) =>
+                            updateFormData("destStreet", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
                           City
                         </label>
                         <input
@@ -452,6 +555,29 @@ Please provide pricing for this shipment. Thank you!`;
                           value={formData.destCity}
                           onChange={(e) =>
                             updateFormData("destCity", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          State
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., California"
+                          value={formData.destState}
+                          onChange={(e) =>
+                            updateFormData("destState", e.target.value)
                           }
                           className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
                           style={{
@@ -802,7 +928,8 @@ Please provide pricing for this shipment. Thank you!`;
                           className="font-semibold text-sm sm:text-base"
                           style={{ color: "var(--text-primary)" }}
                         >
-                          {formData.originCity}, {formData.originCountry}
+                          {formData.originStreet}, {formData.originCity},{" "}
+                          {formData.originState}, {formData.originCountry}
                         </div>
                       </div>
                     </div>
@@ -828,7 +955,8 @@ Please provide pricing for this shipment. Thank you!`;
                           className="font-semibold text-sm sm:text-base"
                           style={{ color: "var(--text-primary)" }}
                         >
-                          {formData.destCity}, {formData.destCountry}
+                          {formData.destStreet}, {formData.destCity},{" "}
+                          {formData.destState}, {formData.destCountry}
                         </div>
                       </div>
                     </div>

@@ -23,7 +23,9 @@ const Home = () => {
       <div className="my-20">
         <TrustedBy />
       </div>
-      <SolutionsSection />
+      <section id="solutions" style={{ scrollMarginTop: 96 }}>
+        <SolutionsSection />
+      </section>
       <FeaturesSection />
       <ProcessSection />
       <ServicesComponent />

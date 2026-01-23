@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin, Clock, Search } from "lucide-react";
+import { Building2, Clock, Headset, Mail, MapPin, Phone } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
-import Cta from "../components/home/Cta";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -16,7 +15,7 @@ export default function Contact() {
   const [sent, setSent] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setForm((s) => ({ ...s, [e.target.name]: e.target.value }));
   };
@@ -33,193 +32,556 @@ export default function Contact() {
     }, 900);
   };
 
+  const offices = [
+    {
+      city: "New York, United States",
+      address: "350 Fifth Avenue, Suite 5400",
+      phone: "+1 (212) 555-0123",
+      email: "newyork@swiftship.com",
+    },
+    {
+      city: "London, United Kingdom",
+      address: "1 Canada Square, Canary Wharf",
+      phone: "+44 20 7946 0958",
+      email: "london@swiftship.com",
+    },
+    {
+      city: "Singapore, Singapore",
+      address: "1 Raffles Place, Tower 2",
+      phone: "+65 6123 4567",
+      email: "singapore@swiftship.com",
+    },
+    {
+      city: "Dubai, UAE",
+      address: "Dubai World Trade Centre",
+      phone: "+971 4 123 4567",
+      email: "dubai@swiftship.com",
+    },
+  ];
+
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-      <div className="container mx-auto">
-        <div className="services_container">
-          <Navbar />
-          <div className="hero_container md:p-10 p-3">
-            <div className="hero_text">
-              <div>
-                <div className="badge_design">
-                  Contact Us<span></span>
-                </div>
-              </div>
+    <div
+      className="min-h-screen"
+      style={{ background: "hsl(var(--background))" }}
+    >
+      <Navbar />
 
-              <div className="hero_text">
-                <h1 className="md:text-5xl text-4xl mt-5 header md:w-9/12">
-                  Get in Touch with Digital Logistics{" "}
-                </h1>
-                <p className="mt-5 md:w-7/12">
-                  Have questions about our services, need a shipping quote, or
-                  want to discuss your logistics needs? Our team is ready to
-                  provide the support and solutions you need.
-                </p>
-              </div>
+      {/* Hero */}
+      <section
+        className="relative overflow-hidden"
+        style={{
+          background:
+            "radial-gradient(1200px 520px at 50% 0%, hsl(var(--primary) / 0.18), transparent 60%), linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%)",
+          borderBottom: "1px solid var(--border-soft)",
+        }}
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 pt-16 pb-14 text-center">
+          <div className="flex justify-center">
+            <span
+              className="inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold"
+              style={{
+                background: "hsl(var(--card) / 0.65)",
+                border: "1px solid var(--border-soft)",
+                color: "var(--accent-teal)",
+                boxShadow: "var(--shadow-card)",
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              Contact Us
+            </span>
+          </div>
 
-              <div className="md:flex justify-between items-center mt-10">
-                <div className="hero_input px-4 py-2 md:mt-0 mt-10 rounded-2xl sm:ml-0">
-                  <div
-                    className="hr_input flex items-center gap-2"
-                    style={{ position: "relative" }}
-                  >
-                    <Search size={24} className="text-gray-300 mr-2" />
-                    <input
-                      type="text"
-                      placeholder="Enter tracking number..."
-                      className="bg-transparent outline-none border-none text-gray-300 placeholder-gray-400 w-full text-lg"
-                      style={{ paddingLeft: 0 }}
-                    />
-                    <button className="rounded-md">Track</button>
-                  </div>
-                </div>
+          <h1
+            className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Get in <span style={{ color: "var(--accent-teal)" }}>Touch</span>
+          </h1>
+
+          <p
+            className="mx-auto mt-4 max-w-2xl text-base sm:text-lg"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Have questions about our services? Our team is here to help you find
+            the perfect logistics solution.
+          </p>
+        </div>
+      </section>
+
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 py-14">
+        {/* Contact methods */}
+        <section className="grid gap-6 md:grid-cols-3">
+          <div
+            className="rounded-2xl p-8"
+            style={{
+              background: "hsl(var(--card) / 0.55)",
+              border: "1px solid var(--border-soft)",
+              boxShadow: "var(--shadow-card)",
+            }}
+          >
+            <div
+              className="grid place-items-center rounded-2xl"
+              style={{
+                width: 56,
+                height: 56,
+                background: "hsl(var(--background) / 0.35)",
+                border: "1px solid var(--border-soft)",
+                color: "var(--accent-teal)",
+              }}
+            >
+              <Phone className="h-6 w-6" />
+            </div>
+
+            <div className="mt-6">
+              <div
+                className="text-lg font-semibold"
+                style={{ color: "var(--text-primary)" }}
+              >
+                Call Us
               </div>
+              <div
+                className="mt-1 text-sm"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Available 24/7
+              </div>
+              <a
+                href="tel:+18005551234"
+                className="mt-4 inline-block font-semibold"
+                style={{ color: "var(--accent-teal)" }}
+              >
+                +1 (800) 555-1234
+              </a>
             </div>
           </div>
-        </div>
 
-        <header className="mx-auto max-w-5xl py-12 text-center">
-          <h1 className="text-4xl font-extrabold text-(--text-primary)">
-            Get in touch
-          </h1>
-          <p className="mt-3 text-(--text-secondary) max-w-2xl mx-auto">
-            Whether you need a quote, partnership info, or support — reach out
-            and we'll respond promptly.
-          </p>
-        </header>
+          <div
+            className="rounded-2xl p-8"
+            style={{
+              background: "hsl(var(--card) / 0.55)",
+              border: "1px solid var(--border-soft)",
+              boxShadow: "var(--shadow-card)",
+            }}
+          >
+            <div
+              className="grid place-items-center rounded-2xl"
+              style={{
+                width: 56,
+                height: 56,
+                background: "hsl(var(--background) / 0.35)",
+                border: "1px solid var(--border-soft)",
+                color: "hsl(var(--success))",
+              }}
+            >
+              <Mail className="h-6 w-6" />
+            </div>
 
-        <main className="mx-auto grid gap-8 lg:grid-cols-3 max-w-6xl">
+            <div className="mt-6">
+              <div
+                className="text-lg font-semibold"
+                style={{ color: "var(--text-primary)" }}
+              >
+                Email Us
+              </div>
+              <div
+                className="mt-1 text-sm"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Response within 24 hours
+              </div>
+              <a
+                href="mailto:hello@swiftship.com"
+                className="mt-4 inline-block font-semibold"
+                style={{ color: "hsl(var(--success))" }}
+              >
+                hello@swiftship.com
+              </a>
+            </div>
+          </div>
+
+          <div
+            className="rounded-2xl p-8"
+            style={{
+              background: "hsl(var(--card) / 0.55)",
+              border: "1px solid var(--border-soft)",
+              boxShadow: "var(--shadow-card)",
+            }}
+          >
+            <div
+              className="grid place-items-center rounded-2xl"
+              style={{
+                width: 56,
+                height: 56,
+                background: "hsl(var(--background) / 0.35)",
+                border: "1px solid var(--border-soft)",
+                color: "#8b5cf6",
+              }}
+            >
+              <Headset className="h-6 w-6" />
+            </div>
+
+            <div className="mt-6">
+              <div
+                className="text-lg font-semibold"
+                style={{ color: "var(--text-primary)" }}
+              >
+                Live Chat
+              </div>
+              <div
+                className="mt-1 text-sm"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Chat with our AI assistant
+              </div>
+              <a
+                href="#send-message"
+                className="mt-4 inline-flex items-center gap-2 font-semibold"
+                style={{ color: "#8b5cf6" }}
+              >
+                Start Chat <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Form + Offices */}
+        <section className="mt-14 grid gap-10 lg:grid-cols-2">
           {/* Form */}
-          <section className="lg:col-span-2">
-            <div className="rounded-2xl bg-(--bg-secondary) border border-(--border-soft) p-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-(--text-primary)">
-                Contact us
-              </h2>
+          <div>
+            <h2
+              className="text-3xl font-bold"
+              style={{ color: "var(--text-primary)" }}
+              id="send-message"
+            >
+              Send Us a Message
+            </h2>
 
-              <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div
+              className="mt-6 rounded-2xl p-8"
+              style={{
+                background: "hsl(var(--card) / 0.55)",
+                border: "1px solid var(--border-soft)",
+                boxShadow: "var(--shadow-card)",
+              }}
+            >
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label
+                      className="text-sm font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Full Name{" "}
+                      <span style={{ color: "var(--accent-teal)" }}>*</span>
+                    </label>
+                    <input
+                      name="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      placeholder="John Doe"
+                      className="mt-2 w-full rounded-xl px-4 py-3 outline-none"
+                      style={{
+                        background: "hsl(var(--background) / 0.35)",
+                        border: "1px solid var(--border-soft)",
+                        color: "var(--text-primary)",
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label
+                      className="text-sm font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Email{" "}
+                      <span style={{ color: "var(--accent-teal)" }}>*</span>
+                    </label>
+                    <input
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder="john@company.com"
+                      className="mt-2 w-full rounded-xl px-4 py-3 outline-none"
+                      style={{
+                        background: "hsl(var(--background) / 0.35)",
+                        border: "1px solid var(--border-soft)",
+                        color: "var(--text-primary)",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label
+                      className="text-sm font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Company
+                    </label>
+                    <input
+                      name="company"
+                      value={form.company}
+                      onChange={handleChange}
+                      placeholder="Your Company"
+                      className="mt-2 w-full rounded-xl px-4 py-3 outline-none"
+                      style={{
+                        background: "hsl(var(--background) / 0.35)",
+                        border: "1px solid var(--border-soft)",
+                        color: "var(--text-primary)",
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label
+                      className="text-sm font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Phone
+                    </label>
+                    <input
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      placeholder="+1 (555) 000-0000"
+                      className="mt-2 w-full rounded-xl px-4 py-3 outline-none"
+                      style={{
+                        background: "hsl(var(--background) / 0.35)",
+                        border: "1px solid var(--border-soft)",
+                        color: "var(--text-primary)",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    className="text-sm font-semibold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    Subject{" "}
+                    <span style={{ color: "var(--accent-teal)" }}>*</span>
+                  </label>
                   <input
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder="Full name"
-                    className="w-full rounded-lg bg-(--bg-primary)/10 border border-(--border-soft) px-4 py-3 outline-none text-(--text-primary)"
-                  />
-                  <input
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="Email address"
-                    className="w-full rounded-lg bg-(--bg-primary)/10 border border-(--border-soft) px-4 py-3 outline-none text-(--text-primary)"
+                    name="subject"
+                    value={(form as any).subject ?? ""}
+                    onChange={(e) =>
+                      setForm((s) => ({
+                        ...(s as any),
+                        subject: e.target.value,
+                      }))
+                    }
+                    placeholder="How can we help?"
+                    className="mt-2 w-full rounded-xl px-4 py-3 outline-none"
+                    style={{
+                      background: "hsl(var(--background) / 0.35)",
+                      border: "1px solid var(--border-soft)",
+                      color: "var(--text-primary)",
+                    }}
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <input
-                    name="company"
-                    value={form.company}
+                <div>
+                  <label
+                    className="text-sm font-semibold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    Message{" "}
+                    <span style={{ color: "var(--accent-teal)" }}>*</span>
+                  </label>
+                  <textarea
+                    name="message"
+                    value={form.message}
                     onChange={handleChange}
-                    placeholder="Company (optional)"
-                    className="w-full rounded-lg bg-(--bg-primary)/10 border border-(--border-soft) px-4 py-3 outline-none text-(--text-primary)"
-                  />
-                  <input
-                    name="phone"
-                    value={form.phone}
-                    onChange={handleChange}
-                    placeholder="Phone (optional)"
-                    className="w-full rounded-lg bg-(--bg-primary)/10 border border-(--border-soft) px-4 py-3 outline-none text-(--text-primary)"
+                    placeholder="Tell us about your logistics needs..."
+                    rows={7}
+                    className="mt-2 w-full rounded-xl px-4 py-3 outline-none"
+                    style={{
+                      background: "hsl(var(--background) / 0.35)",
+                      border: "1px solid var(--border-soft)",
+                      color: "var(--text-primary)",
+                      resize: "vertical",
+                    }}
                   />
                 </div>
 
-                <textarea
-                  name="message"
-                  value={form.message}
-                  onChange={handleChange}
-                  placeholder="How can we help?"
-                  rows={6}
-                  className="w-full rounded-lg bg-(--bg-primary)/10 border border-(--border-soft) px-4 py-3 outline-none text-(--text-primary)"
-                />
-
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="rounded-md bg-(--accent-teal) px-6 py-3 font-medium text-(--bg-primary) shadow-sm"
+                    className="rounded-xl px-6 py-3 font-semibold"
+                    style={{
+                      width: "100%",
+                      background: "hsl(var(--primary))",
+                      color: "hsl(var(--primary-foreground))",
+                      boxShadow: "var(--glow-primary)",
+                    }}
                   >
-                    {submitting ? "Sending…" : "Send message"}
+                    {submitting ? "Sending…" : "Send Message"}
                   </button>
 
                   {sent && (
-                    <div className="text-sm text-(--accent-teal)">
+                    <div
+                      className="text-sm"
+                      style={{ color: "var(--accent-teal)" }}
+                    >
                       Thanks — we'll be in touch shortly.
                     </div>
                   )}
                 </div>
               </form>
             </div>
-          </section>
+          </div>
 
-          {/* Info panel */}
-          <aside className="lg:col-span-1">
-            <div className="rounded-2xl bg-(--bg-secondary) border border-(--border-soft) p-6 shadow-sm">
-              <div className="flex items-start gap-3">
-                <div className="rounded-md bg-(--bg-primary) p-2 text-(--accent-teal)">
-                  <Mail className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="text-sm text-(--text-tertiary)">Email</div>
-                  <div className="font-medium text-(--text-primary)">
-                    hello@DigitalLogistics.com
+          {/* Offices + Hours */}
+          <div>
+            <h2
+              className="text-3xl font-bold"
+              style={{ color: "var(--text-primary)" }}
+            >
+              Our Offices
+            </h2>
+
+            <div className="mt-6 grid gap-5">
+              {offices.map((o) => (
+                <div
+                  key={o.city}
+                  className="rounded-2xl p-6"
+                  style={{
+                    background: "hsl(var(--card) / 0.55)",
+                    border: "1px solid var(--border-soft)",
+                    boxShadow: "var(--shadow-card)",
+                  }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="grid place-items-center rounded-xl"
+                      style={{
+                        width: 44,
+                        height: 44,
+                        background: "hsl(var(--background) / 0.35)",
+                        border: "1px solid var(--border-soft)",
+                        color: "var(--accent-teal)",
+                      }}
+                    >
+                      <Building2 className="h-5 w-5" />
+                    </div>
+
+                    <div className="flex-1">
+                      <div
+                        className="font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {o.city}
+                      </div>
+                      <div
+                        className="mt-1 text-sm"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        {o.address}
+                      </div>
+
+                      <div
+                        className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm"
+                        style={{ color: "var(--accent-teal)" }}
+                      >
+                        <a
+                          href={`tel:${o.phone.replace(/[^+\d]/g, "")}`}
+                          className="inline-flex items-center gap-2"
+                        >
+                          <Phone className="h-4 w-4" /> {o.phone}
+                        </a>
+                        <a
+                          href={`mailto:${o.email}`}
+                          className="inline-flex items-center gap-2"
+                          style={{ color: "var(--text-tertiary)" }}
+                        >
+                          <Mail className="h-4 w-4" /> {o.email}
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
 
-              <div className="mt-4 flex items-start gap-3">
-                <div className="rounded-md bg-(--bg-primary) p-2 text-(--accent-teal)">
-                  <Phone className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="text-sm text-(--text-tertiary)">
-                    Call / WhatsApp
+              <div
+                className="rounded-2xl p-6"
+                style={{
+                  background: "hsl(var(--card) / 0.55)",
+                  border: "1px solid var(--border-soft)",
+                  boxShadow: "var(--shadow-card)",
+                }}
+              >
+                <div className="flex items-start gap-4">
+                  <div
+                    className="grid place-items-center rounded-xl"
+                    style={{
+                      width: 44,
+                      height: 44,
+                      background: "hsl(var(--background) / 0.35)",
+                      border: "1px solid var(--border-soft)",
+                      color: "hsl(var(--success))",
+                    }}
+                  >
+                    <Clock className="h-5 w-5" />
                   </div>
-                  <div className="font-medium text-(--text-primary)">
-                    +234 801 234 5678
-                  </div>
-                </div>
-              </div>
 
-              <div className="mt-4 flex items-start gap-3">
-                <div className="rounded-md bg-(--bg-primary) p-2 text-(--accent-teal)">
-                  <MapPin className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="text-sm text-(--text-tertiary)">Office</div>
-                  <div className="font-medium text-(--text-primary)">
-                    Lagos, Nigeria
-                  </div>
-                </div>
-              </div>
+                  <div className="flex-1">
+                    <div
+                      className="font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Business Hours
+                    </div>
 
-              <div className="mt-6 border-t border-(--border-soft) pt-4">
-                <div className="text-sm text-(--text-secondary)">
-                  Support hours
-                </div>
-                <div className="font-medium text-(--text-primary) flex items-center gap-2">
-                  <Clock className="h-4 w-4" /> Mon — Fri, 8am — 6pm
+                    <div
+                      className="mt-3 grid gap-2 text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      <div className="flex items-center justify-between gap-6">
+                        <span>Monday - Friday</span>
+                        <span style={{ color: "var(--text-primary)" }}>
+                          8:00 AM - 8:00 PM
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-6">
+                        <span>Saturday</span>
+                        <span style={{ color: "var(--text-primary)" }}>
+                          9:00 AM - 5:00 PM
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-6">
+                        <span>Sunday</span>
+                        <span style={{ color: "var(--text-primary)" }}>
+                          Closed
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          borderTop: "1px solid hsl(var(--border) / 0.35)",
+                          marginTop: 10,
+                          paddingTop: 10,
+                        }}
+                      >
+                        <div
+                          className="inline-flex items-center gap-2"
+                          style={{ color: "hsl(var(--success))" }}
+                        >
+                          <MapPin className="h-4 w-4" /> 24/7 Emergency Support
+                          Available
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </aside>
-        </main>
+          </div>
+        </section>
 
-        <div className="mt-12 md:m-10 m-5">
-          <Cta />
-        </div>
-
-        <footer className="mt-8">
+        <div className="mt-14">
           <Footer />
-        </footer>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

@@ -4,6 +4,9 @@ import "./index.css";
 import App from "./App.tsx";
 import { AuthProvider } from "./auth/AuthContext";
 import { BrowserRouter } from "react-router-dom";
+import { initTheme } from "./lib/theme";
+
+initTheme();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -12,5 +15,5 @@ createRoot(document.getElementById("root")!).render(
         <App />
       </BrowserRouter>
     </AuthProvider>
-  </StrictMode>
+  </StrictMode>,
 );

@@ -2,14 +2,24 @@ import { useEffect, useState } from "react";
 import Logo from "../../assets/logo.png";
 import { Globe, Menu, Moon, Sun, X } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useAuth } from "../../auth/AuthContext";
+import {
+  applyTheme,
+  getAppliedTheme,
+  toggleTheme,
+  type Theme,
+} from "../../lib/theme";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(true);
+  const [theme, setTheme] = useState<Theme>(() => getAppliedTheme());
   const location = useLocation();
 
+  const isDark = theme === "dark";
+
+  const { isAuthenticated } = useAuth();
   const navLinks = [
-    { name: "Solutions", path: "/services" },
+    { name: "Solutions", path: "/#solutions" },
     { name: "About", path: "/about" },
     { name: "Resources", path: "/resources" },
     { name: "Support", path: "/support" },
@@ -30,7 +40,33 @@ const Navbar = () => {
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
-  }, [location.pathname]);
+  }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    if (!location.hash) return;
+    const id = location.hash.replace("#", "");
+    if (!id) return;
+
+    const scroll = () => {
+      const target = document.getElementById(id);
+      if (!target) return;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    // Wait a tick so the route renders the section.
+    requestAnimationFrame(() => requestAnimationFrame(scroll));
+  }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((t) => toggleTheme(t));
+  };
+
+  const navUnderlineBase =
+    "relative inline-flex items-center text-sm font-medium transition-colors after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-white after:transition-transform after:duration-300 hover:after:scale-x-100";
 
   return (
     <>
@@ -87,9 +123,9 @@ const Navbar = () => {
                       to={link.path}
                       className={({ isActive }) =>
                         [
-                          "text-sm font-medium transition-colors",
+                          navUnderlineBase,
                           isActive
-                            ? "text-(--text-primary)"
+                            ? "text-(--text-primary) after:scale-x-100"
                             : "text-(--text-secondary) hover:text-(--text-primary)",
                         ].join(" ")
                       }
@@ -105,7 +141,7 @@ const Navbar = () => {
             <div className="flex items-center gap-2 sm:gap-3 ml-auto">
               <button
                 type="button"
-                onClick={() => setIsDark((v) => !v)}
+                onClick={handleToggleTheme}
                 className="hidden sm:grid place-items-center rounded-full h-10 w-10 transition"
                 style={{
                   border: "1px solid var(--border-soft)",
@@ -122,16 +158,26 @@ const Navbar = () => {
                 )}
               </button>
 
-              <NavLink
-                to="/login"
-                className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium transition-colors"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                Sign In
-              </NavLink>
+              {isAuthenticated ? (
+                <NavLink
+                  to="/dashboard"
+                  className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium transition-colors"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Dashboard
+                </NavLink>
+              ) : (
+                <NavLink
+                  to="/login"
+                  className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium transition-colors"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Sign In
+                </NavLink>
+              )}
 
               <NavLink
-                to="/contact"
+                to="/dashboard/new-delivery"
                 className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
                 style={{
                   background: "hsl(var(--primary))",
@@ -237,7 +283,7 @@ const Navbar = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setIsDark((v) => !v)}
+                  onClick={handleToggleTheme}
                   className="grid place-items-center rounded-full h-10 w-10"
                   style={{
                     border: "1px solid var(--border-soft)",
@@ -262,9 +308,10 @@ const Navbar = () => {
                         to={link.path}
                         className={({ isActive }) =>
                           [
-                            "block rounded-xl px-4 py-3 text-sm font-medium transition-colors",
+                            "block rounded-xl px-4 py-3 transition-colors",
+                            navUnderlineBase,
                             isActive
-                              ? "text-(--text-primary)"
+                              ? "text-(--text-primary) after:scale-x-100"
                               : "text-(--text-secondary) hover:text-(--text-primary)",
                           ].join(" ")
                         }
@@ -280,19 +327,33 @@ const Navbar = () => {
               </nav>
 
               <div className="mt-6 grid gap-2">
+                {isAuthenticated ? (
+                  <NavLink
+                    to="/dashboard"
+                    className="rounded-full px-4 py-3 text-center text-sm font-semibold"
+                    style={{
+                      border: "1px solid var(--border-soft)",
+                      background: "hsl(var(--card) / 0.6)",
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    Dashboard
+                  </NavLink>
+                ) : (
+                  <NavLink
+                    to="/login"
+                    className="rounded-full px-4 py-3 text-center text-sm font-semibold"
+                    style={{
+                      border: "1px solid var(--border-soft)",
+                      background: "hsl(var(--card) / 0.6)",
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    Sign In
+                  </NavLink>
+                )}
                 <NavLink
-                  to="/login"
-                  className="rounded-full px-4 py-3 text-center text-sm font-semibold"
-                  style={{
-                    border: "1px solid var(--border-soft)",
-                    background: "hsl(var(--card) / 0.6)",
-                    color: "var(--text-primary)",
-                  }}
-                >
-                  Sign In
-                </NavLink>
-                <NavLink
-                  to="/contact"
+                  to="/dashboard/new-delivery"
                   className="rounded-full px-4 py-3 text-center text-sm font-semibold"
                   style={{
                     background: "hsl(var(--primary))",
