@@ -1,5 +1,6 @@
 import React from "react";
 import { ArrowRight, Plane, Ship, Truck } from "lucide-react";
+import { motion } from "framer-motion";
 
 const ServicesComponent = () => {
   const cardStyle: React.CSSProperties = {
@@ -27,7 +28,11 @@ const ServicesComponent = () => {
       title: "Ground Freight",
       description:
         "Reliable land transportation with extensive network coverage. Cost-effective for domestic and regional deliveries.",
-      bullets: ["Door-to-door service", "Real-time GPS tracking", "Flexible scheduling"],
+      bullets: [
+        "Door-to-door service",
+        "Real-time GPS tracking",
+        "Flexible scheduling",
+      ],
       icon: Truck,
       tileBg: "linear-gradient(145deg, #f59e0b, #f97316)",
       featured: true,
@@ -36,7 +41,11 @@ const ServicesComponent = () => {
       title: "Ocean Freight",
       description:
         "Global sea transport for large volume shipments. Economical solution for international trade.",
-      bullets: ["FCL & LCL options", "Port-to-port service", "Container tracking"],
+      bullets: [
+        "FCL & LCL options",
+        "Port-to-port service",
+        "Container tracking",
+      ],
       icon: Ship,
       tileBg: "linear-gradient(145deg, #10b981, #06b6d4)",
       featured: false,
@@ -48,7 +57,7 @@ const ServicesComponent = () => {
       <div className="mx-auto max-w-7xl py-14 sm:py-18">
         <div className="mx-auto max-w-4xl text-center">
           <div className="flex justify-center">
-            <div
+            <motion.div
               className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
               style={{
                 background: "hsl(var(--card) / 0.55)",
@@ -56,30 +65,43 @@ const ServicesComponent = () => {
                 color: "hsl(var(--accent))",
                 backdropFilter: "blur(10px)",
               }}
+              initial={{ opacity: 0, y: -30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             >
               Our Services
-            </div>
+            </motion.div>
           </div>
 
-          <h2
+          <motion.h2
             className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
           >
-            Move Cargo <span style={{ color: "var(--accent-teal)" }}>Your Way</span>
-          </h2>
+            Move Cargo{" "}
+            <span style={{ color: "var(--accent-teal)" }}>Your Way</span>
+          </motion.h2>
 
-          <p
+          <motion.p
             className="mt-5 text-base sm:text-lg leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
-            Choose from our comprehensive range of freight solutions. Whatever your needs, we have the
-            perfect shipping option.
-          </p>
+            Choose from our comprehensive range of freight solutions. Whatever
+            your needs, we have the perfect shipping option.
+          </motion.p>
         </div>
 
         <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3">
-          {services.map((s) => (
-            <article
+          {services.map((s, index) => (
+            <motion.article
               key={s.title}
               className="rounded-3xl p-7 sm:p-8 transition-colors"
               style={{
@@ -87,6 +109,14 @@ const ServicesComponent = () => {
                 border: s.featured
                   ? "1px solid hsl(var(--primary) / 0.55)"
                   : "1px solid var(--border-soft)",
+              }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.6,
+                delay: 0.3 + index * 0.15,
+                ease: "easeOut",
               }}
             >
               <div
@@ -101,19 +131,33 @@ const ServicesComponent = () => {
                 <s.icon className="h-8 w-8 text-white" />
               </div>
 
-              <h3 className="mt-7 text-2xl font-semibold" style={{ color: "var(--text-primary)" }}>
+              <h3
+                className="mt-7 text-2xl font-semibold"
+                style={{ color: "var(--text-primary)" }}
+              >
                 {s.title}
               </h3>
-              <p className="mt-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+              <p
+                className="mt-4 leading-relaxed"
+                style={{ color: "var(--text-tertiary)" }}
+              >
                 {s.description}
               </p>
 
               <ul className="mt-7 space-y-3">
                 {s.bullets.map((b) => (
-                  <li key={b} className="flex items-center gap-3" style={{ color: "var(--text-tertiary)" }}>
+                  <li
+                    key={b}
+                    className="flex items-center gap-3"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
                     <span
                       className="inline-block rounded-full"
-                      style={{ width: 6, height: 6, background: "hsl(var(--primary))" }}
+                      style={{
+                        width: 6,
+                        height: 6,
+                        background: "hsl(var(--primary))",
+                      }}
                     />
                     <span>{b}</span>
                   </li>
@@ -134,7 +178,7 @@ const ServicesComponent = () => {
                   <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </button>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>

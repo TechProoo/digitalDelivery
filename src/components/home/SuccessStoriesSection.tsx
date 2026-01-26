@@ -1,5 +1,6 @@
 import type { ComponentType, ReactNode } from "react";
 import { ArrowRight, Boxes, Clock, DollarSign, TrendingUp } from "lucide-react";
+import { motion } from "framer-motion";
 
 import RetailImg from "../../assets/services_img.jpg";
 import ManufacturingImg from "../../assets/road.jpg";
@@ -93,7 +94,7 @@ export default function SuccessStoriesSection() {
       <div className="mx-auto max-w-7xl py-14 sm:py-18">
         <div className="mx-auto max-w-4xl text-center">
           <div className="flex justify-center">
-            <div
+            <motion.div
               className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
               style={{
                 background: "hsl(var(--card) / 0.55)",
@@ -101,14 +102,22 @@ export default function SuccessStoriesSection() {
                 color: "var(--accent-teal)",
                 backdropFilter: "blur(10px)",
               }}
+              initial={{ opacity: 0, y: -30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             >
               Success Stories
-            </div>
+            </motion.div>
           </div>
 
-          <h2
+          <motion.h2
             className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
           >
             See How{" "}
             <span style={{ color: "var(--accent-teal)" }}>
@@ -116,23 +125,35 @@ export default function SuccessStoriesSection() {
             </span>
             <br />
             Succeed
-          </h2>
+          </motion.h2>
 
-          <p
+          <motion.p
             className="mt-5 text-base sm:text-lg leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
             Discover how enterprises across industries are transforming their
             logistics operations with Digital Logistics.
-          </p>
+          </motion.p>
         </div>
 
         <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3">
-          {stories.map((story) => (
-            <article
+          {stories.map((story, index) => (
+            <motion.article
               key={story.title}
               className="overflow-hidden rounded-3xl"
               style={cardStyle}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.6,
+                delay: 0.3 + index * 0.15,
+                ease: "easeOut",
+              }}
             >
               <div className="relative h-44 sm:h-52">
                 <img
@@ -202,7 +223,7 @@ export default function SuccessStoriesSection() {
                   </button>
                 </div>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>

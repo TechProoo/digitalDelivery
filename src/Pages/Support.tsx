@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   CreditCard,
   FileText,
   Globe,
-  MessageCircle,
   Package,
   Rocket,
   Search,
@@ -140,7 +140,7 @@ const Support = () => {
         id: "quote",
         question: "How do I request a quote?",
         answer:
-          "Use the “Get a Quote” button in the navbar or contact our support team. Provide pickup/drop-off, package details, and preferred service, and we’ll respond quickly.",
+          "Use the 'Get a Quote' button in the navbar or contact our support team. Provide pickup/drop-off, package details, and preferred service, and we'll respond quickly.",
       },
       {
         id: "international-docs",
@@ -190,7 +190,7 @@ const Support = () => {
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 pt-16 pb-16 text-center">
           <div className="flex justify-center">
-            <span
+            <motion.span
               className="inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold"
               style={{
                 background: "hsl(var(--card) / 0.65)",
@@ -199,29 +199,43 @@ const Support = () => {
                 boxShadow: "var(--shadow-card)",
                 backdropFilter: "blur(10px)",
               }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             >
               Support Center
-            </span>
+            </motion.span>
           </div>
 
-          <h1
+          <motion.h1
             className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
           >
             How Can We <span style={{ color: "var(--accent-teal)" }}>Help</span>
             ?
-          </h1>
+          </motion.h1>
 
-          <p
+          <motion.p
             className="mx-auto mt-4 max-w-2xl text-base sm:text-lg"
             style={{ color: "var(--text-secondary)" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
             Find answers to common questions, browse our knowledge base, or
             contact our support team.
-          </p>
+          </motion.p>
 
           {/* Search */}
-          <div className="mx-auto mt-10 max-w-3xl">
+          <motion.div
+            className="mx-auto mt-10 max-w-3xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          >
             <div
               className="flex items-center gap-3 rounded-2xl px-5 py-4"
               style={{
@@ -243,30 +257,41 @@ const Support = () => {
                 aria-label="Search for help articles"
               />
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 py-14">
         {/* Browse by Category */}
-
         <section className="pb-10">
-          <h2
+          <motion.h2
             className="text-center text-3xl sm:text-4xl font-bold header"
             style={{ color: "var(--text-primary)" }}
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             Browse by Category
-          </h2>
+          </motion.h2>
 
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((cat) => (
-              <div
+            {filtered.map((cat, index) => (
+              <motion.div
                 key={cat.id}
                 className="group text-left rounded-2xl p-7 transition"
                 style={{
                   background: "hsl(var(--card) / 0.55)",
                   border: "1px solid var(--border-soft)",
                   boxShadow: "var(--shadow-card)",
+                }}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.08,
+                  ease: "easeOut",
                 }}
               >
                 <div className="flex items-start justify-between gap-4">
@@ -319,16 +344,21 @@ const Support = () => {
                     {cat.articlesCount} articles
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
           {filtered.length === 0 && (
-            <div className="mx-auto mt-10 max-w-xl text-center">
+            <motion.div
+              className="mx-auto mt-10 max-w-xl text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
               <p style={{ color: "var(--text-secondary)" }}>
                 No categories match your search.
               </p>
-            </div>
+            </motion.div>
           )}
         </section>
 
@@ -336,7 +366,12 @@ const Support = () => {
         <section className="py-10">
           <div className="grid gap-8 lg:grid-cols-2">
             {/* Popular Articles */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
               <div className="flex items-center gap-3">
                 <BookOpen
                   className="h-5 w-5"
@@ -379,10 +414,15 @@ const Support = () => {
                   </NavLink>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* FAQ */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+            >
               <div className="flex items-center gap-3">
                 <HelpCircle
                   className="h-5 w-5"
@@ -424,41 +464,62 @@ const Support = () => {
                         aria-expanded={open}
                       >
                         <span className="font-semibold">{f.question}</span>
-                        {open ? (
-                          <ChevronUp
-                            className="h-5 w-5"
-                            style={{ color: "var(--accent-teal)" }}
-                          />
-                        ) : (
-                          <ChevronDown
-                            className="h-5 w-5"
-                            style={{ color: "var(--text-tertiary)" }}
-                          />
-                        )}
+                        <motion.div
+                          animate={{ rotate: open ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {open ? (
+                            <ChevronUp
+                              className="h-5 w-5"
+                              style={{ color: "var(--accent-teal)" }}
+                            />
+                          ) : (
+                            <ChevronDown
+                              className="h-5 w-5"
+                              style={{ color: "var(--text-tertiary)" }}
+                            />
+                          )}
+                        </motion.div>
                       </button>
 
-                      {open && (
-                        <div
-                          className="px-6 pb-6"
-                          style={{
-                            color: "var(--text-secondary)",
-                            lineHeight: 1.7,
-                          }}
-                        >
-                          {f.answer}
-                        </div>
-                      )}
+                      <AnimatePresence>
+                        {open && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="overflow-hidden"
+                          >
+                            <div
+                              className="px-6 pb-6"
+                              style={{
+                                color: "var(--text-secondary)",
+                                lineHeight: 1.7,
+                              }}
+                            >
+                              {f.answer}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* Still need help */}
         <section className="py-10">
-          <div className="text-center">
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <h3
               className="text-3xl sm:text-4xl font-bold header"
               style={{ color: "var(--text-primary)" }}
@@ -468,169 +529,114 @@ const Support = () => {
             <p className="mt-3" style={{ color: "var(--text-secondary)" }}>
               Our support team is available 24/7 to assist you
             </p>
-          </div>
+          </motion.div>
 
           <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {/* Live chat */}
-            <div
-              className="rounded-2xl p-8 text-center"
-              style={{
-                background: "hsl(var(--card) / 0.55)",
-                border: "1px solid var(--border-soft)",
-                boxShadow: "var(--shadow-card)",
-              }}
-            >
-              <div className="flex justify-center">
-                <div
-                  className="grid place-items-center rounded-2xl"
-                  style={{
-                    width: 56,
-                    height: 56,
-                    background: "hsl(var(--background) / 0.35)",
-                    border: "1px solid var(--border-soft)",
-                    color: "var(--accent-teal)",
-                  }}
-                >
-                  <MessageSquare className="h-6 w-6" />
-                </div>
-              </div>
-              <div
-                className="mt-6 text-xl font-bold"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Live Chat
-              </div>
-              <p className="mt-3" style={{ color: "var(--text-secondary)" }}>
-                Chat with our AI-powered assistant for instant help
-              </p>
-              <NavLink
-                to="/contact"
-                className="mt-6 inline-flex items-center justify-center rounded-xl px-6 py-3 font-semibold"
+            {[
+              {
+                icon: <MessageSquare className="h-6 w-6" />,
+                color: "var(--accent-teal)",
+                title: "Live Chat",
+                description: "Chat with our AI-powered assistant for instant help",
+                action: "Start Chat",
+                to: "/contact",
+                border: false,
+              },
+              {
+                icon: <Phone className="h-6 w-6" />,
+                color: "hsl(var(--success))",
+                title: "Call Us",
+                description: "Speak directly with a support agent",
+                action: "+1 (800) 555-1234",
+                href: "tel:+18005551234",
+                border: true,
+              },
+              {
+                icon: <Mail className="h-6 w-6" />,
+                color: "#8b5cf6",
+                title: "Email Support",
+                description: "Get a response within 24 hours",
+                action: "Contact Us",
+                to: "/contact",
+                border: false,
+              },
+            ].map((item, index) => (
+              <motion.div
+                key={item.title}
+                className="rounded-2xl p-8 text-center"
                 style={{
-                  width: "100%",
-                  background: "hsl(var(--background) / 0.35)",
-                  border: "1px solid var(--border-soft)",
-                  color: "var(--text-primary)",
+                  background: "hsl(var(--card) / 0.55)",
+                  border: item.border
+                    ? "1px solid hsl(var(--primary) / 0.35)"
+                    : "1px solid var(--border-soft)",
+                  boxShadow: "var(--shadow-card)",
+                }}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.1,
+                  ease: "easeOut",
                 }}
               >
-                Start Chat
-              </NavLink>
-            </div>
-
-            {/* Call */}
-            <div
-              className="rounded-2xl p-8 text-center"
-              style={{
-                background: "hsl(var(--card) / 0.55)",
-                border: "1px solid hsl(var(--primary) / 0.35)",
-                boxShadow: "var(--shadow-card)",
-              }}
-            >
-              <div className="flex justify-center">
-                <div
-                  className="grid place-items-center rounded-2xl"
-                  style={{
-                    width: 56,
-                    height: 56,
-                    background: "hsl(var(--background) / 0.35)",
-                    border: "1px solid var(--border-soft)",
-                    color: "hsl(var(--success))",
-                  }}
-                >
-                  <Phone className="h-6 w-6" />
+                <div className="flex justify-center">
+                  <div
+                    className="grid place-items-center rounded-2xl"
+                    style={{
+                      width: 56,
+                      height: 56,
+                      background: "hsl(var(--background) / 0.35)",
+                      border: "1px solid var(--border-soft)",
+                      color: item.color,
+                    }}
+                  >
+                    {item.icon}
+                  </div>
                 </div>
-              </div>
-              <div
-                className="mt-6 text-xl font-bold"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Call Us
-              </div>
-              <p className="mt-3" style={{ color: "var(--text-secondary)" }}>
-                Speak directly with a support agent
-              </p>
-              <a
-                href="tel:+18005551234"
-                className="mt-6 inline-flex items-center justify-center rounded-xl px-6 py-3 font-semibold"
-                style={{
-                  width: "100%",
-                  background: "hsl(var(--background) / 0.35)",
-                  border: "1px solid var(--border-soft)",
-                  color: "var(--text-primary)",
-                }}
-              >
-                +1 (800) 555-1234
-              </a>
-            </div>
-
-            {/* Email */}
-            <div
-              className="rounded-2xl p-8 text-center"
-              style={{
-                background: "hsl(var(--card) / 0.55)",
-                border: "1px solid var(--border-soft)",
-                boxShadow: "var(--shadow-card)",
-              }}
-            >
-              <div className="flex justify-center">
                 <div
-                  className="grid place-items-center rounded-2xl"
-                  style={{
-                    width: 56,
-                    height: 56,
-                    background: "hsl(var(--background) / 0.35)",
-                    border: "1px solid var(--border-soft)",
-                    color: "#8b5cf6",
-                  }}
+                  className="mt-6 text-xl font-bold"
+                  style={{ color: "var(--text-primary)" }}
                 >
-                  <Mail className="h-6 w-6" />
+                  {item.title}
                 </div>
-              </div>
-              <div
-                className="mt-6 text-xl font-bold"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Email Support
-              </div>
-              <p className="mt-3" style={{ color: "var(--text-secondary)" }}>
-                Get a response within 24 hours
-              </p>
-              <NavLink
-                to="/contact"
-                className="mt-6 inline-flex items-center justify-center rounded-xl px-6 py-3 font-semibold"
-                style={{
-                  width: "100%",
-                  background: "hsl(var(--background) / 0.35)",
-                  border: "1px solid var(--border-soft)",
-                  color: "var(--text-primary)",
-                }}
-              >
-                Contact Us
-              </NavLink>
-            </div>
+                <p className="mt-3" style={{ color: "var(--text-secondary)" }}>
+                  {item.description}
+                </p>
+                {item.to ? (
+                  <NavLink
+                    to={item.to}
+                    className="mt-6 inline-flex items-center justify-center rounded-xl px-6 py-3 font-semibold"
+                    style={{
+                      width: "100%",
+                      background: "hsl(var(--background) / 0.35)",
+                      border: "1px solid var(--border-soft)",
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {item.action}
+                  </NavLink>
+                ) : (
+                  <a
+                    href={item.href}
+                    className="mt-6 inline-flex items-center justify-center rounded-xl px-6 py-3 font-semibold"
+                    style={{
+                      width: "100%",
+                      background: "hsl(var(--background) / 0.35)",
+                      border: "1px solid var(--border-soft)",
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {item.action}
+                  </a>
+                )}
+              </motion.div>
+            ))}
           </div>
         </section>
 
         <Footer />
       </main>
-
-      {/* Floating chat */}
-      <NavLink
-        to="/contact"
-        className="fixed bottom-6 right-6 z-50 grid place-items-center rounded-full"
-        style={{
-          width: 56,
-          height: 56,
-          background:
-            "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))",
-          boxShadow: "0 18px 40px rgba(0,0,0,0.45)",
-          color: "hsl(var(--primary-foreground))",
-        }}
-        aria-label="Chat with support"
-        title="Chat with support"
-      >
-        <MessageCircle className="h-6 w-6" />
-      </NavLink>
     </div>
   );
 };

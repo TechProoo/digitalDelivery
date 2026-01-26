@@ -3,6 +3,7 @@ import Logo from "../../assets/logo.png";
 import { Globe, Menu, Moon, Sun, X } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
+import { motion } from "framer-motion";
 import {
   applyTheme,
   getAppliedTheme,
@@ -82,43 +83,62 @@ const Navbar = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <nav className="h-16 flex items-center gap-4">
             {/* Brand */}
-            <NavLink
-              to="/"
-              className="flex items-center gap-3 shrink-0"
-              aria-label="Go to home"
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              <span
-                className="grid place-items-center rounded-xl"
-                style={{
-                  width: 40,
-                  height: 40,
-                  background: "var(--gradient-primary)",
-                  boxShadow: "var(--glow-primary)",
-                }}
+              <NavLink
+                to="/"
+                className="flex items-center gap-3 shrink-0"
+                aria-label="Go to home"
               >
-                <img
-                  src={Logo}
-                  alt="Digital Logistics"
-                  className="h-7 w-7"
-                  style={{ filter: "drop-shadow(0 1px 6px rgba(0,0,0,0.35))" }}
-                />
-              </span>
-              <div className="leading-tight">
-                <div
-                  className="font-semibold tracking-tight"
-                  style={{ color: "var(--text-primary)" }}
+                <span
+                  className="grid place-items-center rounded-xl"
+                  style={{
+                    width: 40,
+                    height: 40,
+                    background: "var(--gradient-primary)",
+                    boxShadow: "var(--glow-primary)",
+                  }}
                 >
-                  Digital
-                  <span style={{ color: "var(--accent-teal)" }}>Logistics</span>
+                  <img
+                    src={Logo}
+                    alt="Digital Logistics"
+                    className="h-7 w-7"
+                    style={{
+                      filter: "drop-shadow(0 1px 6px rgba(0,0,0,0.35))",
+                    }}
+                  />
+                </span>
+                <div className="leading-tight">
+                  <div
+                    className="font-semibold tracking-tight"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    Digital
+                    <span style={{ color: "var(--accent-teal)" }}>
+                      Logistics
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </NavLink>
+              </NavLink>
+            </motion.div>
 
             {/* Center Links (desktop) */}
             <div className="hidden lg:flex flex-1 justify-center">
               <ul className="flex items-center gap-8">
-                {navLinks.map((link) => (
-                  <li key={link.name}>
+                {navLinks.map((link, index) => (
+                  <motion.li
+                    key={link.name}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.4,
+                      delay: 0.3 + index * 0.08,
+                      ease: "easeOut",
+                    }}
+                  >
                     <NavLink
                       to={link.path}
                       className={({ isActive }) =>
@@ -132,14 +152,14 @@ const Navbar = () => {
                     >
                       {link.name}
                     </NavLink>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>
 
             {/* Right actions */}
             <div className="flex items-center gap-2 sm:gap-3 ml-auto">
-              <button
+              <motion.button
                 type="button"
                 onClick={handleToggleTheme}
                 className="hidden sm:grid place-items-center rounded-full h-10 w-10 transition"
@@ -150,45 +170,60 @@ const Navbar = () => {
                 }}
                 aria-label="Toggle theme"
                 title="Toggle theme"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
               >
                 {isDark ? (
                   <Sun className="h-5 w-5" />
                 ) : (
                   <Moon className="h-5 w-5" />
                 )}
-              </button>
+              </motion.button>
 
-              {isAuthenticated ? (
-                <NavLink
-                  to="/dashboard"
-                  className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium transition-colors"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  Dashboard
-                </NavLink>
-              ) : (
-                <NavLink
-                  to="/login"
-                  className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium transition-colors"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  Sign In
-                </NavLink>
-              )}
-
-              <NavLink
-                to="/dashboard/new-delivery"
-                className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
-                style={{
-                  background: "hsl(var(--primary))",
-                  color: "var(--primary-foreground)",
-                  boxShadow: "var(--glow-primary)",
-                }}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
               >
-                Get a Quote
-              </NavLink>
+                {isAuthenticated ? (
+                  <NavLink
+                    to="/dashboard"
+                    className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium transition-colors"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Dashboard
+                  </NavLink>
+                ) : (
+                  <NavLink
+                    to="/login"
+                    className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium transition-colors"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Sign In
+                  </NavLink>
+                )}
+              </motion.div>
 
-              <button
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+              >
+                <NavLink
+                  to="/dashboard/new-delivery"
+                  className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
+                  style={{
+                    background: "hsl(var(--primary))",
+                    color: "var(--primary-foreground)",
+                    boxShadow: "var(--glow-primary)",
+                  }}
+                >
+                  Get a Quote
+                </NavLink>
+              </motion.div>
+
+              <motion.button
                 onClick={() => setIsMobileMenuOpen((v) => !v)}
                 className="lg:hidden grid place-items-center rounded-full h-10 w-10"
                 aria-label="Toggle menu"
@@ -197,9 +232,12 @@ const Navbar = () => {
                   background: "hsl(var(--card) / 0.65)",
                   color: "var(--text-primary)",
                 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
               >
                 <Menu className="h-5 w-5" />
-              </button>
+              </motion.button>
             </div>
           </nav>
         </div>
@@ -208,19 +246,27 @@ const Navbar = () => {
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <>
-          <div
+          <motion.div
             className="fixed inset-0 z-40 lg:hidden"
             onClick={() => setIsMobileMenuOpen(false)}
             style={{ background: "rgba(0,0,0,0.55)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
           />
 
-          <div
+          <motion.div
             className="fixed top-0 right-0 z-50 lg:hidden h-full w-[90vw] max-w-sm"
             style={{
               background: "hsl(var(--background) / 0.98)",
               borderLeft: "1px solid var(--border-soft)",
               boxShadow: "var(--shadow-strong)",
             }}
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
           >
             <div
               className="h-16 px-4 flex items-center justify-between"
@@ -261,12 +307,15 @@ const Navbar = () => {
             </div>
 
             <div className="p-4">
-              <div
+              <motion.div
                 className="flex items-center justify-between rounded-xl px-4 py-3"
                 style={{
                   background: "hsl(var(--card) / 0.6)",
                   border: "1px solid var(--border-soft)",
                 }}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
               >
                 <div
                   className="flex items-center gap-2"
@@ -298,12 +347,21 @@ const Navbar = () => {
                     <Moon className="h-5 w-5" />
                   )}
                 </button>
-              </div>
+              </motion.div>
 
               <nav className="mt-4">
                 <ul className="space-y-1">
-                  {navLinks.map((link) => (
-                    <li key={link.name}>
+                  {navLinks.map((link, index) => (
+                    <motion.li
+                      key={link.name}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        duration: 0.3,
+                        delay: 0.2 + index * 0.08,
+                        ease: "easeOut",
+                      }}
+                    >
                       <NavLink
                         to={link.path}
                         className={({ isActive }) =>
@@ -321,12 +379,17 @@ const Navbar = () => {
                       >
                         {link.name}
                       </NavLink>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               </nav>
 
-              <div className="mt-6 grid gap-2">
+              <motion.div
+                className="mt-6 grid gap-2"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.6 }}
+              >
                 {isAuthenticated ? (
                   <NavLink
                     to="/dashboard"
@@ -363,9 +426,9 @@ const Navbar = () => {
                 >
                   Get a Quote
                 </NavLink>
-              </div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </>
       )}
     </>

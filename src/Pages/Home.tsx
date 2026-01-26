@@ -5,7 +5,6 @@ import Navbar from "../components/home/Navbar";
 import ServicesComponent from "../components/home/ServicesComponent";
 import TrustedBy from "../components/home/TrustedBy";
 import SolutionsSection from "../components/home/SolutionsSection";
-import FeaturesSection from "../components/home/FeaturesSection";
 import ProcessSection from "../components/home/ProcessSection";
 import StatsStrip from "../components/home/StatsStrip";
 import SuccessStoriesSection from "../components/home/SuccessStoriesSection";
@@ -26,7 +25,6 @@ const Home = () => {
       <section id="solutions" style={{ scrollMarginTop: 96 }}>
         <SolutionsSection />
       </section>
-      <FeaturesSection />
       <ProcessSection />
       <ServicesComponent />
       <StatsStrip />

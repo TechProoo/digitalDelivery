@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { Globe, MapPin, Truck, Users } from "lucide-react";
+import { motion } from "framer-motion";
 
 type MiniStat = {
   icon: ComponentType<{ className?: string }>;
@@ -28,7 +29,7 @@ export default function GlobalReachSection() {
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           {/* Left content */}
           <div>
-            <div
+            <motion.div
               className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
               style={{
                 background: "hsl(var(--card) / 0.55)",
@@ -36,13 +37,21 @@ export default function GlobalReachSection() {
                 color: "var(--accent-teal)",
                 backdropFilter: "blur(10px)",
               }}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
               Global Reach
-            </div>
+            </motion.div>
 
-            <h2
+            <motion.h2
               className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
               style={{ color: "var(--text-primary)" }}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             >
               We Power One of the
               <br />
@@ -52,23 +61,35 @@ export default function GlobalReachSection() {
               in the
               <br />
               World
-            </h2>
+            </motion.h2>
 
-            <p
+            <motion.p
               className="mt-6 text-base sm:text-lg leading-relaxed"
               style={{ color: "var(--text-secondary)" }}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             >
               Our extensive global network connects shippers with carriers
               across every continent, providing unmatched capacity and
               flexibility for your logistics needs.
-            </p>
+            </motion.p>
 
             <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
-              {miniStats.map((s) => (
-                <div
+              {miniStats.map((s, index) => (
+                <motion.div
                   key={s.label}
                   className="flex items-center gap-4 rounded-2xl p-5"
                   style={cardStyle}
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.3 + index * 0.1,
+                    ease: "easeOut",
+                  }}
                 >
                   <div
                     className="grid place-items-center rounded-2xl"
@@ -96,13 +117,19 @@ export default function GlobalReachSection() {
                       {s.label}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
 
           {/* Right globe */}
-          <div className="relative mx-auto w-full max-w-lg">
+          <motion.div
+            className="relative mx-auto w-full max-w-lg"
+            initial={{ opacity: 0, y: -100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+          >
             <div className="relative aspect-square">
               {/* Rings */}
               <div className="absolute inset-0 globe-ring-1" />
@@ -173,7 +200,7 @@ export default function GlobalReachSection() {
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

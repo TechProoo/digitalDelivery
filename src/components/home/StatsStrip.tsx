@@ -1,7 +1,53 @@
+import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import { useEffect } from "react";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
+
 type Stat = {
   value: string;
   label: string;
 };
+
+function Counter({
+  value,
+  duration = 2,
+}: {
+  value: string;
+  duration?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true });
+  const count = useMotionValue(0);
+
+  // Extract number from value (e.g., "5M+" -> 5, "99.8%" -> 99.8)
+  const numericValue = parseFloat(value.replace(/[^0-9.]/g, "")) || 0;
+  const suffix = value.replace(/[0-9.]/g, "");
+
+  const rounded = useTransform(count, (latest) => {
+    // If it's a decimal number, show one decimal place
+    if (value.includes(".")) {
+      return latest.toFixed(1) + suffix;
+    }
+    return Math.round(latest) + suffix;
+  });
+
+  useEffect(() => {
+    if (isInView) {
+      const controls = animate(count, numericValue, { duration });
+      return controls.stop;
+    }
+  }, [isInView, count, numericValue, duration]);
+
+  return (
+    <motion.div
+      ref={ref}
+      className="text-4xl sm:text-5xl font-semibold tracking-tight"
+      style={{ color: "var(--accent-teal)" }}
+    >
+      {rounded}
+    </motion.div>
+  );
+}
 
 export default function StatsStrip() {
   const stats: Stat[] = [
@@ -16,7 +62,7 @@ export default function StatsStrip() {
   return (
     <section className="px-4 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl py-10 sm:py-12">
-        <div
+        <motion.div
           className="relative overflow-hidden rounded-3xl"
           style={{
             background:
@@ -25,6 +71,10 @@ export default function StatsStrip() {
             boxShadow: "0 30px 80px rgba(0,0,0,0.55)",
             backdropFilter: "blur(18px)",
           }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <div
             className="pointer-events-none absolute -top-24 left-1/2 h-48 -translate-x-1/2"
@@ -37,21 +87,36 @@ export default function StatsStrip() {
           />
 
           <div className="relative grid grid-cols-2 gap-y-10 px-6 py-10 text-center sm:px-10 md:grid-cols-3 lg:grid-cols-6">
-            {stats.map((s) => (
-              <div key={s.label}>
-                <div
-                  className="text-4xl sm:text-5xl font-semibold tracking-tight"
-                  style={{ color: "var(--accent-teal)" }}
+            {stats.map((s, index) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.1 + index * 0.08,
+                  ease: "easeOut",
+                }}
+              >
+                <Counter value={s.value} duration={2} />
+                <motion.div
+                  className="mt-3"
+                  style={{ color: "var(--text-tertiary)" }}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.4,
+                    delay: 0.3 + index * 0.08,
+                  }}
                 >
-                  {s.value}
-                </div>
-                <div className="mt-3" style={{ color: "var(--text-tertiary)" }}>
                   {s.label}
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

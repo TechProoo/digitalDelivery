@@ -1,5 +1,6 @@
 import React from "react";
 import { CheckCircle2, ClipboardList, MapPin, Truck } from "lucide-react";
+import { motion } from "framer-motion";
 
 type Step = {
   number: string;
@@ -15,7 +16,7 @@ export default function ProcessSection() {
       number: "01",
       title: "Request a Quote",
       description:
-        "Tell us what you’re shipping and where it’s going — get pricing instantly.",
+        "Tell us what you're shipping and where it's going — get pricing instantly.",
       icon: ClipboardList,
       tileBg: "linear-gradient(145deg, #0ea5e9, #2563eb)",
     },
@@ -23,7 +24,7 @@ export default function ProcessSection() {
       number: "02",
       title: "Schedule Pickup",
       description:
-        "Choose a pickup window and we’ll dispatch the best carrier for the job.",
+        "Choose a pickup window and we'll dispatch the best carrier for the job.",
       icon: Truck,
       tileBg: "linear-gradient(145deg, #f59e0b, #f97316)",
     },
@@ -50,7 +51,7 @@ export default function ProcessSection() {
       <div className="mx-auto max-w-7xl py-14 sm:py-18">
         <div className="mx-auto max-w-4xl text-center">
           <div className="flex justify-center">
-            <div
+            <motion.div
               className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
               style={{
                 background: "hsl(var(--card) / 0.55)",
@@ -58,41 +59,61 @@ export default function ProcessSection() {
                 color: "hsl(var(--accent))",
                 backdropFilter: "blur(10px)",
               }}
+              initial={{ opacity: 0, y: -20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             >
               Simple Process
-            </div>
+            </motion.div>
           </div>
 
-          <h2
+          <motion.h2
             className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
           >
             How{" "}
             <span style={{ color: "var(--accent-teal)" }}>
               Digital Logistics
             </span>{" "}
             Works
-          </h2>
+          </motion.h2>
 
-          <p
+          <motion.p
             className="mt-5 text-base sm:text-lg leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
             Getting started is easy. Our streamlined process takes you from
             quote to delivery in just four simple steps.
-          </p>
+          </motion.p>
         </div>
 
-        <div className=" mt-20 max-w-5xl p-auto mx-auto">
+        <div className="mt-20 max-w-5xl p-auto mx-auto">
           {/* Icon tiles */}
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
-            {steps.map((s) => (
-              <div
+            {steps.map((s, index) => (
+              <motion.div
                 key={s.number}
                 className="flex justify-center lg:justify-start"
+                initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.15,
+                  ease: "easeOut",
+                }}
               >
                 <div className="relative">
-                  <div
+                  <motion.div
                     className="grid place-items-center rounded-3xl"
                     style={{
                       width: 88,
@@ -100,11 +121,13 @@ export default function ProcessSection() {
                       background: s.tileBg,
                       boxShadow: "0 18px 40px rgba(0,0,0,0.45)",
                     }}
+                    whileHover={{ scale: 1.05, rotate: 5 }}
+                    transition={{ duration: 0.3 }}
                   >
                     <s.icon className="h-9 w-9 text-white" />
-                  </div>
+                  </motion.div>
 
-                  <div
+                  <motion.div
                     className="absolute -top-3 -right-3 grid place-items-center rounded-full text-sm font-semibold"
                     style={{
                       width: 34,
@@ -114,27 +137,49 @@ export default function ProcessSection() {
                       color: "hsl(var(--primary))",
                       boxShadow: "0 10px 20px rgba(0,0,0,0.4)",
                     }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.4,
+                      delay: index * 0.15 + 0.2,
+                      ease: "backOut",
+                    }}
                   >
                     {s.number}
-                  </div>
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
           {/* Divider line (desktop) */}
-          <div
+          <motion.div
             className="mt-12 hidden h-px w-full lg:block"
             style={{
               background:
                 "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.55), transparent)",
             }}
+            initial={{ opacity: 0, scaleX: 0 }}
+            whileInView={{ opacity: 1, scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
           />
 
           {/* Titles + descriptions */}
           <div className="mt-8 grid grid-cols-1 gap-10 text-center sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:text-left">
-            {steps.map((s) => (
-              <div key={s.number}>
+            {steps.map((s, index) => (
+              <motion.div
+                key={s.number}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.1,
+                  ease: "easeOut",
+                }}
+              >
                 <div
                   className="text-2xl font-semibold"
                   style={{ color: "var(--text-primary)" }}
@@ -147,7 +192,7 @@ export default function ProcessSection() {
                 >
                   {s.description}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

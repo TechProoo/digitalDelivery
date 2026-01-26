@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { Eye, Leaf, Lightbulb, ShieldCheck, Target, Users } from "lucide-react";
+import { motion } from "framer-motion";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Cta from "./Cta";
@@ -92,7 +93,7 @@ export default function About() {
         <div className="mx-auto max-w-7xl pt-10 pb-10 sm:pt-14 sm:pb-14">
           <div className="mx-auto max-w-4xl text-center">
             <div className="flex justify-center">
-              <div
+              <motion.div
                 className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
                 style={{
                   background: "hsl(var(--card) / 0.55)",
@@ -100,26 +101,35 @@ export default function About() {
                   color: "var(--accent-teal)",
                   backdropFilter: "blur(10px)",
                 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
               >
                 About Us
-              </div>
+              </motion.div>
             </div>
 
-            <h1
+            <motion.h1
               className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
               style={{ color: "var(--text-primary)" }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             >
               About{" "}
               <span style={{ color: "var(--accent-teal)" }}>SwiftShip</span>
-            </h1>
+            </motion.h1>
 
-            <p
+            <motion.p
               className="mt-5 text-base sm:text-lg leading-relaxed"
               style={{ color: "var(--text-secondary)" }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             >
               Leading the future of global freight logistics with innovation and
               excellence.
-            </p>
+            </motion.p>
           </div>
         </div>
       </section>
@@ -128,11 +138,19 @@ export default function About() {
       <section className="px-4 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-7xl pb-10 sm:pb-14">
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((s) => (
-              <div
+            {stats.map((s, index) => (
+              <motion.div
                 key={s.label}
                 className="rounded-2xl p-7 text-center"
                 style={cardStyle}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.1,
+                  ease: "easeOut",
+                }}
               >
                 <div
                   className="text-4xl sm:text-5xl font-semibold tracking-tight"
@@ -143,7 +161,7 @@ export default function About() {
                 <div className="mt-2" style={{ color: "var(--text-tertiary)" }}>
                   {s.label}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -153,7 +171,14 @@ export default function About() {
       <section className="px-4 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-7xl py-10 sm:py-14">
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-2">
-            <div className="rounded-3xl p-8" style={cardStyle}>
+            <motion.div
+              className="rounded-3xl p-8"
+              style={cardStyle}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
               <div
                 className="grid place-items-center rounded-2xl"
                 style={{
@@ -181,9 +206,16 @@ export default function About() {
                 sustainable, and cost-effective freight solutions for businesses
                 of all sizes.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="rounded-3xl p-8" style={cardStyle}>
+            <motion.div
+              className="rounded-3xl p-8"
+              style={cardStyle}
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+            >
               <div
                 className="grid place-items-center rounded-2xl"
                 style={{
@@ -210,7 +242,7 @@ export default function About() {
                 setting new standards in efficiency, reliability, and customer
                 experience.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -218,16 +250,32 @@ export default function About() {
       {/* Values */}
       <section className="px-4 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-7xl py-10 sm:py-14">
-          <h2
+          <motion.h2
             className="text-center text-3xl sm:text-4xl font-semibold header"
             style={{ color: "var(--text-primary)" }}
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             Our Values
-          </h2>
+          </motion.h2>
 
           <div className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {values.map((v) => (
-              <div key={v.title} className="rounded-3xl p-7" style={cardStyle}>
+            {values.map((v, index) => (
+              <motion.div
+                key={v.title}
+                className="rounded-3xl p-7"
+                style={cardStyle}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.1,
+                  ease: "easeOut",
+                }}
+              >
                 <div
                   className="grid place-items-center rounded-2xl"
                   style={{
@@ -248,7 +296,7 @@ export default function About() {
                 <div className="mt-3" style={{ color: "var(--text-tertiary)" }}>
                   {v.description}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -257,19 +305,31 @@ export default function About() {
       {/* Leadership */}
       <section className="px-4 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-7xl py-10 sm:py-14">
-          <h2
+          <motion.h2
             className="text-center text-3xl sm:text-4xl font-semibold header"
             style={{ color: "var(--text-primary)" }}
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             Leadership Team
-          </h2>
+          </motion.h2>
 
           <div className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {leaders.map((l) => (
-              <article
+            {leaders.map((l, index) => (
+              <motion.article
                 key={l.name}
                 className="overflow-hidden rounded-3xl"
                 style={cardStyle}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.1,
+                  ease: "easeOut",
+                }}
               >
                 <div
                   className="h-40"
@@ -310,7 +370,7 @@ export default function About() {
                     </div>
                   </div>
                 </div>
-              </article>
+              </motion.article>
             ))}
           </div>
         </div>

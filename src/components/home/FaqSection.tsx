@@ -1,5 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { useId, useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type FaqItem = {
   question: string;
@@ -68,7 +69,7 @@ export default function FaqSection() {
       <div className="mx-auto max-w-7xl py-14 sm:py-18">
         <div className="mx-auto max-w-4xl text-center">
           <div className="flex justify-center">
-            <div
+            <motion.div
               className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
               style={{
                 background: "hsl(var(--card) / 0.55)",
@@ -76,25 +77,37 @@ export default function FaqSection() {
                 color: "var(--accent-teal)",
                 backdropFilter: "blur(10px)",
               }}
+              initial={{ opacity: 0, y: -30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             >
               FAQ
-            </div>
+            </motion.div>
           </div>
 
-          <h2
+          <motion.h2
             className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
           >
             Frequently Asked{" "}
             <span style={{ color: "var(--accent-teal)" }}>Questions</span>
-          </h2>
+          </motion.h2>
 
-          <p
+          <motion.p
             className="mt-5 text-base sm:text-lg leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
             Everything you need to know about shipping with SwiftShip.
-          </p>
+          </motion.p>
         </div>
 
         <div className="mx-auto mt-12 max-w-4xl space-y-4">
@@ -103,7 +116,7 @@ export default function FaqSection() {
             const contentId = `${baseId}-faq-${idx}`;
 
             return (
-              <div
+              <motion.div
                 key={item.question}
                 className="overflow-hidden rounded-2xl"
                 style={{
@@ -111,6 +124,14 @@ export default function FaqSection() {
                   border: isOpen
                     ? "1px solid hsl(var(--primary) / 0.35)"
                     : "1px solid var(--border-soft)",
+                }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.3 + idx * 0.05,
+                  ease: "easeOut",
                 }}
               >
                 <button
@@ -126,32 +147,44 @@ export default function FaqSection() {
                   <span className="text-lg sm:text-xl font-semibold">
                     {item.question}
                   </span>
-                  <ChevronDown
-                    className="h-5 w-5 shrink-0 transition-transform duration-300"
-                    style={{
-                      color: "var(--text-primary)",
-                      transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-                    }}
-                  />
+                  <motion.div
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <ChevronDown
+                      className="h-5 w-5 shrink-0"
+                      style={{ color: "var(--text-primary)" }}
+                    />
+                  </motion.div>
                 </button>
 
-                {isOpen && (
-                  <div
-                    id={contentId}
-                    className="px-6 pb-6"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    <div
-                      style={{
-                        borderTop: "1px solid var(--border-soft)",
-                        paddingTop: "1rem",
-                      }}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      id={contentId}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
                     >
-                      {item.answer}
-                    </div>
-                  </div>
-                )}
-              </div>
+                      <div
+                        className="px-6 pb-6"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        <div
+                          style={{
+                            borderTop: "1px solid var(--border-soft)",
+                            paddingTop: "1rem",
+                          }}
+                        >
+                          {item.answer}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             );
           })}
         </div>

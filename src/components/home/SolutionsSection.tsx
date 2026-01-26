@@ -14,6 +14,7 @@ import {
   Utensils,
   ArrowRight,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type TabKey = "solutions" | "industries";
 
@@ -155,15 +156,21 @@ export default function SolutionsSection() {
   const cards = tab === "solutions" ? solutions : industries;
 
   return (
-    <section className="px-4 sm:px-6 lg:px-10">
+    <section className="px-4 sm:px-6 lg:px-10" id="solutions">
       <div className="mx-auto max-w-7xl py-14 sm:py-18">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <h2
               className="text-4xl sm:text-6xl font-semibold tracking-tight header"
               style={{ color: "var(--text-primary)" }}
             >
-              Enterprise <span style={{ color: "var(--accent-teal)" }}>Solutions</span>
+              Enterprise{" "}
+              <span style={{ color: "var(--accent-teal)" }}>Solutions</span>
             </h2>
             <p
               className="mt-3 text-base sm:text-lg"
@@ -171,15 +178,19 @@ export default function SolutionsSection() {
             >
               Comprehensive logistics solutions tailored to your industry needs.
             </p>
-          </div>
+          </motion.div>
 
-          <div
+          <motion.div
             className="inline-flex items-center gap-1 rounded-2xl p-1 self-start"
             style={{
               background: "hsl(var(--card) / 0.55)",
               border: "1px solid var(--border-soft)",
               backdropFilter: "blur(12px)",
             }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
           >
             <button
               type="button"
@@ -213,46 +224,62 @@ export default function SolutionsSection() {
             >
               Industries
             </button>
-          </div>
+          </motion.div>
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {cards.map((card) => (
-            <div
-              key={card.title}
-              className="rounded-2xl p-6"
-              style={{
-                background: "hsl(var(--card) / 0.50)",
-                border: "1px solid var(--border-soft)",
-                boxShadow: "var(--shadow-card)",
-                backdropFilter: "blur(12px)",
-              }}
-            >
-              <div
-                className="grid place-items-center rounded-2xl"
+          <AnimatePresence mode="wait">
+            {cards.map((card, index) => (
+              <motion.div
+                key={`${tab}-${card.title}`}
+                className="rounded-2xl p-6"
                 style={{
-                  width: 56,
-                  height: 56,
-                  background: card.iconBg,
-                  color: card.iconFg,
+                  background: "hsl(var(--card) / 0.50)",
+                  border: "1px solid var(--border-soft)",
+                  boxShadow: "var(--shadow-card)",
+                  backdropFilter: "blur(12px)",
+                }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.08,
+                  ease: "easeOut",
                 }}
               >
-                <card.icon className="h-7 w-7" />
-              </div>
-              <div
-                className="mt-6 text-lg font-semibold"
-                style={{ color: "var(--text-primary)" }}
-              >
-                {card.title}
-              </div>
-              <div className="mt-1" style={{ color: "var(--text-tertiary)" }}>
-                {card.description}
-              </div>
-            </div>
-          ))}
+                <div
+                  className="grid place-items-center rounded-2xl"
+                  style={{
+                    width: 56,
+                    height: 56,
+                    background: card.iconBg,
+                    color: card.iconFg,
+                  }}
+                >
+                  <card.icon className="h-7 w-7" />
+                </div>
+                <div
+                  className="mt-6 text-lg font-semibold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  {card.title}
+                </div>
+                <div className="mt-1" style={{ color: "var(--text-tertiary)" }}>
+                  {card.description}
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
-        <div className="mt-12 flex justify-center">
+        <motion.div
+          className="mt-12 flex justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5, delay: 0.7, ease: "easeOut" }}
+        >
           <button
             type="button"
             className="inline-flex items-center justify-center gap-3 rounded-xl px-7 py-3 text-sm font-semibold"
@@ -266,7 +293,7 @@ export default function SolutionsSection() {
             Explore all solutions
             <ArrowRight className="h-4 w-4" />
           </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

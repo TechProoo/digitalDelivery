@@ -1,17 +1,41 @@
 import { Box, Headset, MoveRight, Plane, Play, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
+import { motion } from "framer-motion";
 
 export default function Hero() {
   const { isAuthenticated } = useAuth();
   const trackHref = isAuthenticated ? "/dashboard/track" : "/login";
+
+  const stats = [
+    {
+      icon: Box,
+      value: "5M+",
+      label: "Shipments Delivered",
+    },
+    {
+      icon: Truck,
+      value: "150+",
+      label: "Countries Served",
+    },
+    {
+      icon: Plane,
+      value: "99.8%",
+      label: "Customer Satisfaction",
+    },
+    {
+      icon: Headset,
+      value: "24/7",
+      label: "Support",
+    },
+  ];
 
   return (
     <section className="relative px-4 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl pt-10 pb-14 sm:pt-14 sm:pb-18">
         <div className="mx-auto max-w-4xl text-center">
           <div className="flex justify-center">
-            <div
+            <motion.div
               className="inline-flex items-center gap-2 rounded-full px-4 py-2"
               style={{
                 background: "hsl(var(--card) / 0.55)",
@@ -19,6 +43,9 @@ export default function Hero() {
                 color: "var(--accent-teal)",
                 backdropFilter: "blur(10px)",
               }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             >
               <span
                 className="inline-block h-2 w-2 rounded-full"
@@ -27,29 +54,40 @@ export default function Hero() {
               <span className="text-sm font-semibold">
                 Enterprise Logistics
               </span>
-            </div>
+            </motion.div>
           </div>
 
-          <h1
+          <motion.h1
             className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
           >
             Maximize your logistics
             <br />
             <span style={{ color: "var(--accent-teal)" }}>
               savings &amp; efficiency
             </span>
-          </h1>
+          </motion.h1>
 
-          <p
+          <motion.p
             className="mt-5 text-base sm:text-lg leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
-            Harness Digital Logistics’s AI-led enterprise suite of solutions
+            Harness Digital Logistics's AI-led enterprise suite of solutions
             backed by industry data, technology, and hands-on partnership.
-          </p>
+          </motion.p>
 
-          <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <motion.div
+            className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          >
             <Link
               to="/signup"
               className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold"
@@ -76,33 +114,12 @@ export default function Hero() {
               <Play className="h-4 w-4" />
               Track a Shipment
             </Link>
-          </div>
+          </motion.div>
         </div>
 
         <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            {
-              icon: Box,
-              value: "5M+",
-              label: "Shipments Delivered",
-            },
-            {
-              icon: Truck,
-              value: "150+",
-              label: "Countries Served",
-            },
-            {
-              icon: Plane,
-              value: "99.8%",
-              label: "Customer Satisfaction",
-            },
-            {
-              icon: Headset,
-              value: "24/7",
-              label: "Support",
-            },
-          ].map((stat) => (
-            <div
+          {stats.map((stat, index) => (
+            <motion.div
               key={stat.label}
               className="rounded-2xl p-6 text-center"
               style={{
@@ -110,6 +127,13 @@ export default function Hero() {
                 border: "1px solid var(--border-soft)",
                 boxShadow: "var(--shadow-card)",
                 backdropFilter: "blur(12px)",
+              }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                delay: 0.4 + index * 0.1,
+                ease: "easeOut",
               }}
             >
               <div
@@ -136,7 +160,7 @@ export default function Hero() {
               >
                 {stat.label}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

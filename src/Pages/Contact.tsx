@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Building2, Clock, Headset, Mail, MapPin, Phone } from "lucide-react";
+import {
+  Building2,
+  Clock,
+  Headset,
+  Mail,
+  MapPin,
+  Phone,
+} from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
 
@@ -15,7 +22,7 @@ export default function Contact() {
   const [sent, setSent] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setForm((s) => ({ ...s, [e.target.name]: e.target.value }));
   };
@@ -60,10 +67,7 @@ export default function Contact() {
   ];
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ background: "hsl(var(--background))" }}
-    >
+    <div className="min-h-screen" style={{ background: "hsl(var(--background))" }}>
       <Navbar />
 
       {/* Hero */}
@@ -133,16 +137,10 @@ export default function Contact() {
             </div>
 
             <div className="mt-6">
-              <div
-                className="text-lg font-semibold"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <div className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
                 Call Us
               </div>
-              <div
-                className="mt-1 text-sm"
-                style={{ color: "var(--text-secondary)" }}
-              >
+              <div className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
                 Available 24/7
               </div>
               <a
@@ -177,16 +175,10 @@ export default function Contact() {
             </div>
 
             <div className="mt-6">
-              <div
-                className="text-lg font-semibold"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <div className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
                 Email Us
               </div>
-              <div
-                className="mt-1 text-sm"
-                style={{ color: "var(--text-secondary)" }}
-              >
+              <div className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
                 Response within 24 hours
               </div>
               <a
@@ -221,16 +213,10 @@ export default function Contact() {
             </div>
 
             <div className="mt-6">
-              <div
-                className="text-lg font-semibold"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <div className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
                 Live Chat
               </div>
-              <div
-                className="mt-1 text-sm"
-                style={{ color: "var(--text-secondary)" }}
-              >
+              <div className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
                 Chat with our AI assistant
               </div>
               <a
@@ -248,11 +234,7 @@ export default function Contact() {
         <section className="mt-14 grid gap-10 lg:grid-cols-2">
           {/* Form */}
           <div>
-            <h2
-              className="text-3xl font-bold"
-              style={{ color: "var(--text-primary)" }}
-              id="send-message"
-            >
+            <h2 className="text-3xl font-bold" style={{ color: "var(--text-primary)" }} id="send-message">
               Send Us a Message
             </h2>
 
@@ -271,8 +253,7 @@ export default function Contact() {
                       className="text-sm font-semibold"
                       style={{ color: "var(--text-primary)" }}
                     >
-                      Full Name{" "}
-                      <span style={{ color: "var(--accent-teal)" }}>*</span>
+                      Full Name <span style={{ color: "var(--accent-teal)" }}>*</span>
                     </label>
                     <input
                       name="name"
@@ -292,8 +273,7 @@ export default function Contact() {
                       className="text-sm font-semibold"
                       style={{ color: "var(--text-primary)" }}
                     >
-                      Email{" "}
-                      <span style={{ color: "var(--accent-teal)" }}>*</span>
+                      Email <span style={{ color: "var(--accent-teal)" }}>*</span>
                     </label>
                     <input
                       name="email"
@@ -358,17 +338,13 @@ export default function Contact() {
                     className="text-sm font-semibold"
                     style={{ color: "var(--text-primary)" }}
                   >
-                    Subject{" "}
-                    <span style={{ color: "var(--accent-teal)" }}>*</span>
+                    Subject <span style={{ color: "var(--accent-teal)" }}>*</span>
                   </label>
                   <input
                     name="subject"
                     value={(form as any).subject ?? ""}
                     onChange={(e) =>
-                      setForm((s) => ({
-                        ...(s as any),
-                        subject: e.target.value,
-                      }))
+                      setForm((s) => ({ ...(s as any), subject: e.target.value }))
                     }
                     placeholder="How can we help?"
                     className="mt-2 w-full rounded-xl px-4 py-3 outline-none"
@@ -385,8 +361,7 @@ export default function Contact() {
                     className="text-sm font-semibold"
                     style={{ color: "var(--text-primary)" }}
                   >
-                    Message{" "}
-                    <span style={{ color: "var(--accent-teal)" }}>*</span>
+                    Message <span style={{ color: "var(--accent-teal)" }}>*</span>
                   </label>
                   <textarea
                     name="message"
@@ -420,10 +395,7 @@ export default function Contact() {
                   </button>
 
                   {sent && (
-                    <div
-                      className="text-sm"
-                      style={{ color: "var(--accent-teal)" }}
-                    >
+                    <div className="text-sm" style={{ color: "var(--accent-teal)" }}>
                       Thanks — we'll be in touch shortly.
                     </div>
                   )}
@@ -434,10 +406,7 @@ export default function Contact() {
 
           {/* Offices + Hours */}
           <div>
-            <h2
-              className="text-3xl font-bold"
-              style={{ color: "var(--text-primary)" }}
-            >
+            <h2 className="text-3xl font-bold" style={{ color: "var(--text-primary)" }}>
               Our Offices
             </h2>
 
@@ -473,10 +442,7 @@ export default function Contact() {
                       >
                         {o.city}
                       </div>
-                      <div
-                        className="mt-1 text-sm"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
+                      <div className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
                         {o.address}
                       </div>
 
@@ -484,17 +450,10 @@ export default function Contact() {
                         className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm"
                         style={{ color: "var(--accent-teal)" }}
                       >
-                        <a
-                          href={`tel:${o.phone.replace(/[^+\d]/g, "")}`}
-                          className="inline-flex items-center gap-2"
-                        >
+                        <a href={`tel:${o.phone.replace(/[^+\d]/g, "")}`} className="inline-flex items-center gap-2">
                           <Phone className="h-4 w-4" /> {o.phone}
                         </a>
-                        <a
-                          href={`mailto:${o.email}`}
-                          className="inline-flex items-center gap-2"
-                          style={{ color: "var(--text-tertiary)" }}
-                        >
+                        <a href={`mailto:${o.email}`} className="inline-flex items-center gap-2" style={{ color: "var(--text-tertiary)" }}>
                           <Mail className="h-4 w-4" /> {o.email}
                         </a>
                       </div>
@@ -526,48 +485,26 @@ export default function Contact() {
                   </div>
 
                   <div className="flex-1">
-                    <div
-                      className="font-semibold"
-                      style={{ color: "var(--text-primary)" }}
-                    >
+                    <div className="font-semibold" style={{ color: "var(--text-primary)" }}>
                       Business Hours
                     </div>
 
-                    <div
-                      className="mt-3 grid gap-2 text-sm"
-                      style={{ color: "var(--text-secondary)" }}
-                    >
+                    <div className="mt-3 grid gap-2 text-sm" style={{ color: "var(--text-secondary)" }}>
                       <div className="flex items-center justify-between gap-6">
                         <span>Monday - Friday</span>
-                        <span style={{ color: "var(--text-primary)" }}>
-                          8:00 AM - 8:00 PM
-                        </span>
+                        <span style={{ color: "var(--text-primary)" }}>8:00 AM - 8:00 PM</span>
                       </div>
                       <div className="flex items-center justify-between gap-6">
                         <span>Saturday</span>
-                        <span style={{ color: "var(--text-primary)" }}>
-                          9:00 AM - 5:00 PM
-                        </span>
+                        <span style={{ color: "var(--text-primary)" }}>9:00 AM - 5:00 PM</span>
                       </div>
                       <div className="flex items-center justify-between gap-6">
                         <span>Sunday</span>
-                        <span style={{ color: "var(--text-primary)" }}>
-                          Closed
-                        </span>
+                        <span style={{ color: "var(--text-primary)" }}>Closed</span>
                       </div>
-                      <div
-                        style={{
-                          borderTop: "1px solid hsl(var(--border) / 0.35)",
-                          marginTop: 10,
-                          paddingTop: 10,
-                        }}
-                      >
-                        <div
-                          className="inline-flex items-center gap-2"
-                          style={{ color: "hsl(var(--success))" }}
-                        >
-                          <MapPin className="h-4 w-4" /> 24/7 Emergency Support
-                          Available
+                      <div style={{ borderTop: "1px solid hsl(var(--border) / 0.35)", marginTop: 10, paddingTop: 10 }}>
+                        <div className="inline-flex items-center gap-2" style={{ color: "hsl(var(--success))" }}>
+                          <MapPin className="h-4 w-4" /> 24/7 Emergency Support Available
                         </div>
                       </div>
                     </div>

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
 import {
@@ -22,7 +23,6 @@ import {
   type ResourceCategory,
 } from "../data/resources";
 
-
 function typeIcon(resourceType: ResourceType) {
   switch (resourceType) {
     case "Article":
@@ -39,9 +39,7 @@ function typeIcon(resourceType: ResourceType) {
 }
 
 const Resources = () => {
-  const [activeCategory, setActiveCategory] = useState<
-    "All" | ResourceCategory
-  >("All");
+  const [activeCategory, setActiveCategory] = useState<"All" | ResourceCategory>("All");
   const [activeType, setActiveType] = useState<"All" | ResourceType>("All");
   const [query, setQuery] = useState("");
 
@@ -73,36 +71,50 @@ const Resources = () => {
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
         {/* Hero */}
         <section className="pt-14 pb-10 text-center">
-          <div
+          <motion.div
             className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold"
             style={{
               background: "hsl(var(--card) / 0.7)",
               border: "1px solid var(--border-soft)",
               color: "var(--accent-teal)",
             }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
           >
             <Tag className="h-4 w-4" />
             Logistics
-          </div>
+          </motion.div>
 
-          <h1
+          <motion.h1
             className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
           >
             Logistics{" "}
             <span style={{ color: "var(--accent-teal)" }}>Knowledge Hub</span>
-          </h1>
+          </motion.h1>
 
-          <p
+          <motion.p
             className="mx-auto mt-4 max-w-2xl text-base sm:text-lg"
             style={{ color: "var(--text-secondary)" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
             Access industry insights, best practices, whitepapers, and guides to
             optimize your supply chain operations.
-          </p>
+          </motion.p>
 
           {/* Search */}
-          <div className="mx-auto mt-8 max-w-2xl">
+          <motion.div
+            className="mx-auto mt-8 max-w-2xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          >
             <div
               className="flex items-center gap-3 rounded-2xl px-4 py-3"
               style={{
@@ -123,16 +135,16 @@ const Resources = () => {
                 style={{ color: "var(--text-primary)" }}
               />
             </div>
-          </div>
+          </motion.div>
         </section>
 
         {/* Category pills */}
         <section className="pb-8">
           <div className="flex flex-wrap justify-center gap-3">
-            {ALL_CATEGORIES.map((cat) => {
+            {ALL_CATEGORIES.map((cat, index) => {
               const active = cat === activeCategory;
               return (
-                <button
+                <motion.button
                   key={cat}
                   type="button"
                   onClick={() => setActiveCategory(cat)}
@@ -149,20 +161,27 @@ const Resources = () => {
                       : "1px solid var(--border-soft)",
                     boxShadow: active ? "var(--glow-primary)" : undefined,
                   }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.4,
+                    delay: 0.4 + index * 0.05,
+                    ease: "easeOut",
+                  }}
                 >
                   {cat}
-                </button>
+                </motion.button>
               );
             })}
           </div>
 
           {/* Type row */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-6">
-            {ALL_TYPES.map((t) => {
+            {ALL_TYPES.map((t, index) => {
               const active = t === activeType;
               const isAll = t === "All";
               return (
-                <button
+                <motion.button
                   key={t}
                   type="button"
                   onClick={() => setActiveType(t)}
@@ -171,6 +190,13 @@ const Resources = () => {
                     color: active
                       ? "var(--text-primary)"
                       : "var(--text-tertiary)",
+                  }}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.4,
+                    delay: 0.7 + index * 0.08,
+                    ease: "easeOut",
                   }}
                 >
                   {isAll ? (
@@ -196,7 +222,7 @@ const Resources = () => {
                       <span>{t}</span>
                     </>
                   )}
-                </button>
+                </motion.button>
               );
             })}
           </div>
@@ -205,14 +231,21 @@ const Resources = () => {
         {/* Cards */}
         <section className="pb-16">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((item) => (
-              <article
+            {filtered.map((item, index) => (
+              <motion.article
                 key={item.id}
                 className="overflow-hidden rounded-2xl"
                 style={{
                   background: "hsl(var(--card) / 0.55)",
                   border: "1px solid var(--border-soft)",
                   boxShadow: "var(--shadow-card)",
+                }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.05,
+                  ease: "easeOut",
                 }}
               >
                 {item.cardVariant !== "text" && (
@@ -318,28 +351,37 @@ const Resources = () => {
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
-              </article>
+              </motion.article>
             ))}
           </div>
 
           {filtered.length === 0 && (
-            <div className="mx-auto mt-10 max-w-xl text-center">
+            <motion.div
+              className="mx-auto mt-10 max-w-xl text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
               <p style={{ color: "var(--text-secondary)" }}>
                 No resources match your filters.
               </p>
-            </div>
+            </motion.div>
           )}
         </section>
 
         {/* Newsletter */}
         <section className="pb-20">
-          <div
+          <motion.div
             className="mx-auto max-w-4xl rounded-3xl p-8 sm:p-12 text-center"
             style={{
               background: "hsl(var(--card) / 0.55)",
               border: "1px solid var(--border-soft)",
               boxShadow: "var(--shadow-elevated)",
             }}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <h2
               className="text-3xl sm:text-4xl font-bold header"
@@ -389,11 +431,17 @@ const Resources = () => {
             </form>
 
             {subscribed && (
-              <p className="mt-4 text-sm" style={{ color: "var(--success)" }}>
+              <motion.p
+                className="mt-4 text-sm"
+                style={{ color: "var(--success)" }}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
                 Subscribed! (Demo only — no email sent.)
-              </p>
+              </motion.p>
             )}
-          </div>
+          </motion.div>
         </section>
       </main>
 
