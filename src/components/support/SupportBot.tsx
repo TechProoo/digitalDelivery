@@ -97,8 +97,8 @@ export default function SupportBot() {
 
   // Merge local + socket messages + typing indicator
   const mergedMessages = useMemo(() => {
-    const socketMsgs: BotMessage[] = chatMessages.map((m) => ({
-      id: m.id,
+    const socketMsgs: BotMessage[] = chatMessages.map((m, idx) => ({
+      id: (m as any).id || `chat-${idx}-${new Date(m.timestamp).getTime()}`,
       role: "bot",
       text: m.message,
       timestamp: m.timestamp ? new Date(m.timestamp).getTime() : Date.now(),
