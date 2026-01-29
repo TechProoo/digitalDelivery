@@ -117,7 +117,7 @@ export default function About() {
               transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             >
               About{" "}
-              <span style={{ color: "var(--accent-teal)" }}>SwiftShip</span>
+              <span style={{ color: "var(--accent-teal)" }}>Digitallogistics</span>
             </motion.h1>
 
             <motion.p

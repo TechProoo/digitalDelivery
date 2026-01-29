@@ -43,26 +43,26 @@ export default function Contact() {
     {
       city: "New York, United States",
       address: "350 Fifth Avenue, Suite 5400",
-      phone: "+1 (212) 555-0123",
-      email: "newyork@swiftship.com",
+      phone: "+2349010191502",
+      email: "support@digitalLogistics.com",
     },
     {
       city: "London, United Kingdom",
       address: "1 Canada Square, Canary Wharf",
       phone: "+44 20 7946 0958",
-      email: "london@swiftship.com",
+      email: "info@digitallogistics.com",
     },
     {
       city: "Singapore, Singapore",
       address: "1 Raffles Place, Tower 2",
       phone: "+65 6123 4567",
-      email: "singapore@swiftship.com",
+      email: "singapore@digitallogistics.com",
     },
     {
       city: "Dubai, UAE",
       address: "Dubai World Trade Centre",
       phone: "+971 4 123 4567",
-      email: "dubai@swiftship.com",
+      email: "dubai@digitallogistics.com",
     },
   ];
 
@@ -182,11 +182,11 @@ export default function Contact() {
                 Response within 24 hours
               </div>
               <a
-                href="mailto:hello@swiftship.com"
+                href="mailto:hello@digitallogistics.com"
                 className="mt-4 inline-block font-semibold"
                 style={{ color: "hsl(var(--success))" }}
               >
-                hello@swiftship.com
+                hello@digitallogistics.com
               </a>
             </div>
           </div>

@@ -19,7 +19,7 @@ type BotMessage = {
   actions?: BotAction[];
 };
 
-const STORAGE_KEY = "dl.supportBot.v1";
+// const STORAGE_KEY = "dl.supportBot.v1";
 const OPEN_EVENT = "dl:openSupportBot";
 
 const nowId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;

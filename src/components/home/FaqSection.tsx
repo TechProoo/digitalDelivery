@@ -106,7 +106,7 @@ export default function FaqSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
-            Everything you need to know about shipping with SwiftShip.
+            Everything you need to know about shipping with digitallogistics.
           </motion.p>
         </div>
 
