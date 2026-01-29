@@ -124,13 +124,15 @@ export default function SupportBot() {
       } as BotMessage;
     });
 
-    const all = [...messages, ...socketMsgs];
+    // Merge and sort by timestamp so user and bot messages interleave correctly
+    const all = [...messages, ...socketMsgs].sort((a, b) => a.timestamp - b.timestamp);
     if (isTyping) {
+      // Ensure typing indicator appears last
       all.push({
         id: "typing-indicator",
         role: "bot",
         text: "Typing...",
-        timestamp: Date.now(),
+        timestamp: Date.now() + 1,
       });
     }
     return all;
