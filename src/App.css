@@ -333,16 +333,16 @@ body {
 }
 
 .globe-ring-1 {
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 .globe-ring-2 {
-  transform: scale(1.1);
+  transform: scale(1.09);
   border-color: hsl(var(--primary) / 0.14);
 }
 
 .globe-ring-3 {
-  transform: scale(1.18);
+  transform: scale(1.1);
   border-color: hsl(var(--primary) / 0.1);
 }
 

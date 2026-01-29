@@ -124,7 +124,7 @@ export default function GlobalReachSection() {
 
           {/* Right globe */}
           <motion.div
-            className="relative mx-auto w-full max-w-lg"
+            className="relative mx-auto w-full max-w-l"
             initial={{ opacity: 0, y: -100 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MessageCircle, Send, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useChat } from "../hooks/useChat";
+import { useAuth } from "../../auth/AuthContext";
 
 type BotRole = "user" | "bot";
 
@@ -52,6 +53,7 @@ export default function SupportBot() {
 
   // Socket chat hook
   const { messages: chatMessages, isTyping, sendMessage } = useChat();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   // Load local history
   useEffect(() => {
@@ -83,105 +85,115 @@ export default function SupportBot() {
       top: listRef.current.scrollHeight,
       behavior: "smooth",
     });
-  }, [messages, chatMessages, isTyping, isOpen]);
+  }, [messages, isTyping]);
 
-  // External trigger to open bot
+  // Listen for custom open event
   useEffect(() => {
-    const handler = () => {
-      setIsOpen(true);
-      requestAnimationFrame(() => inputRef.current?.focus());
-    };
+    const handler = () => setIsOpen(true);
     window.addEventListener(OPEN_EVENT, handler);
     return () => window.removeEventListener(OPEN_EVENT, handler);
   }, []);
 
-  // Merge local + socket messages + typing indicator
-  const mergedMessages = useMemo(() => {
-    const socketMsgs: BotMessage[] = chatMessages.map((m, idx) => ({
-      id: (m as any).id || `chat-${idx}-${new Date(m.timestamp).getTime()}`,
-      role: "bot",
-      text: m.message,
-      timestamp: m.timestamp ? new Date(m.timestamp).getTime() : Date.now(),
-    }));
+  // Focus input when opening
+  useEffect(() => {
+    if (isOpen && isAuthenticated) {
+      setTimeout(() => inputRef.current?.focus(), 100);
+    }
+  }, [isOpen, isAuthenticated]);
 
+  // Merge local and socket messages
+  const mergedMessages = useMemo(() => {
+    const socketMsgs: BotMessage[] = chatMessages.map((cm) => {
+      const tsNum = (() => {
+        try {
+          // ChatResponse.timestamp is a string in types; coerce to number (ms)
+          const t = cm.timestamp as unknown as string;
+          const parsed = Date.parse(t);
+          return Number.isFinite(parsed) ? parsed : Date.now();
+        } catch {
+          return Date.now();
+        }
+      })();
+
+      return {
+        id: nowId(),
+        role: "bot" as BotRole,
+        text: (cm.message as string) || "",
+        timestamp: tsNum,
+        actions: undefined,
+      } as BotMessage;
+    });
+
+    const all = [...messages, ...socketMsgs];
     if (isTyping) {
-      socketMsgs.push({
+      all.push({
         id: "typing-indicator",
         role: "bot",
-        text: "…",
+        text: "Typing...",
         timestamp: Date.now(),
       });
     }
-
-    // Merge and sort by timestamp
-    const all = [...messages, ...socketMsgs].sort(
-      (a, b) => a.timestamp - b.timestamp,
-    );
-
-    // Show all user messages and all bot responses, but only one typing indicator
-    const deduped: BotMessage[] = [];
-    let typingAdded = false;
-    for (let i = 0; i < all.length; i++) {
-      const msg = all[i];
-      if (msg.id === "typing-indicator") {
-        if (!typingAdded) {
-          deduped.push(msg);
-          typingAdded = true;
-        }
-      } else {
-        deduped.push(msg);
-      }
-    }
-    return deduped;
+    return all;
   }, [messages, chatMessages, isTyping]);
 
-  // Send message
+  // Send message handler
   const send = (text: string) => {
     const trimmed = text.trim();
     if (!trimmed) return;
-    const userMessage: BotMessage = {
+
+    const userMsg: BotMessage = {
       id: nowId(),
       role: "user",
       text: trimmed,
       timestamp: Date.now(),
     };
-    setMessages((prev) => [...prev, userMessage]);
-    sendMessage(trimmed);
+
+    setMessages((prev) => [...prev, userMsg]);
     setInput("");
+
+    // Send to backend
+    if (sendMessage) {
+      sendMessage(trimmed);
+    } else {
+      // Fallback: mock bot response
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: nowId(),
+            role: "bot",
+            text: "",
+            timestamp: Date.now(),
+          },
+        ]);
+      }, 800);
+    }
   };
 
+  // Action handler
   const runAction = (action: BotAction) => {
     if ("to" in action) {
       navigate(action.to);
-    } else {
-      window.open(action.href, "_blank", "noopener,noreferrer");
+      setIsOpen(false);
+    } else if ("href" in action) {
+      window.open(action.href, "_blank");
     }
   };
 
   return (
     <>
-      {/* Launcher */}
+      {/* Floating action button */}
       <motion.button
-        type="button"
-        onClick={() => {
-          setIsOpen((v) => !v);
-          requestAnimationFrame(() => inputRef.current?.focus());
-        }}
-        className="fixed bottom-6 right-6 z-50 grid place-items-center rounded-full"
-        style={{
-          width: 56,
-          height: 56,
-          background:
-            "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))",
-          boxShadow: "0 18px 40px rgba(0,0,0,0.45)",
-          color: "hsl(var(--primary-foreground))",
-        }}
-        aria-label={isOpen ? "Close support bot" : "Open support bot"}
-        title={isOpen ? "Close" : "Chat with support"}
         whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        animate={isOpen ? { rotate: 0 } : { rotate: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="fixed bottom-6 right-6 z-50 grid place-items-center rounded-full h-16 w-16 shadow-2xl"
+        style={{
+          background: "hsl(var(--primary))",
+          color: "hsl(var(--primary-foreground))",
+          boxShadow: "var(--glow-primary)",
+        }}
+        aria-label={isOpen ? "Close support chat" : "Open support chat"}
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -256,203 +268,271 @@ export default function SupportBot() {
               className="flex-1 overflow-y-auto px-4 py-3"
               style={{ scrollbarWidth: "thin" }}
             >
-              <div className="space-y-3">
-                <AnimatePresence mode="popLayout">
-                  {mergedMessages.map((m, idx) => {
-                    // Under construction UI
-                    if (
-                      m.role === "bot" &&
-                      m.text === "" &&
-                      (!m.actions || m.actions.length === 0)
-                    ) {
+              {authLoading ? (
+                <div className="flex-1 grid place-items-center">Loading…</div>
+              ) : !isAuthenticated ? (
+                <div className="flex-1 grid place-items-center px-6">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="max-w-sm text-center rounded-2xl p-6 shadow-lg"
+                    style={{
+                      background: "hsl(var(--card))",
+                      border: "1px solid var(--border-soft)",
+                    }}
+                  >
+                    <div
+                      className="text-2xl font-semibold mb-2"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Sign in to chat with Support
+                    </div>
+                    <div
+                      className="text-sm mb-4"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      You need to be signed in to access personalized help and
+                      pricing information.
+                    </div>
+                    <div className="flex gap-3 justify-center">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        type="button"
+                        onClick={() => navigate("/login")}
+                        className="rounded-full px-4 py-2 font-semibold"
+                        style={{
+                          background: "hsl(var(--primary))",
+                          color: "hsl(var(--primary-foreground))",
+                          boxShadow: "var(--glow-primary)",
+                        }}
+                      >
+                        Sign in
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        type="button"
+                        onClick={() => navigate("/signup")}
+                        className="rounded-full px-4 py-2 border"
+                        style={{
+                          borderColor: "var(--border-medium)",
+                          background: "hsl(var(--secondary))",
+                          color: "var(--text-primary)",
+                        }}
+                      >
+                        Create account
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <AnimatePresence mode="popLayout">
+                    {mergedMessages.map((m, idx) => {
+                      // Under construction UI
+                      if (
+                        m.role === "bot" &&
+                        m.text === "" &&
+                        (!m.actions || m.actions.length === 0)
+                      ) {
+                        return (
+                          <motion.div
+                            key={m.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 300,
+                              damping: 25,
+                            }}
+                            className="flex justify-start"
+                          >
+                            <motion.div
+                              whileHover={{ scale: 1.02 }}
+                              className="max-w-[85%] rounded-2xl px-3 py-2 text-sm bg-yellow-50 border border-yellow-300 text-yellow-900 flex flex-col items-center gap-2"
+                            >
+                              <motion.span
+                                animate={{ rotate: [0, -5, 5, -5, 0] }}
+                                transition={{
+                                  duration: 0.5,
+                                  repeat: Infinity,
+                                  repeatDelay: 2,
+                                }}
+                                style={{ fontSize: 32, color: "#facc15" }}
+                              >
+                                🚧
+                              </motion.span>
+                              <div
+                                className="font-bold text-base"
+                                style={{ color: "#b45309" }}
+                              >
+                                Under Construction
+                              </div>
+                              <div className="text-xs text-yellow-900 text-center max-w-xs">
+                                This feature is not available yet because the
+                                client hasn't paid the developer.
+                                <br />
+                                Please check back later!
+                              </div>
+                            </motion.div>
+                          </motion.div>
+                        );
+                      }
+
+                      // Normal messages
                       return (
                         <motion.div
-                          key={m.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
+                          key={m.id || `msg-${idx}`}
+                          initial={{
+                            opacity: 0,
+                            x: m.role === "user" ? 20 : -20,
+                            scale: 0.95,
+                          }}
+                          animate={{ opacity: 1, x: 0, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.8 }}
                           transition={{
                             type: "spring",
                             stiffness: 300,
                             damping: 25,
                           }}
-                          className="flex justify-start"
+                          className={
+                            m.role === "user"
+                              ? "flex justify-end"
+                              : "flex justify-start"
+                          }
                         >
                           <motion.div
                             whileHover={{ scale: 1.02 }}
-                            className="max-w-[85%] rounded-2xl px-3 py-2 text-sm bg-yellow-50 border border-yellow-300 text-yellow-900 flex flex-col items-center gap-2"
+                            className="max-w-[85%] rounded-2xl px-3 py-2 text-sm"
+                            style={{
+                              background:
+                                m.role === "user"
+                                  ? "hsl(var(--primary) / 0.18)"
+                                  : "hsl(var(--card) / 0.55)",
+                              border: "1px solid var(--border-soft)",
+                              color: "var(--text-primary)",
+                            }}
                           >
-                            <motion.span
-                              animate={{ rotate: [0, -5, 5, -5, 0] }}
-                              transition={{
-                                duration: 0.5,
-                                repeat: Infinity,
-                                repeatDelay: 2,
-                              }}
-                              style={{ fontSize: 32, color: "#facc15" }}
-                            >
-                              🚧
-                            </motion.span>
-                            <div
-                              className="font-bold text-base"
-                              style={{ color: "#b45309" }}
-                            >
-                              Under Construction
+                            <div className="whitespace-pre-wrap leading-relaxed">
+                              {m.id === "typing-indicator" ? (
+                                <motion.span
+                                  animate={{ opacity: [0.3, 1, 0.3] }}
+                                  transition={{
+                                    duration: 1.5,
+                                    repeat: Infinity,
+                                  }}
+                                >
+                                  {m.text}
+                                </motion.span>
+                              ) : (
+                                m.text
+                              )}
                             </div>
-                            <div className="text-xs text-yellow-900 text-center max-w-xs">
-                              This feature is not available yet because the
-                              client hasn't paid the developer.
-                              <br />
-                              Please check back later!
-                            </div>
+                            {m.actions && m.actions.length > 0 && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="mt-2 flex flex-wrap gap-2"
+                              >
+                                {m.actions.map((a, actionIdx) => (
+                                  <motion.button
+                                    key={a.label}
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{
+                                      delay: 0.3 + actionIdx * 0.1,
+                                    }}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    type="button"
+                                    onClick={() => runAction(a)}
+                                    className="rounded-full px-3 py-1 text-xs font-semibold"
+                                    style={{
+                                      background:
+                                        a.kind === "primary"
+                                          ? "hsl(var(--primary))"
+                                          : "hsl(var(--background) / 0.35)",
+                                      color:
+                                        a.kind === "primary"
+                                          ? "hsl(var(--primary-foreground))"
+                                          : "var(--text-primary)",
+                                      border:
+                                        a.kind === "primary"
+                                          ? "none"
+                                          : "1px solid var(--border-soft)",
+                                    }}
+                                  >
+                                    {a.label}
+                                  </motion.button>
+                                ))}
+                              </motion.div>
+                            )}
                           </motion.div>
                         </motion.div>
                       );
-                    }
-
-                    // Normal messages
-                    return (
-                      <motion.div
-                        key={m.id || `msg-${idx}`}
-                        initial={{
-                          opacity: 0,
-                          x: m.role === "user" ? 20 : -20,
-                          scale: 0.95,
-                        }}
-                        animate={{ opacity: 1, x: 0, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 300,
-                          damping: 25,
-                        }}
-                        className={
-                          m.role === "user"
-                            ? "flex justify-end"
-                            : "flex justify-start"
-                        }
-                      >
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          className="max-w-[85%] rounded-2xl px-3 py-2 text-sm"
-                          style={{
-                            background:
-                              m.role === "user"
-                                ? "hsl(var(--primary) / 0.18)"
-                                : "hsl(var(--card) / 0.55)",
-                            border: "1px solid var(--border-soft)",
-                            color: "var(--text-primary)",
-                          }}
-                        >
-                          <div className="whitespace-pre-wrap leading-relaxed">
-                            {m.id === "typing-indicator" ? (
-                              <motion.span
-                                animate={{ opacity: [0.3, 1, 0.3] }}
-                                transition={{ duration: 1.5, repeat: Infinity }}
-                              >
-                                {m.text}
-                              </motion.span>
-                            ) : (
-                              m.text
-                            )}
-                          </div>
-                          {m.actions && m.actions.length > 0 && (
-                            <motion.div
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.2 }}
-                              className="mt-2 flex flex-wrap gap-2"
-                            >
-                              {m.actions.map((a, actionIdx) => (
-                                <motion.button
-                                  key={a.label}
-                                  initial={{ opacity: 0, scale: 0.8 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{ delay: 0.3 + actionIdx * 0.1 }}
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  type="button"
-                                  onClick={() => runAction(a)}
-                                  className="rounded-full px-3 py-1 text-xs font-semibold"
-                                  style={{
-                                    background:
-                                      a.kind === "primary"
-                                        ? "hsl(var(--primary))"
-                                        : "hsl(var(--background) / 0.35)",
-                                    color:
-                                      a.kind === "primary"
-                                        ? "hsl(var(--primary-foreground))"
-                                        : "var(--text-primary)",
-                                    border:
-                                      a.kind === "primary"
-                                        ? "none"
-                                        : "1px solid var(--border-soft)",
-                                  }}
-                                >
-                                  {a.label}
-                                </motion.button>
-                              ))}
-                            </motion.div>
-                          )}
-                        </motion.div>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
-              </div>
+                    })}
+                  </AnimatePresence>
+                </div>
+              )}
             </div>
 
             {/* Input */}
-            <motion.form
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              onSubmit={(e) => {
-                e.preventDefault();
-                send(input);
-              }}
-              className="px-4 py-3"
-              style={{ borderTop: "1px solid var(--border-soft)" }}
-            >
-              <div className="flex items-center gap-2">
-                <input
-                  ref={inputRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Type a message…"
-                  className="flex-1 rounded-xl px-3 py-2 text-sm outline-none"
-                  style={{
-                    background: "hsl(var(--background) / 0.35)",
-                    border: "1px solid var(--border-soft)",
-                    color: "var(--text-primary)",
-                  }}
-                />
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  type="submit"
-                  className="grid place-items-center rounded-xl h-10 w-10"
-                  style={{
-                    background: "hsl(var(--primary))",
-                    color: "hsl(var(--primary-foreground))",
-                    boxShadow: "var(--glow-primary)",
-                  }}
-                  aria-label="Send"
-                >
-                  <Send className="h-4 w-4" />
-                </motion.button>
-              </div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="mt-2 text-[11px]"
-                style={{ color: "var(--text-tertiary)" }}
+            {isAuthenticated && (
+              <motion.form
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  send(input);
+                }}
+                className="px-4 py-3"
+                style={{ borderTop: "1px solid var(--border-soft)" }}
               >
-                Tip: try "track my shipment", "get a quote", or "talk to
-                support".
-              </motion.div>
-            </motion.form>
+                <div className="flex items-center gap-2">
+                  <input
+                    ref={inputRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Type a message…"
+                    className="flex-1 rounded-xl px-3 py-2 text-sm outline-none"
+                    style={{
+                      background: "hsl(var(--background) / 0.35)",
+                      border: "1px solid var(--border-soft)",
+                      color: "var(--text-primary)",
+                    }}
+                  />
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    type="submit"
+                    className="grid place-items-center rounded-xl h-10 w-10"
+                    style={{
+                      background: "hsl(var(--primary))",
+                      color: "hsl(var(--primary-foreground))",
+                      boxShadow: "var(--glow-primary)",
+                    }}
+                    aria-label="Send"
+                  >
+                    <Send className="h-4 w-4" />
+                  </motion.button>
+                </div>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="mt-2 text-[11px]"
+                  style={{ color: "var(--text-tertiary)" }}
+                >
+                  Tip: try "track my shipment", "get a quote", or "talk to
+                  support".
+                </motion.div>
+              </motion.form>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
