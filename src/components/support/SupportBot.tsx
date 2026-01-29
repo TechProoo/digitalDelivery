@@ -57,27 +57,11 @@ export default function SupportBot() {
 
   // Load local history
   useEffect(() => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      setMessages([welcome]);
-      return;
-    }
-    try {
-      const parsed = JSON.parse(raw) as BotMessage[];
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        setMessages(parsed);
-      } else {
-        setMessages([welcome]);
-      }
-    } catch {
-      setMessages([welcome]);
-    }
+    // Do not load persisted sessions — always start fresh in memory
+    setMessages([welcome]);
   }, [welcome]);
 
-  // Persist local messages
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-30)));
-  }, [messages]);
+  // Do not persist messages to localStorage — keep sessions in memory only
 
   // Scroll to bottom when messages update
   useEffect(() => {
@@ -125,7 +109,9 @@ export default function SupportBot() {
     });
 
     // Merge and sort by timestamp so user and bot messages interleave correctly
-    const all = [...messages, ...socketMsgs].sort((a, b) => a.timestamp - b.timestamp);
+    const all = [...messages, ...socketMsgs].sort(
+      (a, b) => a.timestamp - b.timestamp,
+    );
     if (isTyping) {
       // Ensure typing indicator appears last
       all.push({
@@ -137,6 +123,12 @@ export default function SupportBot() {
     }
     return all;
   }, [messages, chatMessages, isTyping]);
+
+  // Debug: log incoming socket messages and merged result to help trace rendering
+  useEffect(() => {
+    console.log("[SupportBot] chatMessages:", chatMessages);
+    console.log("[SupportBot] mergedMessages:", mergedMessages);
+  }, [chatMessages, mergedMessages]);
 
   // Send message handler
   const send = (text: string) => {
