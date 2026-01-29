@@ -295,7 +295,7 @@ export default function SupportBot() {
                       You need to be signed in to access personalized help and
                       pricing information.
                     </div>
-                    <div className="flex gap-3 justify-center">
+                    <div className="flex flex-wrap gap-3 justify-center">
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
