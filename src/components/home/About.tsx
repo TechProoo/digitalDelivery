@@ -18,11 +18,6 @@ type ValueCard = {
   iconFg: string;
 };
 
-type Leader = {
-  name: string;
-  role: string;
-};
-
 localStorage.clear();
 
 export default function About() {
