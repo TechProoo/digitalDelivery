@@ -23,13 +23,7 @@ type Leader = {
   role: string;
 };
 
-function initials(name: string): string {
-  const parts = name.trim().split(/\s+/g);
-  return parts
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase() ?? "")
-    .join("");
-}
+localStorage.clear();
 
 export default function About() {
   const cardStyle: React.CSSProperties = {
@@ -77,13 +71,6 @@ export default function About() {
     },
   ];
 
-  const leaders: Leader[] = [
-    { name: "Amina Okafor", role: "Chief Executive Officer" },
-    { name: "Daniel Hart", role: "Chief Operations Officer" },
-    { name: "Sophia Nguyen", role: "Head of Product" },
-    { name: "Michael Stone", role: "VP, Partnerships" },
-  ];
-
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
       <Navbar />
@@ -117,7 +104,9 @@ export default function About() {
               transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             >
               About{" "}
-              <span style={{ color: "var(--accent-teal)" }}>Digitallogistics</span>
+              <span style={{ color: "var(--accent-teal)" }}>
+                Digitallogistics
+              </span>
             </motion.h1>
 
             <motion.p
@@ -297,80 +286,6 @@ export default function About() {
                   {v.description}
                 </div>
               </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Leadership */}
-      <section className="px-4 sm:px-6 lg:px-10">
-        <div className="mx-auto max-w-7xl py-10 sm:py-14">
-          <motion.h2
-            className="text-center text-3xl sm:text-4xl font-semibold header"
-            style={{ color: "var(--text-primary)" }}
-            initial={{ opacity: 0, y: -30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            Leadership Team
-          </motion.h2>
-
-          <div className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {leaders.map((l, index) => (
-              <motion.article
-                key={l.name}
-                className="overflow-hidden rounded-3xl"
-                style={cardStyle}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.1,
-                  ease: "easeOut",
-                }}
-              >
-                <div
-                  className="h-40"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 30% 30%, rgba(17, 207, 220, 0.25), rgba(0,0,0,0) 62%), radial-gradient(circle at 70% 80%, rgba(245, 158, 11, 0.16), rgba(0,0,0,0) 58%), linear-gradient(135deg, rgba(9, 20, 28, 0.95), rgba(10, 34, 44, 0.75))",
-                    borderBottom: "1px solid var(--border-soft)",
-                  }}
-                />
-
-                <div className="p-7">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="grid place-items-center rounded-2xl text-sm font-semibold"
-                      style={{
-                        width: 44,
-                        height: 44,
-                        background: "hsl(var(--background) / 0.55)",
-                        border: "1px solid var(--border-soft)",
-                        color: "var(--accent-teal)",
-                      }}
-                    >
-                      {initials(l.name)}
-                    </div>
-                    <div>
-                      <div
-                        className="font-semibold"
-                        style={{ color: "var(--text-primary)" }}
-                      >
-                        {l.name}
-                      </div>
-                      <div
-                        className="text-sm"
-                        style={{ color: "var(--text-tertiary)" }}
-                      >
-                        {l.role}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.article>
             ))}
           </div>
         </div>
