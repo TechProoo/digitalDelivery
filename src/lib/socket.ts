@@ -20,5 +20,4 @@ function computeSocketUrl(): string {
 export const socket = io(computeSocketUrl(), {
   transports: ["websocket"],
   autoConnect: false,
-  withCredentials: true,
 });
