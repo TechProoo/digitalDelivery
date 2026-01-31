@@ -7,8 +7,49 @@ export function useChat() {
   const [isTyping, setIsTyping] = useState(false);
   const [connected, setConnected] = useState(false);
 
+  // Subscribe to window-level events first so every hook instance receives updates
+  // before any socket-dispatched events arrive (avoids race conditions).
   useEffect(() => {
-    console.log("[useChat] useEffect mount");
+    const onResponse = (e: Event) => {
+      const ce = e as CustomEvent<ChatResponse>;
+      if (ce?.detail) {
+        console.log("[useChat] window onResponse", ce.detail);
+        setMessages((prev) => [...prev, ce.detail]);
+      }
+    };
+    const onTyping = (e: Event) => {
+      const ce = e as CustomEvent<{ isTyping: boolean }>;
+      if (ce?.detail) {
+        console.log("[useChat] window onTyping", ce.detail.isTyping);
+        setIsTyping(ce.detail.isTyping);
+      }
+    };
+
+    window.addEventListener("dd:chat:response", onResponse as EventListener);
+    window.addEventListener("dd:chat:typing", onTyping as EventListener);
+
+    // Drain any messages that may have been queued before listeners attached
+    const queue = (window as any).__dd_message_queue as ChatResponse[] | undefined;
+    if (Array.isArray(queue) && queue.length > 0) {
+      console.log("[useChat] draining message queue", queue.length);
+      queue.forEach((m) =>
+        window.dispatchEvent(new CustomEvent("dd:chat:response", { detail: m })),
+      );
+      (window as any).__dd_message_queue = [];
+    }
+
+    return () => {
+      window.removeEventListener(
+        "dd:chat:response",
+        onResponse as EventListener,
+      );
+      window.removeEventListener("dd:chat:typing", onTyping as EventListener);
+    };
+  }, []);
+
+  // Then attach socket listeners (attached once globally)
+  useEffect(() => {
+    console.log("[useChat] socket useEffect mount");
 
     // Only connect if not already connected
     if (!socket.connected) {
@@ -31,20 +72,28 @@ export function useChat() {
       });
 
       socket.on("chat:response", (data: ChatResponse) => {
-        console.log("[useChat] chat:response", data);
-        // Broadcast to all hook instances; window listeners will update local state.
+        console.log("[useChat] chat:response (socket)", data);
+
+        // Ensure a global in-memory queue exists to hold messages if no listeners yet
+        (window as any).__dd_message_queue =
+          (window as any).__dd_message_queue || [];
+
+        // Try to dispatch to window listeners. If none are attached yet they will get
+        // drained by the listener effect above on mount.
         try {
           window.dispatchEvent(
             new CustomEvent("dd:chat:response", { detail: data }),
           );
         } catch (e) {
           // ignore
+        } finally {
+          // Always push into the queue so late-mounting listeners can drain it.
+          (window as any).__dd_message_queue.push(data);
         }
       });
 
       socket.on("chat:typing", ({ isTyping }) => {
         console.log("[useChat] chat:typing", isTyping);
-        // Broadcast typing status; window listeners will update local state.
         try {
           window.dispatchEvent(
             new CustomEvent("dd:chat:typing", { detail: { isTyping } }),
@@ -65,33 +114,9 @@ export function useChat() {
 
     return () => {
       console.log(
-        "[useChat] useEffect unmount (no cleanup to preserve global connection)",
+        "[useChat] socket useEffect unmount (no cleanup to preserve global connection)",
       );
-      // Intentionally do not remove global listeners or disconnect here. Keeping a single
-      // connection/listener set prevents duplicates in React Strict Mode development.
-    };
-  }, []);
-
-  // Subscribe to window-level events so every hook instance receives updates
-  useEffect(() => {
-    const onResponse = (e: Event) => {
-      const ce = e as CustomEvent<ChatResponse>;
-      if (ce?.detail) setMessages((prev) => [...prev, ce.detail]);
-    };
-    const onTyping = (e: Event) => {
-      const ce = e as CustomEvent<{ isTyping: boolean }>;
-      if (ce?.detail) setIsTyping(ce.detail.isTyping);
-    };
-
-    window.addEventListener("dd:chat:response", onResponse as EventListener);
-    window.addEventListener("dd:chat:typing", onTyping as EventListener);
-
-    return () => {
-      window.removeEventListener(
-        "dd:chat:response",
-        onResponse as EventListener,
-      );
-      window.removeEventListener("dd:chat:typing", onTyping as EventListener);
+      // Intentionally do not remove global listeners or disconnect here.
     };
   }, []);
 
