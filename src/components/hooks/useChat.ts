@@ -29,11 +29,15 @@ export function useChat() {
     window.addEventListener("dd:chat:typing", onTyping as EventListener);
 
     // Drain any messages that may have been queued before listeners attached
-    const queue = (window as any).__dd_message_queue as ChatResponse[] | undefined;
+    const queue = (window as any).__dd_message_queue as
+      | ChatResponse[]
+      | undefined;
     if (Array.isArray(queue) && queue.length > 0) {
       console.log("[useChat] draining message queue", queue.length);
       queue.forEach((m) =>
-        window.dispatchEvent(new CustomEvent("dd:chat:response", { detail: m })),
+        window.dispatchEvent(
+          new CustomEvent("dd:chat:response", { detail: m }),
+        ),
       );
       (window as any).__dd_message_queue = [];
     }
