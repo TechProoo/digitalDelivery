@@ -191,6 +191,14 @@ body {
   opacity: 1;
 }
 
+/* Mobile: show more of the image (less cropping/"zoomed" feel) */
+@media (max-width: 640px) {
+  .home_bg_slide {
+    background-size: cover;
+    background-position: center center;
+  }
+}
+
 .home_container > :not(.home_bg_carousel) {
   position: relative;
   z-index: 1;
