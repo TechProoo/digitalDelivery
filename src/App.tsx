@@ -16,6 +16,7 @@ import Resources from "./Pages/Resources";
 import ResourceDetails from "./Pages/ResourceDetails";
 import Support from "./Pages/Support";
 import SupportArticle from "./Pages/SupportArticle";
+import SuccessStory from "./Pages/SuccessStory";
 import SupportBot from "./components/support/SupportBot";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path="/resource/:id" element={<ResourceDetails />} />
         <Route path="/support" element={<Support />} />
         <Route path="/support/articles/:id" element={<SupportArticle />} />
+            <Route path="/success-stories/:id" element={<SuccessStory />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />

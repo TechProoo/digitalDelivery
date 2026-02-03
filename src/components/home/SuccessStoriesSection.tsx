@@ -1,27 +1,11 @@
-import type { ComponentType, ReactNode } from "react";
-import { ArrowRight, Boxes, Clock, DollarSign, TrendingUp } from "lucide-react";
+import type { ReactNode } from "react";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { NavLink } from "react-router-dom";
 
-import RetailImg from "../../assets/services_img.jpg";
-import ManufacturingImg from "../../assets/road.jpg";
-import CpgImg from "../../assets/door.jpg";
+import { SUCCESS_STORIES } from "../../data/successStories";
 
-type Metric = {
-  icon: ComponentType<{ className?: string }>;
-  value: string;
-  label: string;
-};
-
-type Story = {
-  tag: string;
-  company: string;
-  title: string;
-  description: string;
-  image: string;
-  metrics: [Metric, Metric];
-};
-
-function MetricItem({ icon: Icon, value, label }: Metric): ReactNode {
+function MetricItem({ icon: Icon, value, label }: (typeof SUCCESS_STORIES)[number]["metrics"][number]): ReactNode {
   return (
     <div className="flex items-start gap-3">
       <span style={{ color: "var(--accent-teal)" }}>
@@ -50,44 +34,7 @@ export default function SuccessStoriesSection() {
     backdropFilter: "blur(12px)",
   };
 
-  const stories: Story[] = [
-    {
-      tag: "Retail",
-      company: "Global Retail Co.",
-      title: "40% Cost Reduction Through Network Optimization",
-      description:
-        "Implemented end-to-end logistics optimization resulting in significant cost savings and improved delivery performance.",
-      image: RetailImg,
-      metrics: [
-        { icon: DollarSign, value: "$4.2M", label: "Annual Savings" },
-        { icon: Clock, value: "32%", label: "Faster Delivery" },
-      ],
-    },
-    {
-      tag: "Manufacturing",
-      company: "Tech Manufacturing Inc.",
-      title: "Supply Chain Transformation with AI-Powered Insights",
-      description:
-        "Leveraged advanced analytics to optimize inventory management and reduce transportation costs across facilities.",
-      image: ManufacturingImg,
-      metrics: [
-        { icon: TrendingUp, value: "63%", label: "Accuracy Increase" },
-        { icon: Boxes, value: "18K", label: "Daily Shipments" },
-      ],
-    },
-    {
-      tag: "CPG",
-      company: "Fresh Foods Distribution",
-      title: "Temperature-Controlled Logistics Excellence",
-      description:
-        "Achieved industry-leading cold chain performance with real-time monitoring and proactive exception handling.",
-      image: CpgImg,
-      metrics: [
-        { icon: Clock, value: "99.8%", label: "On-Time Rate" },
-        { icon: DollarSign, value: "28%", label: "Cost Reduction" },
-      ],
-    },
-  ];
+  const stories = SUCCESS_STORIES;
 
   return (
     <section className="px-4 sm:px-6 lg:px-10">
@@ -136,7 +83,7 @@ export default function SuccessStoriesSection() {
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
             Discover how enterprises across industries are transforming their
-            logistics operations with Digital Logistics.
+            logistics operations with Digital Delivery.
           </motion.p>
         </div>
 
@@ -204,7 +151,7 @@ export default function SuccessStoriesSection() {
                   className="mt-4 leading-relaxed"
                   style={{ color: "var(--text-tertiary)" }}
                 >
-                  {story.description}
+                  {story.summary}
                 </p>
 
                 <div className="mt-8 grid grid-cols-2 gap-6">
@@ -213,14 +160,14 @@ export default function SuccessStoriesSection() {
                 </div>
 
                 <div className="mt-8">
-                  <button
-                    type="button"
+                  <NavLink
+                    to={`/success-stories/${story.id}`}
                     className="group inline-flex items-center gap-2 font-semibold"
                     style={{ color: "var(--accent-teal)" }}
                   >
                     <span>Read case study</span>
                     <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
+                  </NavLink>
                 </div>
               </div>
             </motion.article>
