@@ -4,10 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
-import {
-  SUCCESS_STORIES,
-  getSuccessStoryById,
-} from "../data/successStories";
+import { SUCCESS_STORIES, getSuccessStoryById } from "../data/successStories";
 
 function estimateReadingTimeMinutes(text: string) {
   const words = text.trim().split(/\s+/).filter(Boolean).length;
@@ -23,21 +20,27 @@ export default function SuccessStory() {
     const combined = [
       story.title,
       story.summary,
-      ...story.sections.flatMap((s) => [s.title, ...s.body, ...(s.bullets ?? [])]),
+      ...story.sections.flatMap((s) => [
+        s.title,
+        ...s.body,
+        ...(s.bullets ?? []),
+      ]),
     ].join(" ");
     return estimateReadingTimeMinutes(combined);
   }, [story]);
 
   const related = useMemo(() => {
     if (!story) return [];
-    return SUCCESS_STORIES.filter((s) => s.id !== story.id && s.tag === story.tag).slice(
-      0,
-      4,
-    );
+    return SUCCESS_STORIES.filter(
+      (s) => s.id !== story.id && s.tag === story.tag,
+    ).slice(0, 4);
   }, [story]);
 
   return (
-    <div className="min-h-screen" style={{ background: "hsl(var(--background))" }}>
+    <div
+      className="min-h-screen"
+      style={{ background: "hsl(var(--background))" }}
+    >
       <Navbar />
 
       <section
@@ -109,7 +112,8 @@ export default function SuccessStory() {
               >
                 <span className="inline-flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  Updated {new Date(story.lastUpdated).toLocaleDateString("en-NG")}
+                  Updated{" "}
+                  {new Date(story.lastUpdated).toLocaleDateString("en-NG")}
                 </span>
                 <span className="inline-flex items-center gap-2">
                   <Clock className="h-4 w-4" />
@@ -117,8 +121,15 @@ export default function SuccessStory() {
                 </span>
               </div>
 
-              <div className="mt-8 overflow-hidden rounded-3xl" style={{ border: "1px solid var(--border-soft)" }}>
-                <img src={story.image} alt="" className="h-56 w-full object-cover sm:h-72" />
+              <div
+                className="mt-8 overflow-hidden rounded-3xl"
+                style={{ border: "1px solid var(--border-soft)" }}
+              >
+                <img
+                  src={story.image}
+                  alt=""
+                  className="h-56 w-full object-cover sm:h-72"
+                />
               </div>
             </>
           ) : (
@@ -157,7 +168,10 @@ export default function SuccessStory() {
                     {section.title}
                   </h2>
 
-                  <div className="mt-3 space-y-3" style={{ color: "var(--text-secondary)" }}>
+                  <div
+                    className="mt-3 space-y-3"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     {section.body.map((p, idx) => (
                       <p key={idx} style={{ lineHeight: 1.8 }}>
                         {p}
@@ -168,7 +182,10 @@ export default function SuccessStory() {
                   {section.bullets?.length ? (
                     <ul
                       className="mt-4 list-disc pl-6 space-y-2"
-                      style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}
+                      style={{
+                        color: "var(--text-secondary)",
+                        lineHeight: 1.7,
+                      }}
                     >
                       {section.bullets.map((b) => (
                         <li key={b}>{b}</li>
@@ -183,7 +200,10 @@ export default function SuccessStory() {
 
         {related.length ? (
           <div className="mt-12">
-            <div className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+            <div
+              className="text-lg font-bold"
+              style={{ color: "var(--text-primary)" }}
+            >
               Related case studies
             </div>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -200,7 +220,10 @@ export default function SuccessStory() {
                   }}
                 >
                   <div className="font-semibold">{s.title}</div>
-                  <div className="mt-2 text-sm" style={{ color: "var(--text-tertiary)" }}>
+                  <div
+                    className="mt-2 text-sm"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
                     {s.summary}
                   </div>
                 </NavLink>

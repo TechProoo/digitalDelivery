@@ -537,7 +537,8 @@ const Support = () => {
                 icon: <MessageSquare className="h-6 w-6" />,
                 color: "var(--accent-teal)",
                 title: "Live Chat",
-                description: "Chat with our AI-powered assistant for instant help",
+                description:
+                  "Chat with our AI-powered assistant for instant help",
                 action: "Start Chat",
                 to: "/contact",
                 border: false,

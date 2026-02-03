@@ -88,7 +88,11 @@ export const SUCCESS_STORIES: SuccessStory[] = [
     lastUpdated: "2026-02-03",
     metrics: [
       { icon: MapPin, value: "6", label: "Standardized checkpoints" },
-      { icon: ArrowDownRight, value: "-18%", label: "Fewer stock-out incidents" },
+      {
+        icon: ArrowDownRight,
+        value: "-18%",
+        label: "Fewer stock-out incidents",
+      },
     ],
     sections: [
       {

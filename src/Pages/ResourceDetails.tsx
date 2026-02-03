@@ -162,7 +162,7 @@ const ResourceDetails = () => {
 
                 <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
                   <h1
-                    className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight header"
+                    className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight header"
                     style={{ color: "white" }}
                   >
                     {resource.title}

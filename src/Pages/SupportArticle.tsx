@@ -25,7 +25,11 @@ const SupportArticle = () => {
     const combined = [
       article.title,
       article.summary,
-      ...article.sections.flatMap((s) => [s.title, ...s.body, ...(s.bullets ?? [])]),
+      ...article.sections.flatMap((s) => [
+        s.title,
+        ...s.body,
+        ...(s.bullets ?? []),
+      ]),
     ].join(" ");
     return estimateReadingTimeMinutes(combined);
   }, [article]);
@@ -38,7 +42,10 @@ const SupportArticle = () => {
   }, [article]);
 
   return (
-    <div className="min-h-screen" style={{ background: "hsl(var(--background))" }}>
+    <div
+      className="min-h-screen"
+      style={{ background: "hsl(var(--background))" }}
+    >
       <Navbar />
 
       <section
@@ -110,7 +117,8 @@ const SupportArticle = () => {
               >
                 <span className="inline-flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  Updated {new Date(article.lastUpdated).toLocaleDateString("en-NG")}
+                  Updated{" "}
+                  {new Date(article.lastUpdated).toLocaleDateString("en-NG")}
                 </span>
                 <span className="inline-flex items-center gap-2">
                   <Clock className="h-4 w-4" />
@@ -154,7 +162,10 @@ const SupportArticle = () => {
                     {section.title}
                   </h2>
 
-                  <div className="mt-3 space-y-3" style={{ color: "var(--text-secondary)" }}>
+                  <div
+                    className="mt-3 space-y-3"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     {section.body.map((p, idx) => (
                       <p key={idx} style={{ lineHeight: 1.8 }}>
                         {p}
@@ -165,7 +176,10 @@ const SupportArticle = () => {
                   {section.bullets?.length ? (
                     <ul
                       className="mt-4 list-disc pl-6 space-y-2"
-                      style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}
+                      style={{
+                        color: "var(--text-secondary)",
+                        lineHeight: 1.7,
+                      }}
                     >
                       {section.bullets.map((b) => (
                         <li key={b}>{b}</li>

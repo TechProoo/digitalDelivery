@@ -67,7 +67,7 @@ export default function NewDelivery() {
 
   const packageTypes = [
     { id: "parcel", label: "Parcel", icon: Package },
-    { id: "pallet", label: "Pallet", icon: Box },
+    { id: "pallet", label: "Boxes", icon: Box },
     { id: "container", label: "Container", icon: Box },
     { id: "full-freight", label: "Full Freight", icon: Truck },
   ];

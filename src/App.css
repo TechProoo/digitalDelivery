@@ -158,17 +158,48 @@ body {
 }
 
 .home_container {
-  background-image: url("./assets/bg.jpg");
   width: 100%;
   height: 100%;
+  font-family: "Alegreya", serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.home_bg_carousel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.home_bg_slide {
+  position: absolute;
+  inset: 0;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  font-family: "Alegreya", serif;
-  background-blend-mode: darken;
-  background-color: var(--text-primary);
+  opacity: 0;
+  transition: opacity 900ms ease;
+  will-change: opacity;
+
+  /* Keep the same overlay vibe you had before */
   background-blend-mode: overlay;
   background-color: #123f52;
+}
+
+.home_bg_slide.is-active {
+  opacity: 1;
+}
+
+.home_container > :not(.home_bg_carousel) {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home_bg_slide {
+    transition: none;
+  }
 }
 
 .nav_logo {

@@ -5,7 +5,11 @@ import { NavLink } from "react-router-dom";
 
 import { SUCCESS_STORIES } from "../../data/successStories";
 
-function MetricItem({ icon: Icon, value, label }: (typeof SUCCESS_STORIES)[number]["metrics"][number]): ReactNode {
+function MetricItem({
+  icon: Icon,
+  value,
+  label,
+}: (typeof SUCCESS_STORIES)[number]["metrics"][number]): ReactNode {
   return (
     <div className="flex items-start gap-3">
       <span style={{ color: "var(--accent-teal)" }}>

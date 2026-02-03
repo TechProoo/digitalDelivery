@@ -11,11 +11,18 @@ import SuccessStoriesSection from "../components/home/SuccessStoriesSection";
 import GlobalReachSection from "../components/home/GlobalReachSection";
 import LatestUpdatesInsightsSection from "../components/home/LatestUpdatesInsightsSection";
 import FaqSection from "../components/home/FaqSection";
+import HomeBackgroundCarousel from "../components/home/HomeBackgroundCarousel";
+
+import Bg1 from "../assets/bg.jpg";
+import Bg2 from "../assets/road.jpg";
+import Bg3 from "../assets/door.jpg";
+import Bg4 from "../assets/hiw.jpg";
 
 const Home = () => {
   return (
     <div>
       <div className="home_container">
+        <HomeBackgroundCarousel images={[Bg1, Bg2, Bg3, Bg4]} />
         <Navbar />
         <Hero />
       </div>
