@@ -91,32 +91,32 @@ const Support = () => {
       {
         id: "track-realtime",
         title: "How to track my shipment in real-time",
-        to: "/dashboard/track",
+        to: "/support/articles/track-realtime",
       },
       {
         id: "rates-quotes",
         title: "Understanding shipping rates and quotes",
-        to: "/resources",
+        to: "/support/articles/rates-quotes",
       },
       {
         id: "customs-clearance",
         title: "Customs clearance requirements explained",
-        to: "/resources",
+        to: "/support/articles/customs-clearance",
       },
       {
         id: "damage-claim",
         title: "How to file a damage claim",
-        to: "/contact",
+        to: "/support/articles/damage-claim",
       },
       {
         id: "notifications",
         title: "Setting up automatic notifications",
-        to: "/resources",
+        to: "/support/articles/notifications",
       },
       {
         id: "multi-shipments",
         title: "Managing multiple shipments at once",
-        to: "/dashboard/orders",
+        to: "/support/articles/multi-shipments",
       },
     ],
     [],

@@ -124,12 +124,6 @@ export default function SupportBot() {
     return all;
   }, [messages, chatMessages, isTyping]);
 
-  // Debug: log incoming socket messages and merged result to help trace rendering
-  useEffect(() => {
-    console.log("[SupportBot] chatMessages:", chatMessages);
-    console.log("[SupportBot] mergedMessages:", mergedMessages);
-  }, [chatMessages, mergedMessages]);
-
   // Send message handler
   const send = (text: string) => {
     const trimmed = text.trim();

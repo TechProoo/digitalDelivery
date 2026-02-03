@@ -20,7 +20,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import BottomNav from "../components/dashboard/bottom-nav";
-import { shipmentsApi } from "../api";
+import { invoicesApi, shipmentsApi } from "../api";
 import type { ShipmentWithRelations } from "../types/shipment";
 import { useAuth } from "../auth/AuthContext";
 
@@ -36,6 +36,7 @@ import {
 
 interface Order {
   id: string;
+  shipmentId: string;
   origin: string;
   destination: string;
   packageType: string;
@@ -44,6 +45,7 @@ interface Order {
   status: ShipmentStatus;
   date: string;
   amount: string;
+  amountValue: number;
   estimatedDelivery: string;
   trackingNumber: string;
 }
@@ -51,6 +53,7 @@ interface Order {
 const sampleOrders: Order[] = [
   {
     id: "DD-2024-001",
+    shipmentId: "DD-2024-001",
     origin: "Lagos, Ikeja",
     destination: "Abuja, Wuse",
     packageType: "Parcel",
@@ -59,11 +62,13 @@ const sampleOrders: Order[] = [
     status: ShipmentStatus.IN_TRANSIT,
     date: "Jan 2, 2026",
     amount: "₦125,000",
+    amountValue: 125000,
     estimatedDelivery: "Jan 8, 2026",
     trackingNumber: "DD-2024-001",
   },
   {
     id: "DD-2024-002",
+    shipmentId: "DD-2024-002",
     origin: "Shanghai, China",
     destination: "Lagos, Victoria Island",
     packageType: "Container",
@@ -72,11 +77,13 @@ const sampleOrders: Order[] = [
     status: ShipmentStatus.DELIVERED,
     date: "Dec 15, 2025",
     amount: "₦2,768,000",
+    amountValue: 2768000,
     estimatedDelivery: "Jan 3, 2026",
     trackingNumber: "DD-2024-002",
   },
   {
     id: "DD-2024-003",
+    shipmentId: "DD-2024-003",
     origin: "Port Harcourt",
     destination: "Kano",
     packageType: "Pallet",
@@ -85,11 +92,13 @@ const sampleOrders: Order[] = [
     status: ShipmentStatus.DELIVERED,
     date: "Dec 28, 2025",
     amount: "₦85,000",
+    amountValue: 85000,
     estimatedDelivery: "Jan 1, 2026",
     trackingNumber: "DD-2024-003",
   },
   {
     id: "DD-2024-004",
+    shipmentId: "DD-2024-004",
     origin: "London, UK",
     destination: "Abuja, Garki",
     packageType: "Parcel",
@@ -98,11 +107,13 @@ const sampleOrders: Order[] = [
     status: ShipmentStatus.DELIVERED,
     date: "Dec 20, 2025",
     amount: "₦210,000",
+    amountValue: 210000,
     estimatedDelivery: "Dec 25, 2025",
     trackingNumber: "DD-2024-004",
   },
   {
     id: "DD-2024-005",
+    shipmentId: "DD-2024-005",
     origin: "Ibadan",
     destination: "Enugu",
     packageType: "Parcel",
@@ -111,11 +122,13 @@ const sampleOrders: Order[] = [
     status: ShipmentStatus.PENDING,
     date: "Jan 4, 2026",
     amount: "₦45,000",
+    amountValue: 45000,
     estimatedDelivery: "Jan 10, 2026",
     trackingNumber: "DD-2024-005",
   },
   {
     id: "DD-2024-006",
+    shipmentId: "DD-2024-006",
     origin: "Dubai, UAE",
     destination: "Lagos, Lekki",
     packageType: "Pallet",
@@ -124,11 +137,13 @@ const sampleOrders: Order[] = [
     status: ShipmentStatus.IN_TRANSIT,
     date: "Jan 1, 2026",
     amount: "₦890,000",
+    amountValue: 890000,
     estimatedDelivery: "Jan 6, 2026",
     trackingNumber: "DD-2024-006",
   },
   {
     id: "DD-2024-007",
+    shipmentId: "DD-2024-007",
     origin: "Abuja",
     destination: "Calabar",
     packageType: "Parcel",
@@ -137,11 +152,13 @@ const sampleOrders: Order[] = [
     status: ShipmentStatus.CANCELLED,
     date: "Dec 18, 2025",
     amount: "₦35,000",
+    amountValue: 35000,
     estimatedDelivery: "Dec 22, 2025",
     trackingNumber: "DD-2024-007",
   },
   {
     id: "DD-2024-008",
+    shipmentId: "DD-2024-008",
     origin: "New York, USA",
     destination: "Port Harcourt",
     packageType: "Container",
@@ -150,6 +167,7 @@ const sampleOrders: Order[] = [
     status: ShipmentStatus.IN_TRANSIT,
     date: "Dec 10, 2025",
     amount: "₦3,200,000",
+    amountValue: 3200000,
     estimatedDelivery: "Jan 15, 2026",
     trackingNumber: "DD-2024-008",
   },
@@ -158,20 +176,67 @@ const sampleOrders: Order[] = [
 export default function MyOrders() {
   const { user } = useAuth();
 
+  const [isDownloadingInvoice, setIsDownloadingInvoice] = useState(false);
+
   const [ordersData, setOrdersData] = useState<ShipmentWithRelations[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
   const [ordersError, setOrdersError] = useState<string | null>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ShipmentStatus | "all">(
-    "all"
+    "all",
   );
   const [serviceFilter, setServiceFilter] = useState<ServiceType | "all">(
-    "all"
+    "all",
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const itemsPerPage = 5;
+
+  const isLikelyUuid = (value: string) =>
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      String(value || ""),
+    );
+
+  const downloadInvoice = async (order: Order) => {
+    if (!order?.shipmentId) return;
+
+    if ((order.amountValue ?? 0) <= 0) {
+      setOrdersError(
+        "Invoice is not available yet because the price is still pending.",
+      );
+      return;
+    }
+
+    // If we are showing demo/sample data, disable invoice download.
+    if (!isLikelyUuid(order.shipmentId)) {
+      setOrdersError(
+        "Invoice download is not available for demo orders. Please place a real order to generate an invoice.",
+      );
+      return;
+    }
+
+    setIsDownloadingInvoice(true);
+    setOrdersError(null);
+
+    try {
+      const blob = await invoicesApi.downloadShipmentInvoicePdf(
+        order.shipmentId,
+      );
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `invoice-${order.trackingNumber || order.id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+    } catch (err: any) {
+      setOrdersError(err?.message ?? "Failed to download invoice.");
+    } finally {
+      setIsDownloadingInvoice(false);
+    }
+  };
 
   const formatShortDate = (iso: string) => {
     const d = new Date(iso);
@@ -226,8 +291,8 @@ export default function MyOrders() {
                 statusHistory: [],
                 checkpoints: [],
                 notes: [],
-              } as unknown as ShipmentWithRelations)
-          )
+              }) as unknown as ShipmentWithRelations,
+          ),
         );
       } else {
         setOrdersData([]);
@@ -251,6 +316,7 @@ export default function MyOrders() {
 
       return {
         id: shipment.trackingId,
+        shipmentId: shipment.id,
         origin: shipment.pickupLocation,
         destination: shipment.destinationLocation,
         packageType: shipment.packageType,
@@ -259,6 +325,7 @@ export default function MyOrders() {
         status,
         date: formatShortDate(shipment.createdAt),
         amount: formatNairaAmount(shipment.amount),
+        amountValue: Number(shipment.amount ?? 0),
         estimatedDelivery: "—",
         trackingNumber: shipment.trackingId,
       };
@@ -284,7 +351,7 @@ export default function MyOrders() {
   // Paginate
   const paginatedOrders = filteredOrders.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
@@ -1063,7 +1130,7 @@ export default function MyOrders() {
                           {pageNum}
                         </button>
                       );
-                    }
+                    },
                   )}
 
                   <button
@@ -1665,15 +1732,34 @@ export default function MyOrders() {
                   Track Order
                 </button>
                 <button
+                  onClick={() => void downloadInvoice(selectedOrder)}
+                  disabled={
+                    isDownloadingInvoice ||
+                    (selectedOrder.amountValue ?? 0) <= 0
+                  }
                   className="py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 text-sm"
                   style={{
                     background: "rgba(255,255,255,0.05)",
                     border: "1px solid var(--border-soft)",
                     color: "var(--text-primary)",
+                    opacity:
+                      isDownloadingInvoice ||
+                      (selectedOrder.amountValue ?? 0) <= 0
+                        ? 0.6
+                        : 1,
+                    cursor:
+                      isDownloadingInvoice ||
+                      (selectedOrder.amountValue ?? 0) <= 0
+                        ? "not-allowed"
+                        : "pointer",
                   }}
                 >
                   <Download className="h-4 w-4" />
-                  Download Invoice
+                  {isDownloadingInvoice
+                    ? "Downloading..."
+                    : (selectedOrder.amountValue ?? 0) <= 0
+                      ? "Invoice Pending"
+                      : "Download Invoice"}
                 </button>
               </div>
             </div>

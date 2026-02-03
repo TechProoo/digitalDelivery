@@ -15,6 +15,7 @@ import { RequireAuth } from "./auth/RequireAuth";
 import Resources from "./Pages/Resources";
 import ResourceDetails from "./Pages/ResourceDetails";
 import Support from "./Pages/Support";
+import SupportArticle from "./Pages/SupportArticle";
 import SupportBot from "./components/support/SupportBot";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/resources/:id" element={<ResourceDetails />} />
         <Route path="/resource/:id" element={<ResourceDetails />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/support/articles/:id" element={<SupportArticle />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />

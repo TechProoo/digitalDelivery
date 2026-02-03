@@ -13,14 +13,12 @@ export function useChat() {
     const onResponse = (e: Event) => {
       const ce = e as CustomEvent<ChatResponse>;
       if (ce?.detail) {
-        console.log("[useChat] window onResponse", ce.detail);
         setMessages((prev) => [...prev, ce.detail]);
       }
     };
     const onTyping = (e: Event) => {
       const ce = e as CustomEvent<{ isTyping: boolean }>;
       if (ce?.detail) {
-        console.log("[useChat] window onTyping", ce.detail.isTyping);
         setIsTyping(ce.detail.isTyping);
       }
     };
@@ -53,12 +51,10 @@ export function useChat() {
 
   // Then attach socket listeners (attached once globally)
   useEffect(() => {
-    console.log("[useChat] socket useEffect mount");
 
     // Only connect if not already connected
     if (!socket.connected) {
       socket.connect();
-      console.log("[useChat] socket.connect() called");
     }
 
     // Attach listeners once globally to avoid duplicate handlers (React Strict Mode)
@@ -76,7 +72,6 @@ export function useChat() {
       });
 
       socket.on("chat:response", (data: ChatResponse) => {
-        console.log("[useChat] chat:response (socket)", data);
 
         // Ensure a global in-memory queue exists to hold messages if no listeners yet
         (window as any).__dd_message_queue =
@@ -97,7 +92,6 @@ export function useChat() {
       });
 
       socket.on("chat:typing", ({ isTyping }) => {
-        console.log("[useChat] chat:typing", isTyping);
         try {
           window.dispatchEvent(
             new CustomEvent("dd:chat:typing", { detail: { isTyping } }),
@@ -106,7 +100,6 @@ export function useChat() {
       });
 
       socket.on("chat:error", (err) => {
-        console.log("[useChat] chat:error", err);
         setMessages((prev) => [
           ...prev,
           { message: err.message, timestamp: new Date().toISOString() },
@@ -117,15 +110,12 @@ export function useChat() {
     }
 
     return () => {
-      console.log(
-        "[useChat] socket useEffect unmount (no cleanup to preserve global connection)",
-      );
+
       // Intentionally do not remove global listeners or disconnect here.
     };
   }, []);
 
   const sendMessage = (message: string) => {
-    console.log("[useChat] sendMessage", message);
     socket.emit("chat:message", { message, userId: "web-user" });
   };
 

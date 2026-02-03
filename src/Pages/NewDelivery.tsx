@@ -259,13 +259,6 @@ Please provide pricing for this shipment. Thank you!`;
       alert("Pop-up blocked! Opening WhatsApp in this tab.");
       window.location.href = whatsappUrl;
     }
-
-    // Optional: Track analytics
-    console.log("WhatsApp quote request sent:", {
-      origin: `${formData.originStreet}, ${formData.originCity}, ${formData.originState}, ${formData.originCountry}`,
-      destination: `${formData.destStreet}, ${formData.destCity}, ${formData.destState}, ${formData.destCountry}`,
-      timestamp: new Date().toISOString(),
-    });
   };
 
   return (

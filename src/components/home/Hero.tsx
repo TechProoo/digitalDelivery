@@ -90,7 +90,7 @@ export default function Hero() {
           >
             <Link
               to="/signup"
-              className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold"
+              className="inline-flex text-xl items-center justify-center gap-2 rounded-xl px-6 py-3  font-semibold"
               style={{
                 background: "hsl(var(--primary))",
                 color: "var(--primary-foreground)",
@@ -103,7 +103,7 @@ export default function Hero() {
 
             <Link
               to={trackHref}
-              className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold"
+              className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-xl font-semibold"
               style={{
                 background: "transparent",
                 border: "1px solid var(--border-soft)",

@@ -159,7 +159,7 @@ const Navbar = () => {
 
             {/* Right actions */}
             <div className="flex items-center gap-2 sm:gap-3 ml-auto">
-              <motion.button
+              {/* <motion.button
                 type="button"
                 onClick={handleToggleTheme}
                 className="hidden sm:grid place-items-center rounded-full h-10 w-10 transition"
@@ -179,7 +179,7 @@ const Navbar = () => {
                 ) : (
                   <Moon className="h-5 w-5" />
                 )}
-              </motion.button>
+              </motion.button> */}
 
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}

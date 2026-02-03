@@ -7,7 +7,6 @@ function getBaseUrl() {
   return envUrl?.trim() || "http://localhost:3000";
 }
 
-console.log(getBaseUrl);
 
 export const apiClient: AxiosInstance = axios.create({
   baseURL: getBaseUrl(),
