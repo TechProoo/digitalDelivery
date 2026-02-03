@@ -238,18 +238,10 @@ Please provide pricing for this shipment. Thank you!`;
 
   const handleWhatsAppRedirect = () => {
     // Validate required fields before sending
-    if (
-      !formData.originStreet ||
-      !formData.originCity ||
-      !formData.originState ||
-      !formData.originCountry ||
-      !formData.destStreet ||
-      !formData.destCity ||
-      !formData.destState ||
-      !formData.destCountry ||
-      !formData.packageType
-    ) {
-      alert("Please fill in all required fields before sending to WhatsApp");
+    if (!canProceedStep1() || !canProceedStep2() || !canProceedStep3()) {
+      alert(
+        "Please fill in all required fields (locations, package details, and WhatsApp numbers) before requesting a quote.",
+      );
       return;
     }
 
@@ -1146,9 +1138,34 @@ Please provide pricing for this shipment. Thank you!`;
                   </button>
 
                   <button
-                    onClick={handleCreateShipment}
+                    type="button"
+                    onClick={handleWhatsAppRedirect}
                     disabled={!canProceedStep3() || isSubmitting}
                     className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all text-sm sm:text-base order-1 sm:order-2"
+                    style={{
+                      background:
+                        canProceedStep3() && !isSubmitting
+                          ? "rgba(23,199,189,0.15)"
+                          : "rgba(255,255,255,0.05)",
+                      border: "1px solid var(--border-soft)",
+                      color:
+                        canProceedStep3() && !isSubmitting
+                          ? "var(--text-primary)"
+                          : "var(--text-secondary)",
+                      cursor:
+                        canProceedStep3() && !isSubmitting
+                          ? "pointer"
+                          : "not-allowed",
+                    }}
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    Request a Quote
+                  </button>
+
+                  <button
+                    onClick={handleCreateShipment}
+                    disabled={!canProceedStep3() || isSubmitting}
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all text-sm sm:text-base"
                     style={{
                       background:
                         canProceedStep3() && !isSubmitting
@@ -1171,26 +1188,6 @@ Please provide pricing for this shipment. Thank you!`;
                     <span className="sm:hidden">
                       {isSubmitting ? "Creating..." : "Create"}
                     </span>
-                  </button>
-                </div>
-
-                <div className="mt-3 text-center">
-                  <button
-                    type="button"
-                    onClick={handleWhatsAppRedirect}
-                    disabled={!canProceedStep3() || isSubmitting}
-                    className="text-xs sm:text-sm underline"
-                    style={{
-                      color: canProceedStep3()
-                        ? "var(--text-secondary)"
-                        : "var(--text-tertiary)",
-                      cursor:
-                        canProceedStep3() && !isSubmitting
-                          ? "pointer"
-                          : "not-allowed",
-                    }}
-                  >
-                    Or get a quote on WhatsApp
                   </button>
                 </div>
               </div>

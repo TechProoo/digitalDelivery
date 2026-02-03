@@ -1,17 +1,22 @@
 import { io } from "socket.io-client";
 
 function computeSocketUrl(): string {
-  const socketEnv = (import.meta.env.VITE_SOCKET_URL as string | undefined) || undefined;
-  const apiEnv = (import.meta.env.VITE_API_URL as string | undefined) || undefined;
+  const socketEnv =
+    (import.meta.env.VITE_SOCKET_URL as string | undefined) || undefined;
+  const apiEnv =
+    (import.meta.env.VITE_API_URL as string | undefined) || undefined;
 
   // If an explicit socket URL is set, use it unless it points to localhost
   // while the app itself is not running on localhost (common Netlify mistake).
   if (socketEnv) {
     try {
       const parsed = new URL(socketEnv);
-      const envIsLocal = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
+      const envIsLocal =
+        parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
       const runningLocally =
-        typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+        typeof window !== "undefined" &&
+        (window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1");
 
       if (!envIsLocal || runningLocally) {
         return socketEnv;
