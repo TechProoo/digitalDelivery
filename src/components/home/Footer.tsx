@@ -1,4 +1,4 @@
-import Logo from "../../assets/logo_trans.png"
+import Logo from "../../assets/logo_t.png";
 const Footer = () => {
   return (
     <footer className="mt-20 bg-(--bg-primary) text-(--text-secondary)">

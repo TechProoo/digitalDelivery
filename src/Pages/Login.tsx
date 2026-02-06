@@ -139,12 +139,12 @@ const Login = () => {
 
                 {/* Forgot Password */}
                 <div className="flex items-center justify-end">
-                  <a
-                    href="#"
+                  <Link
+                    to="/forgot-password"
                     className="text-sm text-(--accent-sky) hover:underline"
                   >
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Submit Button */}

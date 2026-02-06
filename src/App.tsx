@@ -2,6 +2,9 @@ import "./App.css";
 import Home from "./Pages/Home";
 import Signup from "./Pages/Signup";
 import Login from "./Pages/Login";
+import ForgotPassword from "./Pages/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword";
+import NotFound from "./Pages/NotFound";
 import Dashboard from "./Pages/Dashboard";
 import NewDelivery from "./Pages/NewDelivery";
 import TrackPackage from "./Pages/TrackPackage";
@@ -40,6 +43,9 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
 
         {/* Dashboard routes */}
@@ -101,6 +107,8 @@ function App() {
             </RequireAuth>
           }
         />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       <SupportBot />

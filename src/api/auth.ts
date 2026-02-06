@@ -27,6 +27,24 @@ export type LoginInput = {
   password: string;
 };
 
+export type ForgotPasswordInput = {
+  email: string;
+};
+
+export type ForgotPasswordResponse = {
+  ok: boolean;
+  resetLink?: string;
+};
+
+export type ResetPasswordInput = {
+  token: string;
+  newPassword: string;
+};
+
+export type ResetPasswordResponse = {
+  ok: boolean;
+};
+
 export async function register(input: RegisterInput): Promise<AuthResponse> {
   try {
     return await apiClient.post("/auth/register", input);
@@ -54,6 +72,26 @@ export async function logout(): Promise<{ ok: boolean }> {
 export async function me(): Promise<{ customer: Customer | null }> {
   try {
     return await apiClient.get("/auth/me");
+  } catch (err) {
+    throw toApiError(err);
+  }
+}
+
+export async function forgotPassword(
+  input: ForgotPasswordInput,
+): Promise<ForgotPasswordResponse> {
+  try {
+    return await apiClient.post("/auth/forgot-password", input);
+  } catch (err) {
+    throw toApiError(err);
+  }
+}
+
+export async function resetPassword(
+  input: ResetPasswordInput,
+): Promise<ResetPasswordResponse> {
+  try {
+    return await apiClient.post("/auth/reset-password", input);
   } catch (err) {
     throw toApiError(err);
   }

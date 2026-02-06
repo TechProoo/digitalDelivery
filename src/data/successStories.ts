@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 
 import RetailImg from "../assets/services_img.jpg";
-import ManufacturingImg from "../assets/road.jpg";
-import CpgImg from "../assets/door.jpg";
+import ManufacturingImg from "../assets/images (12) (1).jpeg";
+import CpgImg from "../assets/images (7) (1).jpeg";
 
 export type SuccessMetric = {
   icon: ComponentType<{ className?: string }>;

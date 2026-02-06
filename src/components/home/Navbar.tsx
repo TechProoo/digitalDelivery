@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Logo from "../../assets/logo_trans.png";
+import Logo from "../../assets/logo_t.png";
 import { Globe, Menu, Moon, Sun, X } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
@@ -94,7 +94,7 @@ const Navbar = () => {
                 aria-label="Go to home"
               >
                 <span
-                  className="grid place-items-center mt-10 rounded-xl"
+                  className="grid place-items-center rounded-xl"
                 
                 >
                   <img
