@@ -17,6 +17,8 @@ import ResourceDetails from "./Pages/ResourceDetails";
 import Support from "./Pages/Support";
 import SupportArticle from "./Pages/SupportArticle";
 import SuccessStory from "./Pages/SuccessStory";
+import Articles from "./Pages/Articles";
+import Article from "./Pages/Article";
 import SupportBot from "./components/support/SupportBot";
 
 function App() {
@@ -30,6 +32,8 @@ function App() {
         <Route path="/resource" element={<Resources />} />
         <Route path="/resources/:id" element={<ResourceDetails />} />
         <Route path="/resource/:id" element={<ResourceDetails />} />
+        <Route path="/articles" element={<Articles />} />
+        <Route path="/articles/:id" element={<Article />} />
         <Route path="/support" element={<Support />} />
         <Route path="/support/articles/:id" element={<SupportArticle />} />
         <Route path="/success-stories/:id" element={<SuccessStory />} />

@@ -1,17 +1,7 @@
 import { ArrowRight, Calendar } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
-import AeroImg from "../../assets/aero.jpg";
-import RoadImg from "../../assets/road.jpg";
-import ServicesImg from "../../assets/services_img.jpg";
-
-type Article = {
-  category: string;
-  date: string;
-  title: string;
-  excerpt: string;
-  image: string;
-  href?: string;
-};
+import { ARTICLES } from "../../data/articles";
 
 export default function LatestUpdatesInsightsSection() {
   const cardStyle: React.CSSProperties = {
@@ -21,32 +11,19 @@ export default function LatestUpdatesInsightsSection() {
     backdropFilter: "blur(12px)",
   };
 
-  const articles: Article[] = [
-    {
-      category: "Industry Report",
-      date: "Jan 15, 2026",
-      title: "A Guide to Freight Trucking Rates in 2026",
-      excerpt:
-        "As we move into 2026, the freight market is showing signs of change. Both demand and...",
-      image: RoadImg,
-    },
-    {
-      category: "Technology",
-      date: "Jan 12, 2026",
-      title: "How AI is Transforming Supply Chain Visibility",
-      excerpt:
-        "Advanced machine learning algorithms are revolutionizing how companies track and opti...",
-      image: AeroImg,
-    },
-    {
-      category: "Market Update",
-      date: "Jan 10, 2026",
-      title: "Q4 2025 Insights and Recommendations",
-      excerpt:
-        "Our quarterly market update provides valuable insights to help shippers, carriers, and logistics...",
-      image: ServicesImg,
-    },
-  ];
+  const articles = ARTICLES.slice(0, 3);
+
+  const formatDate = (dateIso: string) => {
+    try {
+      return new Date(dateIso).toLocaleDateString("en-NG", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    } catch {
+      return dateIso;
+    }
+  };
 
   return (
     <section className="px-4 sm:px-6 lg:px-10">
@@ -82,16 +59,14 @@ export default function LatestUpdatesInsightsSection() {
             </p>
           </div>
 
-          <a
-            href="https://swiftshipco.lovable.app/blog"
-            target="_blank"
-            rel="noreferrer"
+          <NavLink
+            to="/articles"
             className="group mt-2 inline-flex items-center gap-2 font-semibold"
             style={{ color: "var(--accent-teal)" }}
           >
             <span>View all articles</span>
             <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-          </a>
+          </NavLink>
         </div>
 
         <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3">
@@ -103,8 +78,8 @@ export default function LatestUpdatesInsightsSection() {
             >
               <div className="relative h-48 sm:h-56">
                 <img
-                  src={a.image}
-                  alt=""
+                  src={a.imageUrl}
+                  alt={a.title}
                   className="h-full w-full object-cover"
                   style={{ filter: "saturate(0.95)" }}
                 />
@@ -131,7 +106,7 @@ export default function LatestUpdatesInsightsSection() {
                     style={{ color: "var(--text-tertiary)" }}
                   >
                     <Calendar className="h-4 w-4" />
-                    {a.date}
+                    {formatDate(a.date)}
                   </span>
                 </div>
 
@@ -149,20 +124,16 @@ export default function LatestUpdatesInsightsSection() {
                   {a.excerpt}
                 </p>
 
-                {a.href && (
-                  <div className="mt-7">
-                    <a
-                      href={a.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 font-semibold"
-                      style={{ color: "var(--accent-teal)" }}
-                    >
-                      <span>Read more</span>
-                      <ArrowRight className="h-5 w-5" />
-                    </a>
-                  </div>
-                )}
+                <div className="mt-7">
+                  <NavLink
+                    to={`/articles/${a.id}`}
+                    className="inline-flex items-center gap-2 font-semibold"
+                    style={{ color: "var(--accent-teal)" }}
+                  >
+                    <span>Read more</span>
+                    <ArrowRight className="h-5 w-5" />
+                  </NavLink>
+                </div>
               </div>
             </article>
           ))}
