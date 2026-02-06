@@ -3,32 +3,32 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { motion } from "framer-motion";
 
+export const stats = [
+  {
+    icon: Box,
+    value: "5M+",
+    label: "Shipments Delivered",
+  },
+  {
+    icon: Truck,
+    value: "150+",
+    label: "Countries Served",
+  },
+  {
+    icon: Plane,
+    value: "99.8%",
+    label: "Customer Satisfaction",
+  },
+  {
+    icon: Headset,
+    value: "24/7",
+    label: "Support",
+  },
+];
+
 export default function Hero() {
   const { isAuthenticated } = useAuth();
   const trackHref = isAuthenticated ? "/dashboard/track" : "/login";
-
-  const stats = [
-    {
-      icon: Box,
-      value: "5M+",
-      label: "Shipments Delivered",
-    },
-    {
-      icon: Truck,
-      value: "150+",
-      label: "Countries Served",
-    },
-    {
-      icon: Plane,
-      value: "99.8%",
-      label: "Customer Satisfaction",
-    },
-    {
-      icon: Headset,
-      value: "24/7",
-      label: "Support",
-    },
-  ];
 
   return (
     <section className="relative px-4 sm:px-6 lg:px-10">
@@ -117,7 +117,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className=" mx-auto mt-12 hidden sm:grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
