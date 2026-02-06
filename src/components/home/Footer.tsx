@@ -1,11 +1,10 @@
+import Logo from "../../assets/logo_trans.png"
 const Footer = () => {
   return (
     <footer className="mt-20 bg-(--bg-primary) text-(--text-secondary)">
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-          <h3 className="text-(--text-primary) font-bold text-lg mb-3">
-            Digital Logistics
-          </h3>
+          <img src={Logo} className="w-30" alt="" />
           <p className="text-sm">
             Reliable logistics and shipping solutions tailored to your needs.
           </p>

@@ -100,7 +100,7 @@ export default function About() {
             >
               About{" "}
               <span style={{ color: "var(--accent-teal)" }}>
-                Digitallogistics
+                DigitalLogistics
               </span>
             </motion.h1>
 

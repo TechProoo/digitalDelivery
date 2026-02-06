@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logo_trans.png";
 import { Globe, Menu, Moon, Sun, X } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
@@ -81,7 +81,7 @@ const Navbar = () => {
         }}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
-          <nav className="h-16 flex items-center gap-4">
+          <nav className="h-20 flex items-center gap-4">
             {/* Brand */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -94,34 +94,19 @@ const Navbar = () => {
                 aria-label="Go to home"
               >
                 <span
-                  className="grid place-items-center rounded-xl"
-                  style={{
-                    width: 40,
-                    height: 40,
-                    background: "var(--gradient-primary)",
-                    boxShadow: "var(--glow-primary)",
-                  }}
+                  className="grid place-items-center mt-10 rounded-xl"
+                
                 >
                   <img
                     src={Logo}
                     alt="Digital Logistics"
-                    className="h-7 w-7"
+                    className=" w-50"
                     style={{
                       filter: "drop-shadow(0 1px 6px rgba(0,0,0,0.35))",
                     }}
                   />
                 </span>
-                <div className="leading-tight">
-                  <div
-                    className="font-semibold tracking-tight"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    Digital
-                    <span style={{ color: "var(--accent-teal)" }}>
-                      Logistics
-                    </span>
-                  </div>
-                </div>
+                
               </NavLink>
             </motion.div>
 
