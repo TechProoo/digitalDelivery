@@ -32,7 +32,10 @@ export default function Article() {
   }, [article]);
 
   return (
-    <div className="min-h-screen" style={{ background: "hsl(var(--background))" }}>
+    <div
+      className="min-h-screen"
+      style={{ background: "hsl(var(--background))" }}
+    >
       <Navbar />
 
       <section
@@ -103,8 +106,7 @@ export default function Article() {
                   {article.category}
                 </span>
               </div>
-            </
-            >
+            </>
           ) : (
             <>
               <h1
@@ -196,7 +198,10 @@ export default function Article() {
 
         {related.length ? (
           <div className="mt-12">
-            <div className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+            <div
+              className="text-lg font-bold"
+              style={{ color: "var(--text-primary)" }}
+            >
               Related articles
             </div>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -213,7 +218,10 @@ export default function Article() {
                   }}
                 >
                   <div className="font-semibold">{a.title}</div>
-                  <div className="mt-2 text-sm" style={{ color: "var(--text-tertiary)" }}>
+                  <div
+                    className="mt-2 text-sm"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
                     {a.excerpt}
                   </div>
                 </NavLink>

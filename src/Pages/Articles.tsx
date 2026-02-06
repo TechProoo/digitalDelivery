@@ -24,9 +24,9 @@ function formatDate(dateIso: string) {
 }
 
 export default function Articles() {
-  const [activeCategory, setActiveCategory] = useState<
-    "All" | ArticleCategory
-  >("All");
+  const [activeCategory, setActiveCategory] = useState<"All" | ArticleCategory>(
+    "All",
+  );
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -51,7 +51,10 @@ export default function Articles() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "hsl(var(--background))" }}>
+    <div
+      className="min-h-screen"
+      style={{ background: "hsl(var(--background))" }}
+    >
       <Navbar />
 
       <section
@@ -97,7 +100,8 @@ export default function Articles() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.05, ease: "easeOut" }}
           >
-            Deep dives, practical playbooks, and market notes — written to help you ship smarter, reduce exceptions, and keep customers happy.
+            Deep dives, practical playbooks, and market notes — written to help
+            you ship smarter, reduce exceptions, and keep customers happy.
           </motion.p>
 
           <motion.div
@@ -114,7 +118,10 @@ export default function Articles() {
                 boxShadow: "var(--shadow-card)",
               }}
             >
-              <Search className="h-5 w-5" style={{ color: "var(--text-tertiary)" }} />
+              <Search
+                className="h-5 w-5"
+                style={{ color: "var(--text-tertiary)" }}
+              />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}

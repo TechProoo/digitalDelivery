@@ -242,7 +242,8 @@ export const ARTICLES: ArticleItem[] = [
     id: "last-mile-reliability",
     category: "Operations",
     date: "2025-12-22",
-    title: "Last-Mile Reliability: The Small Fixes That Improve On-Time Delivery",
+    title:
+      "Last-Mile Reliability: The Small Fixes That Improve On-Time Delivery",
     excerpt:
       "On-time delivery isn’t magic — it’s process. Here are the small operational changes that reduce failed deliveries and re-attempts.",
     author: "Delivery Ops",
@@ -272,7 +273,8 @@ export const ARTICLES: ArticleItem[] = [
     id: "ecommerce-returns-playbook",
     category: "E‑commerce",
     date: "2025-12-12",
-    title: "E-commerce Returns Playbook: Reduce Costs Without Hurting Experience",
+    title:
+      "E-commerce Returns Playbook: Reduce Costs Without Hurting Experience",
     excerpt:
       "Returns are part of e-commerce. The goal is to make them predictable and affordable while staying customer-friendly.",
     author: "E-commerce Team",
