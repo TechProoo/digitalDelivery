@@ -13,6 +13,7 @@ import {
   ArrowRight,
   ArrowLeft,
   MessageCircle,
+  X,
 } from "lucide-react";
 import BottomNav from "../components/dashboard/bottom-nav";
 
@@ -45,6 +46,7 @@ export default function NewDelivery() {
   const { logout } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEstimateDrawerOpen, setIsEstimateDrawerOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     originStreet: "",
@@ -147,6 +149,118 @@ export default function NewDelivery() {
     return `${l}x${w}x${h} cm`;
   }, [formData.length, formData.width, formData.height]);
 
+  const estimate = useMemo(() => {
+    const toNum = (value: string) => {
+      const n = Number.parseFloat(String(value ?? "").trim());
+      return Number.isFinite(n) ? n : 0;
+    };
+
+    const normalize = (value: string) =>
+      String(value ?? "")
+        .trim()
+        .toLowerCase();
+    const originCountry = normalize(formData.originCountry);
+    const destCountry = normalize(formData.destCountry);
+    const originState = normalize(formData.originState);
+    const destState = normalize(formData.destState);
+
+    const actualWeightKg = Math.max(0, toNum(formData.weight));
+    const l = Math.max(0, toNum(formData.length));
+    const w = Math.max(0, toNum(formData.width));
+    const h = Math.max(0, toNum(formData.height));
+    const volumetricWeightKg = l && w && h ? (l * w * h) / 5000 : 0;
+    const chargeableWeightKg = Math.max(
+      actualWeightKg,
+      volumetricWeightKg,
+      0.5,
+    );
+
+    const routeFactor = (() => {
+      if (originCountry && destCountry && originCountry !== destCountry)
+        return 1.7;
+      if (originState && destState && originState !== destState) return 1.25;
+      return 1.0;
+    })();
+
+    const serviceType = formData.serviceType as ServiceType | "";
+    const ratePerKg =
+      serviceType === ServiceType.AIR
+        ? 4500
+        : serviceType === ServiceType.SEA
+          ? 2200
+          : 2500; // ROAD default
+
+    const baseFee =
+      serviceType === ServiceType.AIR
+        ? 12000
+        : serviceType === ServiceType.SEA
+          ? 10000
+          : 8000;
+
+    const handlingFee =
+      formData.packageType === "container"
+        ? 20000
+        : formData.packageType === "full-freight"
+          ? 25000
+          : formData.packageType === "pallet"
+            ? 8000
+            : 4000;
+
+    const transportFee = ratePerKg * chargeableWeightKg * routeFactor;
+    const subtotal = baseFee + handlingFee + transportFee;
+    const fuelSurcharge = subtotal * 0.12;
+    const estimatedTotal = subtotal + fuelSurcharge;
+
+    const roundTo = (value: number, step: number) =>
+      Math.round(value / step) * step;
+
+    const low = roundTo(estimatedTotal * 0.9, 500);
+    const high = roundTo(estimatedTotal * 1.15, 500);
+
+    const formatNgn = (value: number) => {
+      try {
+        return new Intl.NumberFormat("en-NG", {
+          style: "currency",
+          currency: "NGN",
+          maximumFractionDigits: 0,
+        }).format(value);
+      } catch {
+        return `₦${value.toFixed(0)}`;
+      }
+    };
+
+    return {
+      isReady: canProceedStep1() && canProceedStep2() && canProceedStep3(),
+      chargeableWeightKg,
+      actualWeightKg,
+      volumetricWeightKg,
+      routeFactor,
+      ratePerKg,
+      baseFee,
+      handlingFee,
+      transportFee,
+      fuelSurcharge,
+      low,
+      high,
+      formatNgn,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    formData.originCountry,
+    formData.destCountry,
+    formData.originState,
+    formData.destState,
+    formData.weight,
+    formData.length,
+    formData.width,
+    formData.height,
+    formData.serviceType,
+    formData.packageType,
+    canProceedStep1,
+    canProceedStep2,
+    canProceedStep3,
+  ]);
+
   const buildWhatsAppMessage = (opts?: { trackingId?: string }) => {
     const companyWhatsApp = "2349010191502";
     const serviceTypeLabel = formData.serviceType
@@ -187,7 +301,13 @@ Please provide pricing for this shipment. Thank you!`;
     return { message, whatsappUrl };
   };
 
-  const handleCreateShipment = async () => {
+  const handleSubmitOpenEstimate = () => {
+    if (!canProceedStep1() || !canProceedStep2() || !canProceedStep3()) return;
+    setSubmitError(null);
+    setIsEstimateDrawerOpen(true);
+  };
+
+  const handlePlaceOrderToWhatsApp = async () => {
     if (!canProceedStep1() || !canProceedStep2() || !canProceedStep3()) return;
 
     // Open a tab immediately (popup-safe), then fill it after the async call.
@@ -207,17 +327,22 @@ Please provide pricing for this shipment. Thank you!`;
         receiverPhone: formData.receiverWhatsApp.trim(),
       });
 
+      const estimateLine = estimate?.isReady
+        ? `\n\n🧮 *ESTIMATED QUOTE*\n${estimate.formatNgn(estimate.low)} – ${estimate.formatNgn(estimate.high)} (estimate only)`
+        : "";
+
       const { whatsappUrl } = buildWhatsAppMessage({
         trackingId: shipment.trackingId,
       });
+      const whatsappUrlWithEstimate = `${whatsappUrl}${encodeURIComponent(estimateLine)}`;
 
       if (waWindow && !waWindow.closed) {
-        waWindow.location.href = whatsappUrl;
+        waWindow.location.href = whatsappUrlWithEstimate;
       } else {
-        // Popup blocked - fallback attempt
-        window.open(whatsappUrl, "_blank");
+        window.open(whatsappUrlWithEstimate, "_blank");
       }
 
+      setIsEstimateDrawerOpen(false);
       navigate(
         `/dashboard/track?tn=${encodeURIComponent(shipment.trackingId)}`,
       );
@@ -233,31 +358,6 @@ Please provide pricing for this shipment. Thank you!`;
       setSubmitError(err?.message ?? "Failed to create shipment.");
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleWhatsAppRedirect = () => {
-    // Validate required fields before sending
-    if (!canProceedStep1() || !canProceedStep2() || !canProceedStep3()) {
-      alert(
-        "Please fill in all required fields (locations, package details, and WhatsApp numbers) before requesting a quote.",
-      );
-      return;
-    }
-
-    const { whatsappUrl } = buildWhatsAppMessage();
-
-    // Open WhatsApp with better error handling
-    const newWindow = window.open(whatsappUrl, "_blank");
-
-    if (
-      !newWindow ||
-      newWindow.closed ||
-      typeof newWindow.closed === "undefined"
-    ) {
-      // Popup blocked - fallback
-      alert("Pop-up blocked! Opening WhatsApp in this tab.");
-      window.location.href = whatsappUrl;
     }
   };
 
@@ -1131,32 +1231,7 @@ Please provide pricing for this shipment. Thank you!`;
                   </button>
 
                   <button
-                    type="button"
-                    onClick={handleWhatsAppRedirect}
-                    disabled={!canProceedStep3() || isSubmitting}
-                    className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all text-sm sm:text-base order-1 sm:order-2"
-                    style={{
-                      background:
-                        canProceedStep3() && !isSubmitting
-                          ? "rgba(23,199,189,0.15)"
-                          : "rgba(255,255,255,0.05)",
-                      border: "1px solid var(--border-soft)",
-                      color:
-                        canProceedStep3() && !isSubmitting
-                          ? "var(--text-primary)"
-                          : "var(--text-secondary)",
-                      cursor:
-                        canProceedStep3() && !isSubmitting
-                          ? "pointer"
-                          : "not-allowed",
-                    }}
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    Request a Quote
-                  </button>
-
-                  <button
-                    onClick={handleCreateShipment}
+                    onClick={handleSubmitOpenEstimate}
                     disabled={!canProceedStep3() || isSubmitting}
                     className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all text-sm sm:text-base"
                     style={{
@@ -1176,10 +1251,10 @@ Please provide pricing for this shipment. Thank you!`;
                   >
                     <Truck className="h-4 w-4" />
                     <span className="hidden sm:inline">
-                      {isSubmitting ? "Creating..." : "Create Shipment"}
+                      {isSubmitting ? "Creating..." : "Submit"}
                     </span>
                     <span className="sm:hidden">
-                      {isSubmitting ? "Creating..." : "Create"}
+                      {isSubmitting ? "Creating..." : "Submit"}
                     </span>
                   </button>
                 </div>
@@ -1187,6 +1262,192 @@ Please provide pricing for this shipment. Thank you!`;
             )}
           </div>
         </div>
+
+        {isEstimateDrawerOpen ? (
+          <div className="fixed inset-0 z-60">
+            <button
+              type="button"
+              className="absolute inset-0 bg-black/60"
+              aria-label="Close estimate drawer"
+              onClick={() => setIsEstimateDrawerOpen(false)}
+            />
+
+            <div
+              role="dialog"
+              aria-modal="true"
+              className="absolute right-0 top-0 h-full w-full max-w-lg overflow-y-auto"
+              style={{
+                background: "hsl(var(--card) / 0.95)",
+                borderLeft: "1px solid var(--border-soft)",
+                backdropFilter: "blur(12px)",
+              }}
+            >
+              <div className="p-5 sm:p-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p
+                      className="text-xs font-semibold uppercase tracking-wider"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      Estimated Quote
+                    </p>
+                    <h3
+                      className="mt-2 text-xl sm:text-2xl font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {estimate.isReady
+                        ? `${estimate.formatNgn(estimate.low)} – ${estimate.formatNgn(estimate.high)}`
+                        : "Complete the form to see an estimate"}
+                    </h3>
+                    <p
+                      className="mt-2 text-sm leading-relaxed"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      Get real quotation on WhatsApp — this is just an estimated
+                      quote.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsEstimateDrawerOpen(false)}
+                    className="rounded-lg p-2"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid var(--border-soft)",
+                      color: "var(--text-primary)",
+                    }}
+                    aria-label="Close"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <div
+                  className="mt-6 rounded-2xl p-4"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid var(--border-soft)",
+                  }}
+                >
+                  <p
+                    className="text-sm font-semibold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    Estimate breakdown
+                  </p>
+                  <div
+                    className="mt-3 space-y-2 text-sm"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span>Chargeable weight</span>
+                      <span
+                        className="font-medium"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {estimate.chargeableWeightKg.toFixed(1)}kg
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span>Rate × weight</span>
+                      <span
+                        className="font-medium"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {estimate.formatNgn(estimate.ratePerKg)} ×{" "}
+                        {estimate.chargeableWeightKg.toFixed(1)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span>Transport</span>
+                      <span
+                        className="font-medium"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {estimate.formatNgn(Math.round(estimate.transportFee))}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span>Base fee</span>
+                      <span
+                        className="font-medium"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {estimate.formatNgn(estimate.baseFee)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span>Handling</span>
+                      <span
+                        className="font-medium"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {estimate.formatNgn(estimate.handlingFee)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span>Fuel surcharge (est.)</span>
+                      <span
+                        className="font-medium"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {estimate.formatNgn(Math.round(estimate.fuelSurcharge))}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {submitError ? (
+                  <div className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                    {submitError}
+                  </div>
+                ) : null}
+
+                <div className="mt-6 flex flex-col gap-3">
+                  <button
+                    type="button"
+                    onClick={handlePlaceOrderToWhatsApp}
+                    disabled={!estimate.isReady || isSubmitting}
+                    className="w-full px-5 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all"
+                    style={{
+                      background:
+                        estimate.isReady && !isSubmitting
+                          ? "var(--accent-teal)"
+                          : "rgba(255,255,255,0.05)",
+                      color:
+                        estimate.isReady && !isSubmitting
+                          ? "var(--text-inverse)"
+                          : "var(--text-secondary)",
+                      cursor:
+                        estimate.isReady && !isSubmitting
+                          ? "pointer"
+                          : "not-allowed",
+                    }}
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    {isSubmitting
+                      ? "Placing..."
+                      : "Request Live Quote & Place Order via WhatsApp"}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsEstimateDrawerOpen(false)}
+                    className="w-full px-5 py-3 rounded-xl font-medium"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid var(--border-soft)",
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    Edit details
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
         <BottomNav />
       </div>
     </Sidebar>
