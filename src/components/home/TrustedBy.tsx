@@ -50,8 +50,10 @@ export default function TrustedBy() {
                 loading="lazy"
                 className="h-10 sm:h-12 w-auto object-contain"
                 style={{
-                  opacity: 0.55,
-                  // filter: "grayscale(1)",
+            
+                  // These logos are JPEGs with light boxes baked in.
+                  // Blend-mode reduces the visible "square" on dark backgrounds.
+              
                 }}
               />
             </motion.div>

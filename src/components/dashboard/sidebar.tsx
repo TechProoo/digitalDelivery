@@ -136,9 +136,18 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
         >
           {!isCollapsed ? (
             <>
-              <div className="flex items-center gap-3">
+              <NavLink
+                to="/"
+                aria-label="Go to home"
+                className="flex items-center gap-3"
+                onClick={() => !isLarge && setIsOpen(false)}
+              >
                 <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shrink-0">
-                  <img src={Logo} className="w-10 h-10" alt="" />
+                  <img
+                    src={Logo}
+                    className="w-10 h-10"
+                    alt="Digital Logistics"
+                  />
                 </div>
                 <div className="min-w-0">
                   <div className="text-lg font-bold text-primary truncate">
@@ -148,7 +157,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
                     Logistics Platform
                   </div>
                 </div>
-              </div>
+              </NavLink>
               {/* Close button for mobile */}
               <button
                 onClick={() => setIsOpen(false)}
@@ -161,9 +170,13 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
           ) : (
             // collapsed header (desktop only)
             <div className="w-full flex items-center justify-center">
-              <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
-                <Package className="h-5 w-5" />
-              </div>
+              <NavLink
+                to="/"
+                aria-label="Go to home"
+                className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground"
+              >
+                <img src={Logo} alt="" />
+              </NavLink>
             </div>
           )}
         </div>

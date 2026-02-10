@@ -137,7 +137,18 @@ const Navbar = () => {
               className="h-16 px-4 flex items-center justify-between"
               style={{ borderBottom: "1px solid var(--border-soft)" }}
             >
-              <img src={Logo} alt="Digital Logistics" className="h-10 w-auto" />
+              <NavLink
+                to="/"
+                className="flex items-center"
+                aria-label="Go to home"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <img
+                  src={Logo}
+                  alt="Digital Logistics"
+                  className="h-10 w-auto"
+                />
+              </NavLink>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="grid place-items-center rounded-full h-10 w-10"
@@ -275,10 +286,7 @@ const Navbar = () => {
                     <NavLink
                       to={link.path}
                       className={({ isActive }) =>
-                        [
-                          navUnderlineBase,
-                          isActive && "after:scale-x-100",
-                        ]
+                        [navUnderlineBase, isActive && "after:scale-x-100"]
                           .filter(Boolean)
                           .join(" ")
                       }
