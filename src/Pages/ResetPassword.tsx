@@ -10,6 +10,7 @@ import {
 import Logo from "../assets/logo_2.png";
 import { useAuth } from "../auth/AuthContext";
 import { resetPassword } from "../api/auth";
+import AppLoader from "../components/loader/AppLoader";
 
 function getTokenFromLocation(location: ReturnType<typeof useLocation>) {
   const qsToken = new URLSearchParams(location.search).get("token");
@@ -40,11 +41,7 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState(false);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-(--bg-primary) flex items-center justify-center text-(--text-primary)">
-        Loading...
-      </div>
-    );
+    return <AppLoader />;
   }
 
   if (isAuthenticated) {

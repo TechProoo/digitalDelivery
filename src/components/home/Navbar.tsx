@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Logo from "../../assets/logo_t.png";
+import Logo from "../../assets/logo.png";
 import { Globe, Menu, Moon, Sun, X } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
@@ -93,10 +93,7 @@ const Navbar = () => {
                 className="flex items-center gap-3 shrink-0"
                 aria-label="Go to home"
               >
-                <span
-                  className="grid place-items-center rounded-xl"
-                
-                >
+                <span className="grid place-items-center rounded-xl">
                   <img
                     src={Logo}
                     alt="Digital Logistics"
@@ -106,7 +103,6 @@ const Navbar = () => {
                     }}
                   />
                 </span>
-                
               </NavLink>
             </motion.div>
 

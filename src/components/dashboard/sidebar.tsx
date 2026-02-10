@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Home, Package, MapPin, Clock, LogOut, Menu, X } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
+import Logo from "../../assets/logo_2.png";
 
 // simple className merger
 function cn(...classes: (string | boolean | undefined)[]) {
@@ -15,7 +16,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false); // mobile
   const [isCollapsed, setIsCollapsed] = useState(false); // desktop collapsed
   const [isLarge, setIsLarge] = useState<boolean>(
-    typeof window !== "undefined" ? window.innerWidth >= 1024 : true
+    typeof window !== "undefined" ? window.innerWidth >= 1024 : true,
   );
 
   const displayName = user?.name?.trim() || "Account";
@@ -100,7 +101,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
           "fixed inset-0 z-70 bg-black/50 backdrop-blur-sm transition-opacity lg:hidden",
           isOpen
             ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+            : "opacity-0 pointer-events-none",
         )}
       />
 
@@ -116,7 +117,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
           !isCollapsed && "lg:w-64",
           // mobile translate
           isOpen ? "translate-x-0" : "-translate-x-full",
-          "lg:translate-x-0"
+          "lg:translate-x-0",
         )}
         style={{
           backgroundColor: "var(--bg-secondary)",
@@ -126,7 +127,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
         {/* header */}
         <div
           className={cn(
-            "h-16 flex items-center justify-between px-4 border-b shrink-0"
+            "h-16 flex items-center justify-between px-4 border-b shrink-0",
           )}
           style={{
             borderColor: "var(--border-medium)",
@@ -137,7 +138,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
             <>
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shrink-0">
-                  <Package className="h-5 w-5" />
+                  <img src={Logo} className="w-10 h-10" alt="" />
                 </div>
                 <div className="min-w-0">
                   <div className="text-lg font-bold text-primary truncate">
@@ -188,7 +189,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
                       isCollapsed
                         ? "justify-center px-0 py-2.5 gap-0"
                         : "gap-3 px-3 py-2.5",
-                      isActive && "shadow-sm"
+                      isActive && "shadow-sm",
                     )
                   }
                   style={({ isActive }) => ({
@@ -229,7 +230,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
                   <span
                     className={cn(
                       "font-medium",
-                      isCollapsed && "lg:sr-only text-3xl"
+                      isCollapsed && "lg:sr-only text-3xl",
                     )}
                   >
                     {item.title}
@@ -367,8 +368,8 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
                     ? "Expand sidebar"
                     : "Collapse sidebar"
                   : isOpen
-                  ? "Close menu"
-                  : "Open menu"
+                    ? "Close menu"
+                    : "Open menu"
               }
               className="p-2 rounded-lg hover:bg-accent transition-colors"
             >

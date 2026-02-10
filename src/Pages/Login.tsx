@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo_2.png";
 import { useAuth } from "../auth/AuthContext";
+import AppLoader from "../components/loader/AppLoader";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,11 +19,7 @@ const Login = () => {
   const { login, isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-(--bg-primary) flex items-center justify-center text-(--text-primary)">
-        Loading...
-      </div>
-    );
+    return <AppLoader />;
   }
 
   if (isAuthenticated) {

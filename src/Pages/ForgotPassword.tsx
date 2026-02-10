@@ -4,6 +4,7 @@ import { Link, Navigate } from "react-router-dom";
 import Logo from "../assets/logo_2.png";
 import { useAuth } from "../auth/AuthContext";
 import { forgotPassword } from "../api/auth";
+import AppLoader from "../components/loader/AppLoader";
 
 const ForgotPassword = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -17,11 +18,7 @@ const ForgotPassword = () => {
   const normalizedEmail = useMemo(() => email.trim(), [email]);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-(--bg-primary) flex items-center justify-center text-(--text-primary)">
-        Loading...
-      </div>
-    );
+    return <AppLoader />;
   }
 
   if (isAuthenticated) {

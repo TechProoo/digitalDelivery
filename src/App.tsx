@@ -23,12 +23,20 @@ import SuccessStory from "./Pages/SuccessStory";
 import Articles from "./Pages/Articles";
 import Article from "./Pages/Article";
 import SupportBot from "./components/support/SupportBot";
+import RouteSplash from "./components/loader/RouteSplash";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={
+            <RouteSplash delayMs={500} label="Loading...">
+              <Home />
+            </RouteSplash>
+          }
+        />
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<About />} />
         <Route path="/resources" element={<Resources />} />

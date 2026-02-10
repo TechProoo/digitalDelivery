@@ -7,7 +7,9 @@ const NotFound = () => {
     <div className="min-h-screen bg-(--bg-primary) flex items-center justify-center px-4">
       <div className="w-full max-w-lg rounded-2xl border border-(--border-soft) bg-(--bg-secondary) p-8 shadow-strong">
         <div className="text-center">
-          <div className="text-6xl font-extrabold text-(--text-primary)">404</div>
+          <div className="text-6xl font-extrabold text-(--text-primary)">
+            404
+          </div>
           <div className="mt-2 text-xl font-semibold text-(--text-primary)">
             Page not found
           </div>
@@ -19,7 +21,9 @@ const NotFound = () => {
             <div className="font-medium text-(--text-secondary)">
               Requested URL
             </div>
-            <div className="break-all">{location.pathname + location.search}</div>
+            <div className="break-all">
+              {location.pathname + location.search}
+            </div>
           </div>
 
           <div className="mt-6 flex flex-col gap-3">
