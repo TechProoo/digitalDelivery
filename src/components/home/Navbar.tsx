@@ -38,7 +38,6 @@ const Navbar = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname, location.hash]);
-git 
   // smooth scroll for hash routes
   useEffect(() => {
     if (!location.hash) return;
