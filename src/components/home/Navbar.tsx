@@ -245,7 +245,7 @@ const Navbar = () => {
 
                 <NavLink
                   to="/dashboard/new-delivery"
-                  className="rounded-full px-4 py-3 text-center text-sm font-semibold transition"
+                  className="rounded-full px-4 py-3 text-center text-sm text-nowrap font-semibold transition"
                   style={primaryBtnStyle}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -330,7 +330,7 @@ const Navbar = () => {
 
               <NavLink
                 to="/dashboard/new-delivery"
-                className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
+                className="hidden sm:inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
                 style={primaryBtnStyle}
               >
                 Get a Quote
