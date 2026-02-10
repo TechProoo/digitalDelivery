@@ -3,13 +3,7 @@ import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
-  CreditCard,
-  FileText,
-  Globe,
-  Package,
-  Rocket,
   Search,
-  Truck,
   BookOpen,
   ExternalLink,
   HelpCircle,
@@ -21,66 +15,7 @@ import {
 } from "lucide-react";
 import Footer from "../components/home/Footer";
 import Navbar from "../components/home/Navbar";
-
-type SupportCategory = {
-  id: string;
-  title: string;
-  description: string;
-  articlesCount: number;
-  icon: React.ReactNode;
-  accent: string;
-};
-
-const CATEGORIES: SupportCategory[] = [
-  {
-    id: "shipments",
-    title: "Shipments",
-    description: "Track, manage, and troubleshoot shipments",
-    articlesCount: 24,
-    icon: <Package className="h-6 w-6" />,
-    accent: "var(--accent-teal)",
-  },
-  {
-    id: "billing",
-    title: "Billing & Payments",
-    description: "Invoices, payment methods, and refunds",
-    articlesCount: 18,
-    icon: <CreditCard className="h-6 w-6" />,
-    accent: "hsl(var(--success))",
-  },
-  {
-    id: "carriers",
-    title: "Carriers & Partners",
-    description: "Partner registration and management",
-    articlesCount: 15,
-    icon: <Truck className="h-6 w-6" />,
-    accent: "#8b5cf6",
-  },
-  {
-    id: "international",
-    title: "International Shipping",
-    description: "Customs, duties, and cross-border logistics",
-    articlesCount: 32,
-    icon: <Globe className="h-6 w-6" />,
-    accent: "var(--accent-amber)",
-  },
-  {
-    id: "docs",
-    title: "Documentation",
-    description: "BOL, customs forms, and compliance",
-    articlesCount: 21,
-    icon: <FileText className="h-6 w-6" />,
-    accent: "#fb7185",
-  },
-  {
-    id: "getting-started",
-    title: "Getting Started",
-    description: "New user guides and tutorials",
-    articlesCount: 12,
-    icon: <Rocket className="h-6 w-6" />,
-    accent: "#38bdf8",
-  },
-];
+import { SUPPORT_CATEGORIES } from "../data/supportCategories";
 
 const Support = () => {
   const [query, setQuery] = useState("");
@@ -140,7 +75,7 @@ const Support = () => {
         id: "quote",
         question: "How do I request a quote?",
         answer:
-          "Use the 'Get a Quote' button in the navbar or contact our support team. Provide pickup/drop-off, package details, and preferred service, and we'll respond quickly.",
+          "Use the chatbot or place an order to get an estimated quote, but remember its an estimated quote. Get the Real and live quote from t",
       },
       {
         id: "international-docs",
@@ -166,8 +101,8 @@ const Support = () => {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return CATEGORIES;
-    return CATEGORIES.filter((c) =>
+    if (!q) return SUPPORT_CATEGORIES;
+    return SUPPORT_CATEGORIES.filter((c) =>
       [c.title, c.description].some((v) => v.toLowerCase().includes(q)),
     );
   }, [query]);
@@ -277,74 +212,73 @@ const Support = () => {
 
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((cat, index) => (
-              <motion.div
+              <NavLink
                 key={cat.id}
-                className="group text-left rounded-2xl p-7 transition"
-                style={{
-                  background: "hsl(var(--card) / 0.55)",
-                  border: "1px solid var(--border-soft)",
-                  boxShadow: "var(--shadow-card)",
-                }}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.5,
-                  delay: index * 0.08,
-                  ease: "easeOut",
-                }}
+                to={`/support/categories/${cat.id}`}
+                className="block"
+                aria-label={`Open ${cat.title} support category`}
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div
-                    className="grid place-items-center rounded-2xl"
-                    style={{
-                      width: 52,
-                      height: 52,
-                      background: "hsl(var(--background) / 0.35)",
-                      border: "1px solid var(--border-soft)",
-                      color: cat.accent,
-                    }}
-                  >
-                    {cat.icon}
+                <motion.div
+                  className="group text-left rounded-2xl p-7 transition"
+                  style={{
+                    background: "hsl(var(--card) / 0.55)",
+                    border: "1px solid var(--border-soft)",
+                    boxShadow: "var(--shadow-card)",
+                  }}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.08,
+                    ease: "easeOut",
+                  }}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div
+                      className="grid place-items-center rounded-2xl"
+                      style={{
+                        width: 52,
+                        height: 52,
+                        background: "hsl(var(--background) / 0.35)",
+                        border: "1px solid var(--border-soft)",
+                        color: cat.accent,
+                      }}
+                    >
+                      {cat.icon}
+                    </div>
+
+                    <span
+                      className="grid place-items-center rounded-full"
+                      style={{
+                        width: 40,
+                        height: 40,
+                        background: "hsl(var(--background) / 0.35)",
+                        border: "1px solid var(--border-soft)",
+                        color: "var(--accent-teal)",
+                      }}
+                      aria-hidden="true"
+                    >
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </span>
                   </div>
 
-                  <span
-                    className="grid place-items-center rounded-full"
-                    style={{
-                      width: 40,
-                      height: 40,
-                      background: "hsl(var(--background) / 0.35)",
-                      border: "1px solid var(--border-soft)",
-                      color: "var(--accent-teal)",
-                    }}
-                    aria-hidden="true"
-                  >
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </div>
-
-                <div className="mt-5">
-                  <div
-                    className="text-xl font-bold"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {cat.title}
+                  <div className="mt-5">
+                    <div
+                      className="text-xl font-bold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {cat.title}
+                    </div>
+                    <p
+                      className="mt-2 text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      {cat.description}
+                    </p>
                   </div>
-                  <p
-                    className="mt-2 text-sm"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {cat.description}
-                  </p>
-
-                  <div
-                    className="mt-4 text-sm"
-                    style={{ color: "var(--text-tertiary)" }}
-                  >
-                    {cat.articlesCount} articles
-                  </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </NavLink>
             ))}
           </div>
 
@@ -540,7 +474,8 @@ const Support = () => {
                 description:
                   "Chat with our AI-powered assistant for instant help",
                 action: "Start Chat",
-                to: "/contact",
+                onClick: () =>
+                  window.dispatchEvent(new Event("dl:openSupportBot")),
                 border: false,
               },
               {
@@ -604,7 +539,21 @@ const Support = () => {
                 <p className="mt-3" style={{ color: "var(--text-secondary)" }}>
                   {item.description}
                 </p>
-                {item.to ? (
+                {item.onClick ? (
+                  <button
+                    type="button"
+                    onClick={item.onClick}
+                    className="mt-6 inline-flex items-center justify-center rounded-xl px-6 py-3 font-semibold"
+                    style={{
+                      width: "100%",
+                      background: "hsl(var(--background) / 0.35)",
+                      border: "1px solid var(--border-soft)",
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {item.action}
+                  </button>
+                ) : item.to ? (
                   <NavLink
                     to={item.to}
                     className="mt-6 inline-flex items-center justify-center rounded-xl px-6 py-3 font-semibold"

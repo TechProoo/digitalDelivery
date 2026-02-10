@@ -14,7 +14,6 @@ const Footer = () => {
           <h4 className="text-(--text-primary) font-semibold mb-2">Company</h4>
           <ul className="text-sm space-y-1">
             <li>About</li>
-            <li>Careers</li>
             <li>Blog</li>
           </ul>
         </div>

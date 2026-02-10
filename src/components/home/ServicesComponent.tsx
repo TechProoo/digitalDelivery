@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowRight, Plane, Ship, Truck } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const ServicesComponent = () => {
   const cardStyle: React.CSSProperties = {
@@ -165,7 +166,8 @@ const ServicesComponent = () => {
               </ul>
 
               <div className="mt-10">
-                <button
+                <Link
+                  to={"/dashboard/new-delivery"}
                   className="group flex w-full items-center justify-center gap-3 rounded-xl px-5 py-3 font-semibold"
                   style={{
                     background: "hsl(var(--background) / 0.45)",
@@ -176,7 +178,7 @@ const ServicesComponent = () => {
                 >
                   <span>Get Quote</span>
                   <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
+                </Link>
               </div>
             </motion.article>
           ))}

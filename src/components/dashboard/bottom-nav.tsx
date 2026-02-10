@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Home, Package, MapPin, Clock, LogOut } from "lucide-react";
+import { Home, Package, MapPin, Clock } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 
@@ -14,12 +14,12 @@ export type BottomNavProps = {
   defaultIndex?: number;
 };
 
-const navItems = [ 
+const navItems = [
   { label: "Dashboard", icon: Home, href: "/dashboard" },
   { label: "New Order", icon: Package, href: "/dashboard/new-delivery" },
   { label: "Track", icon: MapPin, href: "/dashboard/track" },
   { label: "Orders", icon: Clock, href: "/dashboard/orders" },
-  { label: "Logout", icon: LogOut, href: "/login" },
+  // { label: "Logout", icon: LogOut, href: "/login" },
 ];
 
 export const BottomNav: React.FC<BottomNavProps> = ({
@@ -28,7 +28,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
 }) => {
   const [activeIndex, setActiveIndex] = useState<number>(defaultIndex);
   const [isSmallScreen, setIsSmallScreen] = useState(
-    typeof window !== "undefined" ? window.innerWidth < 1024 : false
+    typeof window !== "undefined" ? window.innerWidth < 1024 : false,
   );
   const navigate = useNavigate();
   const location = useLocation();
@@ -61,7 +61,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     if (idx === -1) {
       // try startsWith to handle nested routes (e.g. /dashboard/orders/123)
       idx = navItems.findIndex(
-        (it) => path === it.href || path.startsWith(it.href + "/")
+        (it) => path === it.href || path.startsWith(it.href + "/"),
       );
     }
     if (idx === -1) idx = defaultIndex;
@@ -82,7 +82,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         "fixed bottom-4 left-1/2 -translate-x-1/2 z-50",
         "min-w-[320px] max-w-[95vw]",
         "flex items-center p-2 space-x-1 rounded-full shadow-xl",
-        className
+        className,
       )}
       style={{
         backgroundColor: "var(--bg-secondary)",
@@ -114,7 +114,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
             }}
             whileTap={{ scale: 0.97 }}
             className={cn(
-              "flex items-center rounded-full px-3 py-2 min-h-10 h-10 transition-colors duration-200 gap-2"
+              "flex items-center rounded-full px-3 py-2 min-h-10 h-10 transition-colors duration-200 gap-2",
             )}
             style={{
               backgroundColor: isActive

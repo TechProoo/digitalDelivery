@@ -132,8 +132,8 @@ export default function Dashboard() {
     try {
       const result = await shipmentsApi.list({ customerId });
       setShipmentsData(result);
-      console.log(result)
-      console.log(shipmentsData)
+      console.log(result);
+      console.log(shipmentsData);
     } catch (err: any) {
       setShipmentsError(err?.message ?? "Failed to load shipments.");
       setShipmentsData([]);
@@ -396,7 +396,7 @@ export default function Dashboard() {
                     boxShadow: "var(--glow-accent)",
                   }}
                 >
-                  <Package className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <Package className="w-5 h-5" />
                   <span>
                     {shipmentsError
                       ? "Retry loading"
@@ -895,7 +895,7 @@ export default function Dashboard() {
                   }}
                 >
                   {/* Header */}
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="md:flex space-y-5 items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div
                         className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"

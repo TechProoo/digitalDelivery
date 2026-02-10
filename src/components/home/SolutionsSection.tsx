@@ -227,7 +227,7 @@ export default function SolutionsSection() {
           </motion.div>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <AnimatePresence mode="wait">
             {cards.map((card, index) => (
               <motion.div

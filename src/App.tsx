@@ -19,6 +19,7 @@ import Resources from "./Pages/Resources";
 import ResourceDetails from "./Pages/ResourceDetails";
 import Support from "./Pages/Support";
 import SupportArticle from "./Pages/SupportArticle";
+import SupportCategory from "./Pages/SupportCategory";
 import SuccessStory from "./Pages/SuccessStory";
 import Articles from "./Pages/Articles";
 import Article from "./Pages/Article";
@@ -46,6 +47,7 @@ function App() {
         <Route path="/articles" element={<Articles />} />
         <Route path="/articles/:id" element={<Article />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/support/categories/:id" element={<SupportCategory />} />
         <Route path="/support/articles/:id" element={<SupportArticle />} />
         <Route path="/success-stories/:id" element={<SuccessStory />} />
         <Route path="/contact" element={<Contact />} />

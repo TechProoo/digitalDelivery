@@ -1,22 +1,13 @@
 import { useEffect, useState } from "react";
 import Logo from "../../assets/logo.png";
-import { Globe, Menu, Moon, Sun, X } from "lucide-react";
+import { Globe, Menu, X } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { motion } from "framer-motion";
-import {
-  applyTheme,
-  getAppliedTheme,
-  toggleTheme,
-  type Theme,
-} from "../../lib/theme";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>(() => getAppliedTheme());
   const location = useLocation();
-
-  const isDark = theme === "dark";
 
   const { isAuthenticated } = useAuth();
   const navLinks = [
@@ -57,14 +48,6 @@ const Navbar = () => {
     // Wait a tick so the route renders the section.
     requestAnimationFrame(() => requestAnimationFrame(scroll));
   }, [location.pathname, location.hash]);
-
-  useEffect(() => {
-    applyTheme(theme);
-  }, [theme]);
-
-  const handleToggleTheme = () => {
-    setTheme((t) => toggleTheme(t));
-  };
 
   const navUnderlineBase =
     "relative inline-flex items-center text-sm font-medium transition-colors after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-white after:transition-transform after:duration-300 hover:after:scale-x-100";
@@ -311,23 +294,6 @@ const Navbar = () => {
                     EN
                   </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={handleToggleTheme}
-                  className="grid place-items-center rounded-full h-10 w-10"
-                  style={{
-                    border: "1px solid var(--border-soft)",
-                    background: "hsl(var(--background) / 0.6)",
-                    color: "var(--text-primary)",
-                  }}
-                  aria-label="Toggle theme"
-                >
-                  {isDark ? (
-                    <Sun className="h-5 w-5" />
-                  ) : (
-                    <Moon className="h-5 w-5" />
-                  )}
-                </button>
               </motion.div>
 
               <nav className="mt-4">

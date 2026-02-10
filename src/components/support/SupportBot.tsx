@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MessageCircle, Send, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useChat } from "../hooks/useChat";
@@ -26,6 +26,7 @@ const nowId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 export default function SupportBot() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<BotMessage[]>([]);
@@ -77,6 +78,13 @@ export default function SupportBot() {
     window.addEventListener(OPEN_EVENT, handler);
     return () => window.removeEventListener(OPEN_EVENT, handler);
   }, []);
+
+  // Close the bot when navigating to auth pages
+  useEffect(() => {
+    if (location.pathname === "/login" || location.pathname === "/signup") {
+      setIsOpen(false);
+    }
+  }, [location.pathname]);
 
   // Focus input when opening
   useEffect(() => {
@@ -175,7 +183,7 @@ export default function SupportBot() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen((prev) => !prev)}
-        className="fixed bottom-6 right-6 z-50 grid place-items-center rounded-full h-16 w-16 shadow-2xl"
+        className="fixed md:bottom-6 bottom-20 right-6 z-50 grid place-items-center rounded-full h-16 w-16 shadow-2xl"
         style={{
           background: "hsl(var(--primary))",
           color: "hsl(var(--primary-foreground))",

@@ -1,7 +1,9 @@
-import ImgRoad from "../assets/road.jpg";
-import ImgBoat from "../assets/boat.jpg";
-import ImgServices from "../assets/services_img.jpg";
-import ImgDoor from "../assets/door.jpg";
+import ImgBoat from "../assets/images (1) (1).jpeg";
+import ImgServices from "../assets/images (10) (1).jpeg";
+import Img from "../assets/images (12) (1).jpeg";
+import Img1 from "../assets/images (15) (1).jpeg";
+import Img2 from "../assets/images (16) (1).jpeg";
+import Img3 from "../assets/images (17) (1).jpeg";
 
 export type ResourceType = "Article" | "Guide" | "Whitepaper" | "Case Study";
 
@@ -59,7 +61,7 @@ export const RESOURCES: ResourceItem[] = [
     readTimeMinutes: 8,
     category: "Strategy",
     type: "Article",
-    imageUrl: ImgServices,
+    imageUrl: Img,
     cardVariant: "text",
   },
   {
@@ -71,7 +73,7 @@ export const RESOURCES: ResourceItem[] = [
     readTimeMinutes: 10,
     category: "Operations",
     type: "Article",
-    imageUrl: ImgBoat,
+    imageUrl: Img1,
     cardVariant: "text",
   },
   {
@@ -83,7 +85,7 @@ export const RESOURCES: ResourceItem[] = [
     readTimeMinutes: 14,
     category: "Compliance",
     type: "Guide",
-    imageUrl: ImgDoor,
+    imageUrl: Img2,
     cardVariant: "text",
   },
   {
@@ -95,7 +97,7 @@ export const RESOURCES: ResourceItem[] = [
     readTimeMinutes: 7,
     category: "Technology",
     type: "Article",
-    imageUrl: ImgBoat,
+    imageUrl: Img3,
     cardVariant: "image",
   },
   {
@@ -119,7 +121,7 @@ export const RESOURCES: ResourceItem[] = [
     readTimeMinutes: 12,
     category: "Sustainability",
     type: "Whitepaper",
-    imageUrl: ImgRoad,
+    imageUrl: ImgBoat,
     cardVariant: "image",
   },
 ];
