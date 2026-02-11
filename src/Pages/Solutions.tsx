@@ -612,7 +612,6 @@ export default function Solutions() {
         </div>
       </section>
 
-      {/* Keep your CTA component, but no page-link buttons were added here */}
       <div className="px-4 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-7xl py-10">
           <Cta />

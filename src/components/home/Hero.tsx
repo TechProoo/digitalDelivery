@@ -106,7 +106,7 @@ export default function Hero() {
               className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-xl font-semibold"
               style={{
                 background: "transparent",
-                border: "1px solid var(--border-soft)",
+                border: "2px solid hsl(var(--primary))",
                 color: "var(--text-primary)",
                 backdropFilter: "blur(10px)",
               }}
