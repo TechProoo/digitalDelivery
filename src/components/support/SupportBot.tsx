@@ -19,21 +19,23 @@ type BotMessage = {
   actions?: BotAction[];
 };
 
-// const STORAGE_KEY = "dl.supportBot.v1";
 const OPEN_EVENT = "dl:openSupportBot";
-
 const nowId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 export default function SupportBot() {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<BotMessage[]>([]);
+
   const listRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // Welcome message
+  const { messages: chatMessages, isTyping, sendMessage } = useChat();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+
   const welcome = useMemo<BotMessage>(
     () => ({
       id: nowId(),
@@ -52,19 +54,8 @@ export default function SupportBot() {
     [],
   );
 
-  // Socket chat hook
-  const { messages: chatMessages, isTyping, sendMessage } = useChat();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  useEffect(() => setMessages([welcome]), [welcome]);
 
-  // Load local history
-  useEffect(() => {
-    // Do not load persisted sessions — always start fresh in memory
-    setMessages([welcome]);
-  }, [welcome]);
-
-  // Do not persist messages to localStorage — keep sessions in memory only
-
-  // Scroll to bottom when messages update
   useEffect(() => {
     listRef.current?.scrollTo({
       top: listRef.current.scrollHeight,
@@ -72,33 +63,38 @@ export default function SupportBot() {
     });
   }, [messages, isTyping]);
 
-  // Listen for custom open event
   useEffect(() => {
     const handler = () => setIsOpen(true);
     window.addEventListener(OPEN_EVENT, handler);
     return () => window.removeEventListener(OPEN_EVENT, handler);
   }, []);
 
-  // Close the bot when navigating to auth pages
   useEffect(() => {
     if (location.pathname === "/login" || location.pathname === "/signup") {
       setIsOpen(false);
     }
   }, [location.pathname]);
 
-  // Focus input when opening
   useEffect(() => {
     if (isOpen && isAuthenticated) {
-      setTimeout(() => inputRef.current?.focus(), 100);
+      setTimeout(() => inputRef.current?.focus(), 120);
     }
   }, [isOpen, isAuthenticated]);
 
-  // Merge local and socket messages
+  // Optional: lock background scroll while open (mobile especially)
+  useEffect(() => {
+    if (!isOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen]);
+
   const mergedMessages = useMemo(() => {
     const socketMsgs: BotMessage[] = chatMessages.map((cm) => {
       const tsNum = (() => {
         try {
-          // ChatResponse.timestamp is a string in types; coerce to number (ms)
           const t = cm.timestamp as unknown as string;
           const parsed = Date.parse(t);
           return Number.isFinite(parsed) ? parsed : Date.now();
@@ -109,19 +105,17 @@ export default function SupportBot() {
 
       return {
         id: nowId(),
-        role: "bot" as BotRole,
+        role: "bot",
         text: (cm.message as string) || "",
         timestamp: tsNum,
-        actions: undefined,
-      } as BotMessage;
+      };
     });
 
-    // Merge and sort by timestamp so user and bot messages interleave correctly
     const all = [...messages, ...socketMsgs].sort(
       (a, b) => a.timestamp - b.timestamp,
     );
+
     if (isTyping) {
-      // Ensure typing indicator appears last
       all.push({
         id: "typing-indicator",
         role: "bot",
@@ -129,10 +123,10 @@ export default function SupportBot() {
         timestamp: Date.now() + 1,
       });
     }
+
     return all;
   }, [messages, chatMessages, isTyping]);
 
-  // Send message handler
   const send = (text: string) => {
     const trimmed = text.trim();
     if (!trimmed) return;
@@ -147,43 +141,27 @@ export default function SupportBot() {
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
 
-    // Send to backend
-    if (sendMessage) {
-      sendMessage(trimmed);
-    } else {
-      // Fallback: mock bot response
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: nowId(),
-            role: "bot",
-            text: "",
-            timestamp: Date.now(),
-          },
-        ]);
-      }, 800);
-    }
+    if (sendMessage) sendMessage(trimmed);
   };
 
-  // Action handler
   const runAction = (action: BotAction) => {
     if ("to" in action) {
       navigate(action.to);
       setIsOpen(false);
-    } else if ("href" in action) {
+    } else {
       window.open(action.href, "_blank");
     }
   };
 
   return (
     <>
-      {/* Floating action button */}
+      {/* Floating action button (smaller + safer on mobile) */}
       <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="fixed md:bottom-6 bottom-20 right-6 z-50 grid place-items-center rounded-full h-16 w-16 shadow-2xl"
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.94 }}
+        onClick={() => setIsOpen((v) => !v)}
+        className="fixed z-50 grid place-items-center rounded-full shadow-2xl
+                   bottom-10 right-4 sm:right-6 h-14 w-14 sm:h-16 sm:w-16"
         style={{
           background: "hsl(var(--primary))",
           color: "hsl(var(--primary-foreground))",
@@ -198,7 +176,7 @@ export default function SupportBot() {
               initial={{ rotate: -90, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.18 }}
             >
               <X className="h-6 w-6" />
             </motion.div>
@@ -208,7 +186,7 @@ export default function SupportBot() {
               initial={{ rotate: 90, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.18 }}
             >
               <MessageCircle className="h-6 w-6" />
             </motion.div>
@@ -216,320 +194,308 @@ export default function SupportBot() {
         </AnimatePresence>
       </motion.button>
 
-      {/* Chat window */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-24 right-6 z-50 flex flex-col rounded-3xl shadow-2xl"
-            style={{
-              width: "min(90vw, 400px)",
-              height: "min(80vh, 600px)",
-              background: "hsl(var(--background) / 0.98)",
-              border: "1px solid var(--border-soft)",
-              backdropFilter: "blur(20px)",
-            }}
-          >
-            {/* Header */}
+          <>
+            {/* Backdrop */}
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="px-4 py-3"
-              style={{
-                borderBottom: "1px solid var(--border-soft)",
-                background: "hsl(var(--card) / 0.55)",
-              }}
-            >
-              <div
-                className="text-base font-semibold"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Support Assistant
-              </div>
-              <div
-                className="text-xs"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                We typically reply instantly
-              </div>
-            </motion.div>
+              className="fixed inset-0 z-40"
+              style={{ background: "rgba(0,0,0,0.55)" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+            />
 
-            {/* Messages */}
-            <div
-              ref={listRef}
-              className="flex-1 overflow-y-auto px-4 py-3"
-              style={{ scrollbarWidth: "thin" }}
+            {/* Chat container: Fullscreen on mobile, floating panel on desktop */}
+            <motion.div
+              className="fixed z-50 flex flex-col overflow-hidden
+                         inset-x-0 bottom-0 sm:inset-auto sm:bottom-24 sm:right-6"
+              style={{
+                background: "hsl(var(--background) / 0.98)",
+                border: "1px solid var(--border-soft)",
+                backdropFilter: "blur(20px)",
+                boxShadow: "var(--shadow-strong)",
+              }}
+              // Mobile: full height. Desktop: fixed size.
+              // Use inline styles for dynamic sizing.
+              // eslint-disable-next-line react/jsx-no-duplicate-props
+              initial={{ opacity: 0, y: 18, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 18, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 320, damping: 28 }}
             >
-              {authLoading ? (
-                <div className="flex-1 grid place-items-center">Loading…</div>
-              ) : !isAuthenticated ? (
-                <div className="flex-1 grid place-items-center px-6">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="max-w-sm text-center rounded-2xl p-6 shadow-lg"
+              <div
+                className="w-full sm:rounded-3xl"
+                style={{
+                  width: "100vw",
+                  height: "calc(100dvh - 0px)",
+                  maxHeight: "100dvh",
+                }}
+              >
+                <div
+                  className="h-full w-full flex flex-col sm:rounded-3xl"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  {/* Desktop sizing override */}
+                  <div
+                    className="hidden sm:block"
                     style={{
-                      background: "hsl(var(--card))",
-                      border: "1px solid var(--border-soft)",
+                      position: "absolute",
+                      inset: 0,
+                      borderRadius: 24,
+                      pointerEvents: "none",
+                    }}
+                  />
+
+                  {/* Wrapper that applies desktop dimensions */}
+                  <div
+                    className="h-full w-full flex flex-col sm:rounded-3xl"
+                    style={{
+                      // On desktop, override to your original size
+                      ...(window.matchMedia?.("(min-width: 640px)")?.matches
+                        ? {
+                            width: "min(92vw, 420px)",
+                            height: "min(80vh, 620px)",
+                          }
+                        : {}),
                     }}
                   >
+                    {/* Header (sticky-ish) */}
                     <div
-                      className="text-2xl font-semibold mb-2"
-                      style={{ color: "var(--text-primary)" }}
+                      className="px-4 py-3 flex items-start justify-between gap-3"
+                      style={{
+                        borderBottom: "1px solid var(--border-soft)",
+                        background: "hsl(var(--card) / 0.55)",
+                      }}
                     >
-                      Sign in to chat with Support
-                    </div>
-                    <div
-                      className="text-sm mb-4"
-                      style={{ color: "var(--text-secondary)" }}
-                    >
-                      You need to be signed in to access personalized help and
-                      pricing information.
-                    </div>
-                    <div className="flex flex-wrap gap-3 justify-center">
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                      <div>
+                        <div
+                          className="text-base font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          Support Assistant
+                        </div>
+                        <div
+                          className="text-xs"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          We typically reply instantly
+                        </div>
+                      </div>
+
+                      {/* Close button in header for mobile comfort */}
+                      <button
                         type="button"
-                        onClick={() => navigate("/login")}
-                        className="rounded-full px-4 py-2 font-semibold"
+                        onClick={() => setIsOpen(false)}
+                        className="grid place-items-center rounded-xl h-10 w-10 shrink-0"
                         style={{
-                          background: "hsl(var(--primary))",
-                          color: "hsl(var(--primary-foreground))",
-                          boxShadow: "var(--glow-primary)",
-                        }}
-                      >
-                        Sign in
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        type="button"
-                        onClick={() => navigate("/signup")}
-                        className="rounded-full px-4 py-2 border"
-                        style={{
-                          borderColor: "var(--border-medium)",
-                          background: "hsl(var(--secondary))",
+                          background: "hsl(var(--background) / 0.35)",
+                          border: "1px solid var(--border-soft)",
                           color: "var(--text-primary)",
                         }}
+                        aria-label="Close chat"
                       >
-                        Create account
-                      </motion.button>
+                        <X className="h-5 w-5" />
+                      </button>
                     </div>
-                  </motion.div>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <AnimatePresence mode="popLayout">
-                    {mergedMessages.map((m, idx) => {
-                      // Under construction UI
-                      if (
-                        m.role === "bot" &&
-                        m.text === "" &&
-                        (!m.actions || m.actions.length === 0)
-                      ) {
-                        return (
-                          <motion.div
-                            key={m.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, scale: 0.8 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 300,
-                              damping: 25,
-                            }}
-                            className="flex justify-start"
-                          >
-                            <motion.div
-                              whileHover={{ scale: 1.02 }}
-                              className="max-w-[85%] rounded-2xl px-3 py-2 text-sm bg-yellow-50 border border-yellow-300 text-yellow-900 flex flex-col items-center gap-2"
-                            >
-                              <motion.span
-                                animate={{ rotate: [0, -5, 5, -5, 0] }}
-                                transition={{
-                                  duration: 0.5,
-                                  repeat: Infinity,
-                                  repeatDelay: 2,
-                                }}
-                                style={{ fontSize: 32, color: "#facc15" }}
-                              >
-                                🚧
-                              </motion.span>
-                              <div
-                                className="font-bold text-base"
-                                style={{ color: "#b45309" }}
-                              >
-                                Under Construction
-                              </div>
-                              <div className="text-xs text-yellow-900 text-center max-w-xs">
-                                This feature is not available yet because the
-                                client hasn't paid the developer.
-                                <br />
-                                Please check back later!
-                              </div>
-                            </motion.div>
-                          </motion.div>
-                        );
-                      }
 
-                      // Normal messages
-                      return (
-                        <motion.div
-                          key={m.id || `msg-${idx}`}
-                          initial={{
-                            opacity: 0,
-                            x: m.role === "user" ? 20 : -20,
-                            scale: 0.95,
-                          }}
-                          animate={{ opacity: 1, x: 0, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          transition={{
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 25,
-                          }}
-                          className={
-                            m.role === "user"
-                              ? "flex justify-end"
-                              : "flex justify-start"
-                          }
-                        >
-                          <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            className="max-w-[85%] rounded-2xl px-3 py-2 text-sm"
+                    {/* Messages */}
+                    <div
+                      ref={listRef}
+                      className="flex-1 overflow-y-auto px-4 py-3"
+                      style={{
+                        scrollbarWidth: "thin",
+                        WebkitOverflowScrolling: "touch",
+                      }}
+                    >
+                      {authLoading ? (
+                        <div className="h-full grid place-items-center">
+                          Loading…
+                        </div>
+                      ) : !isAuthenticated ? (
+                        <div className="h-full grid place-items-center px-4">
+                          <div
+                            className="w-full max-w-sm text-center rounded-2xl p-6"
                             style={{
-                              background:
+                              background: "hsl(var(--card) / 0.70)",
+                              border: "1px solid var(--border-soft)",
+                              boxShadow: "var(--shadow-card)",
+                            }}
+                          >
+                            <div
+                              className="text-xl font-semibold"
+                              style={{ color: "var(--text-primary)" }}
+                            >
+                              Sign in to chat with Support
+                            </div>
+                            <div
+                              className="mt-2 text-sm"
+                              style={{ color: "var(--text-secondary)" }}
+                            >
+                              Sign in to access personalized help and pricing
+                              information.
+                            </div>
+                            <div className="mt-5 grid gap-2">
+                              <button
+                                type="button"
+                                onClick={() => navigate("/login")}
+                                className="rounded-full px-4 py-3 text-sm font-semibold"
+                                style={{
+                                  background: "hsl(var(--primary))",
+                                  color: "hsl(var(--primary-foreground))",
+                                  boxShadow: "var(--glow-primary)",
+                                }}
+                              >
+                                Sign in
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => navigate("/signup")}
+                                className="rounded-full px-4 py-3 text-sm font-semibold"
+                                style={{
+                                  background: "hsl(var(--background) / 0.35)",
+                                  border: "1px solid var(--border-soft)",
+                                  color: "var(--text-primary)",
+                                }}
+                              >
+                                Create account
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          {mergedMessages.map((m) => (
+                            <div
+                              key={m.id}
+                              className={
                                 m.role === "user"
-                                  ? "hsl(var(--primary) / 0.18)"
-                                  : "hsl(var(--card) / 0.55)",
+                                  ? "flex justify-end"
+                                  : "flex justify-start"
+                              }
+                            >
+                              <div
+                                className="max-w-[88%] sm:max-w-[85%] rounded-2xl px-3 py-2 text-sm"
+                                style={{
+                                  background:
+                                    m.role === "user"
+                                      ? "hsl(var(--primary) / 0.18)"
+                                      : "hsl(var(--card) / 0.55)",
+                                  border: "1px solid var(--border-soft)",
+                                  color: "var(--text-primary)",
+                                }}
+                              >
+                                <div className="whitespace-pre-wrap leading-relaxed">
+                                  {m.id === "typing-indicator" ? (
+                                    <motion.span
+                                      animate={{ opacity: [0.3, 1, 0.3] }}
+                                      transition={{
+                                        duration: 1.5,
+                                        repeat: Infinity,
+                                      }}
+                                    >
+                                      {m.text}
+                                    </motion.span>
+                                  ) : (
+                                    m.text
+                                  )}
+                                </div>
+
+                                {m.actions?.length ? (
+                                  <div className="mt-2 flex flex-wrap gap-2">
+                                    {m.actions.map((a) => (
+                                      <button
+                                        key={a.label}
+                                        type="button"
+                                        onClick={() => runAction(a)}
+                                        className="rounded-full px-3 py-1 text-xs font-semibold"
+                                        style={{
+                                          background:
+                                            a.kind === "primary"
+                                              ? "hsl(var(--primary))"
+                                              : "hsl(var(--background) / 0.35)",
+                                          color:
+                                            a.kind === "primary"
+                                              ? "hsl(var(--primary-foreground))"
+                                              : "var(--text-primary)",
+                                          border:
+                                            a.kind === "primary"
+                                              ? "none"
+                                              : "1px solid var(--border-soft)",
+                                        }}
+                                      >
+                                        {a.label}
+                                      </button>
+                                    ))}
+                                  </div>
+                                ) : null}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Input (sticky bottom, safe space) */}
+                    {isAuthenticated && (
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          send(input);
+                        }}
+                        className="px-4 pt-3 pb-4"
+                        style={{
+                          borderTop: "1px solid var(--border-soft)",
+                          paddingBottom:
+                            "calc(16px + env(safe-area-inset-bottom))",
+                          background: "hsl(var(--background) / 0.98)",
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <input
+                            ref={inputRef}
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="Type a message…"
+                            className="flex-1 rounded-xl px-3 py-3 text-sm outline-none"
+                            style={{
+                              background: "hsl(var(--background) / 0.35)",
                               border: "1px solid var(--border-soft)",
                               color: "var(--text-primary)",
                             }}
+                          />
+                          <button
+                            type="submit"
+                            className="grid place-items-center rounded-xl h-11 w-11"
+                            style={{
+                              background: "hsl(var(--primary))",
+                              color: "hsl(var(--primary-foreground))",
+                              boxShadow: "var(--glow-primary)",
+                            }}
+                            aria-label="Send"
                           >
-                            <div className="whitespace-pre-wrap leading-relaxed">
-                              {m.id === "typing-indicator" ? (
-                                <motion.span
-                                  animate={{ opacity: [0.3, 1, 0.3] }}
-                                  transition={{
-                                    duration: 1.5,
-                                    repeat: Infinity,
-                                  }}
-                                >
-                                  {m.text}
-                                </motion.span>
-                              ) : (
-                                m.text
-                              )}
-                            </div>
-                            {m.actions && m.actions.length > 0 && (
-                              <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="mt-2 flex flex-wrap gap-2"
-                              >
-                                {m.actions.map((a, actionIdx) => (
-                                  <motion.button
-                                    key={a.label}
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{
-                                      delay: 0.3 + actionIdx * 0.1,
-                                    }}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    type="button"
-                                    onClick={() => runAction(a)}
-                                    className="rounded-full px-3 py-1 text-xs font-semibold"
-                                    style={{
-                                      background:
-                                        a.kind === "primary"
-                                          ? "hsl(var(--primary))"
-                                          : "hsl(var(--background) / 0.35)",
-                                      color:
-                                        a.kind === "primary"
-                                          ? "hsl(var(--primary-foreground))"
-                                          : "var(--text-primary)",
-                                      border:
-                                        a.kind === "primary"
-                                          ? "none"
-                                          : "1px solid var(--border-soft)",
-                                    }}
-                                  >
-                                    {a.label}
-                                  </motion.button>
-                                ))}
-                              </motion.div>
-                            )}
-                          </motion.div>
-                        </motion.div>
-                      );
-                    })}
-                  </AnimatePresence>
-                </div>
-              )}
-            </div>
+                            <Send className="h-4 w-4" />
+                          </button>
+                        </div>
 
-            {/* Input */}
-            {isAuthenticated && (
-              <motion.form
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 }}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  send(input);
-                }}
-                className="px-4 py-3"
-                style={{ borderTop: "1px solid var(--border-soft)" }}
-              >
-                <div className="flex items-center gap-2">
-                  <input
-                    ref={inputRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type a message…"
-                    className="flex-1 rounded-xl px-3 py-2 text-sm outline-none"
-                    style={{
-                      background: "hsl(var(--background) / 0.35)",
-                      border: "1px solid var(--border-soft)",
-                      color: "var(--text-primary)",
-                    }}
-                  />
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    type="submit"
-                    className="grid place-items-center rounded-xl h-10 w-10"
-                    style={{
-                      background: "hsl(var(--primary))",
-                      color: "hsl(var(--primary-foreground))",
-                      boxShadow: "var(--glow-primary)",
-                    }}
-                    aria-label="Send"
-                  >
-                    <Send className="h-4 w-4" />
-                  </motion.button>
+                        <div
+                          className="mt-2 text-[11px]"
+                          style={{ color: "var(--text-tertiary)" }}
+                        >
+                          Tip: try “track my shipment”, “get a quote”, or “talk
+                          to support”.
+                        </div>
+                      </form>
+                    )}
+                  </div>
                 </div>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="mt-2 text-[11px]"
-                  style={{ color: "var(--text-tertiary)" }}
-                >
-                  Tip: try "track my shipment", "get a quote", or "talk to
-                  support".
-                </motion.div>
-              </motion.form>
-            )}
-          </motion.div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

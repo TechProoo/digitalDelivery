@@ -23,6 +23,12 @@ import SupportCategory from "./Pages/SupportCategory";
 import SuccessStory from "./Pages/SuccessStory";
 import Articles from "./Pages/Articles";
 import Article from "./Pages/Article";
+import Privacy from "./Pages/Privacy";
+import Terms from "./Pages/Terms";
+import Security from "./Pages/Security";
+import Shipping from "./Pages/Shipping";
+import Fulfilment from "./Pages/Fulfilment";
+import Tracking from "./Pages/Tracking";
 import SupportBot from "./components/support/SupportBot";
 import RouteSplash from "./components/loader/RouteSplash";
 
@@ -39,13 +45,20 @@ function App() {
           }
         />
         <Route path="/services" element={<Services />} />
+        <Route path="/shipping" element={<Shipping />} />
+        <Route path="/fulfilment" element={<Fulfilment />} />
+        <Route path="/tracking" element={<Tracking />} />
         <Route path="/about" element={<About />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/resource" element={<Resources />} />
         <Route path="/resources/:id" element={<ResourceDetails />} />
         <Route path="/resource/:id" element={<ResourceDetails />} />
         <Route path="/articles" element={<Articles />} />
+        <Route path="/blog" element={<Articles />} />
         <Route path="/articles/:id" element={<Article />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/security" element={<Security />} />
         <Route path="/support" element={<Support />} />
         <Route path="/support/categories/:id" element={<SupportCategory />} />
         <Route path="/support/articles/:id" element={<SupportArticle />} />

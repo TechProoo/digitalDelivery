@@ -416,14 +416,14 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
           <div className="flex-1"></div>
 
           <div className="flex items-center gap-2">
-            <button className="p-2 rounded-lg hover:bg-accent transition-colors relative">
-              <Package
+            <button
+              className="p-2 rounded-lg hover:bg-accent transition-colors"
+              aria-label="Logout"
+              onClick={handleLogout}
+            >
+              <LogOut
                 className="h-5 w-5"
                 style={{ color: "var(--text-primary)" }}
-              />
-              <span
-                className="absolute top-1 right-1 h-2 w-2 rounded-full"
-                style={{ backgroundColor: "var(--brand-primary)" }}
               />
             </button>
           </div>

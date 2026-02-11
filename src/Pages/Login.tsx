@@ -5,6 +5,7 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo_2.png";
 import { useAuth } from "../auth/AuthContext";
 import AppLoader from "../components/loader/AppLoader";
+import { clearAccessToken } from "../lib/authToken";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,6 +18,15 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isAuthenticated, isLoading } = useAuth();
+
+  const handleGoogleLogin = () => {
+    clearAccessToken();
+    const apiBase =
+      ((import.meta as any).env?.VITE_API_URL as string | undefined)?.trim() ||
+      "http://localhost:3000";
+    const url = `${apiBase.replace(/\/$/, "")}/auth/google`;
+    window.location.assign(url);
+  };
 
   if (isLoading) {
     return <AppLoader />;
@@ -168,7 +178,11 @@ const Login = () => {
 
               {/* Social Login */}
               <div className="grid grid-cols-1 gap-3">
-                <button className="py-3 px-4 border border-(--border-soft) rounded-xl text-(--text-primary) hover:bg-(--hover-overlay) transition flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  className="py-3 px-4 border border-(--border-soft) rounded-xl text-(--text-primary) hover:bg-(--hover-overlay) transition flex items-center justify-center gap-2"
+                >
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path
                       fill="currentColor"

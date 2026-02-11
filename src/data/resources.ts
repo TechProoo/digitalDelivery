@@ -1,4 +1,4 @@
-import ImgBoat from "../assets/images (1) (1).jpeg";
+import ImgBoat from "../assets/bg4.jpeg";
 import ImgServices from "../assets/images (10) (1).jpeg";
 import Img from "../assets/images (12) (1).jpeg";
 import Img1 from "../assets/images (15) (1).jpeg";

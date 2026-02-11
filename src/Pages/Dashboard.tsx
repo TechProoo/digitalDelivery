@@ -376,6 +376,14 @@ export default function Dashboard() {
                   className="text-sm sm:text-base"
                   style={{ color: "var(--text-secondary)" }}
                 >
+                  {user?.name ? user.name : displayName}
+                  {user?.email ? ` (${user.email})` : null}
+                </p>
+
+                <p
+                  className="text-sm sm:text-base"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   {shipmentsError
                     ? shipmentsError
                     : "Your dashboard is empty for now — create your first delivery to start tracking shipments here."}
@@ -396,7 +404,7 @@ export default function Dashboard() {
                     boxShadow: "var(--glow-accent)",
                   }}
                 >
-                  <Package className="w-5 h-5" />
+                  {/* <Package className="w-5 h-5" /> */}
                   <span>
                     {shipmentsError
                       ? "Retry loading"

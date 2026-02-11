@@ -12,11 +12,10 @@ import GlobalReachSection from "../components/home/GlobalReachSection";
 import LatestUpdatesInsightsSection from "../components/home/LatestUpdatesInsightsSection";
 import FaqSection from "../components/home/FaqSection";
 import HomeBackgroundCarousel from "../components/home/HomeBackgroundCarousel";
-
 import Bg1 from "../assets/bg.jpg";
 import Bg2 from "../assets/road.jpg";
 import Bg3 from "../assets/door.jpg";
-import Bg4 from "../assets/hiw.jpg";
+import Bg4 from "../assets/bg4.jpeg";
 import { motion } from "framer-motion";
 
 const Home = () => {

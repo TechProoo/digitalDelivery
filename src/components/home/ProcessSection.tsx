@@ -97,8 +97,79 @@ export default function ProcessSection() {
         </div>
 
         <div className="mt-20 max-w-5xl p-auto mx-auto">
+          {/* Mobile: stacked steps (icon -> text) */}
+          <div className="sm:hidden">
+            <div className="grid grid-cols-1 gap-12 text-center">
+              {steps.map((s, index) => (
+                <motion.div
+                  key={s.number}
+                  className="flex flex-col items-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.6,
+                    delay: index * 0.12,
+                    ease: "easeOut",
+                  }}
+                >
+                  <div className="relative">
+                    <motion.div
+                      className="grid place-items-center rounded-3xl"
+                      style={{
+                        width: 88,
+                        height: 88,
+                        background: s.tileBg,
+                        boxShadow: "0 18px 40px rgba(0,0,0,0.45)",
+                      }}
+                      whileHover={{ scale: 1.05, rotate: 5 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <s.icon className="h-9 w-9 text-white" />
+                    </motion.div>
+
+                    <motion.div
+                      className="absolute -top-3 -right-3 grid place-items-center rounded-full text-sm font-semibold"
+                      style={{
+                        width: 34,
+                        height: 34,
+                        background: "hsl(var(--background) / 0.95)",
+                        border: "2px solid hsl(var(--primary))",
+                        color: "hsl(var(--primary))",
+                        boxShadow: "0 10px 20px rgba(0,0,0,0.4)",
+                      }}
+                      initial={{ opacity: 0, scale: 0 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: 0.4,
+                        delay: index * 0.12 + 0.2,
+                        ease: "backOut",
+                      }}
+                    >
+                      {s.number}
+                    </motion.div>
+                  </div>
+
+                  <div
+                    className="mt-6 text-2xl font-semibold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {s.title}
+                  </div>
+                  <p
+                    className="mt-4 leading-relaxed"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
+                    {s.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
           {/* Icon tiles */}
-          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
+          <div className="hidden sm:grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
             {steps.map((s, index) => (
               <motion.div
                 key={s.number}
@@ -167,7 +238,7 @@ export default function ProcessSection() {
           />
 
           {/* Titles + descriptions */}
-          <div className="mt-8 grid grid-cols-1 gap-10 text-center sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:text-left">
+          <div className="mt-8 hidden sm:grid grid-cols-1 gap-10 text-center sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:text-left">
             {steps.map((s, index) => (
               <motion.div
                 key={s.number}

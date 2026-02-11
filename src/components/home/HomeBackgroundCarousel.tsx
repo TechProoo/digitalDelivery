@@ -130,7 +130,7 @@ export default function HomeBackgroundCarousel({
         <div
           key={`${src}-${index}`}
           className={`home_bg_slide${index === activeIndex ? " is-active" : ""}`}
-          style={{ backgroundImage: `url(${src})` }}
+          style={{ backgroundImage: `url("${encodeURI(src)}")` }}
         />
       ))}
     </div>
