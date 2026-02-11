@@ -29,6 +29,7 @@ import Security from "./Pages/Security";
 import Shipping from "./Pages/Shipping";
 import Fulfilment from "./Pages/Fulfilment";
 import Tracking from "./Pages/Tracking";
+import Solutions from "./Pages/Solutions";
 import SupportBot from "./components/support/SupportBot";
 import RouteSplash from "./components/loader/RouteSplash";
 
@@ -45,6 +46,7 @@ function App() {
           }
         />
         <Route path="/services" element={<Services />} />
+        <Route path="/solutions" element={<Solutions />} />
         <Route path="/shipping" element={<Shipping />} />
         <Route path="/fulfilment" element={<Fulfilment />} />
         <Route path="/tracking" element={<Tracking />} />

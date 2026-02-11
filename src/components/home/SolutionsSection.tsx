@@ -15,6 +15,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 
 type TabKey = "solutions" | "industries";
 
@@ -280,8 +281,8 @@ export default function SolutionsSection() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.5, delay: 0.7, ease: "easeOut" }}
         >
-          <button
-            type="button"
+          <Link
+            to="/solutions"
             className="inline-flex items-center justify-center gap-3 rounded-xl px-7 py-3 text-sm font-semibold"
             style={{
               background: "transparent",
@@ -292,7 +293,7 @@ export default function SolutionsSection() {
           >
             Explore all solutions
             <ArrowRight className="h-4 w-4" />
-          </button>
+          </Link>
         </motion.div>
       </div>
     </section>
