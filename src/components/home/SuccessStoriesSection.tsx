@@ -48,7 +48,7 @@ export default function SuccessStoriesSection() {
       className="px-4 sm:px-6 lg:px-10"
       style={{
         background:
-          "linear-gradient(180deg, aliceblue 0%, aliceblue 82%, hsl(var(--background)) 100%)",
+          "linear-gradient(180deg, aliceblue 0%, aliceblue 100%)",
       }}
     >
       <div className="mx-auto max-w-7xl py-14 sm:py-18">

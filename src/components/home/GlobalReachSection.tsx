@@ -17,14 +17,20 @@ export default function GlobalReachSection() {
   ];
 
   const cardStyle: React.CSSProperties = {
-    background: "hsl(var(--card) / 0.50)",
-    border: "1px solid var(--border-soft)",
-    boxShadow: "var(--shadow-card)",
+    background: "hsl(var(--foreground) / 0.70)",
+    border: "1px solid hsl(var(--primary-foreground) / 0.12)",
+    boxShadow: "0 14px 38px hsl(var(--primary-foreground) / 0.12)",
     backdropFilter: "blur(12px)",
   };
 
   return (
-    <section className="px-4 sm:px-6 lg:px-10">
+    <section
+      className="px-4 sm:px-6 lg:px-10"
+      style={{
+        background:
+          "linear-gradient(180deg, aliceblue 0%, aliceblue 82%, hsl(var(--background)) 100%)",
+      }}
+    >
       <div className="mx-auto max-w-7xl py-14 sm:py-18">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           {/* Left content */}
@@ -32,8 +38,8 @@ export default function GlobalReachSection() {
             <motion.div
               className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
               style={{
-                background: "hsl(var(--card) / 0.55)",
-                border: "1px solid var(--border-soft)",
+                background: "hsl(var(--foreground) / 0.65)",
+                border: "1px solid hsl(var(--primary-foreground) / 0.12)",
                 color: "var(--accent-teal)",
                 backdropFilter: "blur(10px)",
               }}
@@ -47,7 +53,7 @@ export default function GlobalReachSection() {
 
             <motion.h2
               className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
-              style={{ color: "var(--text-primary)" }}
+              style={{ color: "hsl(var(--primary-foreground))" }}
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -65,7 +71,7 @@ export default function GlobalReachSection() {
 
             <motion.p
               className="mt-6 text-base sm:text-lg leading-relaxed"
-              style={{ color: "var(--text-secondary)" }}
+              style={{ color: "hsl(var(--primary-foreground) / 0.78)" }}
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -106,13 +112,13 @@ export default function GlobalReachSection() {
                   <div>
                     <div
                       className="text-2xl font-semibold"
-                      style={{ color: "var(--text-primary)" }}
+                      style={{ color: "hsl(var(--primary-foreground))" }}
                     >
                       {s.value}
                     </div>
                     <div
                       className="text-sm"
-                      style={{ color: "var(--text-tertiary)" }}
+                      style={{ color: "hsl(var(--primary-foreground) / 0.70)" }}
                     >
                       {s.label}
                     </div>
