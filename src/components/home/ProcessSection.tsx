@@ -47,7 +47,13 @@ export default function ProcessSection() {
   ];
 
   return (
-    <section className="px-4 sm:px-6 lg:px-10">
+    <section
+      className="px-4 sm:px-6 lg:px-10"
+      style={{
+        background:
+          "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 82%, aliceblue 100%)",
+      }}
+    >
       <div className="mx-auto max-w-7xl py-14 sm:py-18">
         <div className="mx-auto max-w-4xl text-center">
           <div className="flex justify-center">

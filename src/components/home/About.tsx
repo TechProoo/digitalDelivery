@@ -34,6 +34,13 @@ export default function About() {
     backdropFilter: "blur(12px)",
   };
 
+  const lightCardStyle: React.CSSProperties = {
+    background: "hsl(var(--foreground) / 0.70)",
+    border: "1px solid hsl(var(--primary-foreground) / 0.12)",
+    boxShadow: "0 14px 38px hsl(var(--primary-foreground) / 0.12)",
+    backdropFilter: "blur(12px)",
+  };
+
   const softPanelStyle: React.CSSProperties = {
     background: "hsl(var(--card) / 0.45)",
     border: "1px solid var(--border-soft)",
@@ -328,11 +335,19 @@ export default function About() {
       </section>
 
       {/* EXPERIENCE */}
-      <section className="px-4 sm:px-6 lg:px-10" style={sectionGlowStyle}>
+      <section
+        className="px-4 sm:px-6 lg:px-10"
+        style={{
+          background:
+            "linear-gradient(180deg, hsl(var(--background)) 0%, aliceblue 22%, aliceblue 100%)",
+          borderTop: "1px solid var(--border-soft)",
+          borderBottom: "1px solid hsl(var(--primary-foreground) / 0.10)",
+        }}
+      >
         <div className="mx-auto max-w-7xl py-12 sm:py-16">
           <motion.h2
             className="text-center text-3xl sm:text-4xl font-semibold header"
-            style={{ color: "var(--text-primary)" }}
+            style={{ color: "hsl(var(--primary-foreground))" }}
             initial={{ opacity: 0, y: -18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -343,7 +358,7 @@ export default function About() {
 
           <p
             className="mx-auto mt-4 max-w-3xl text-center"
-            style={{ color: "var(--text-secondary)" }}
+            style={{ color: "hsl(var(--primary-foreground) / 0.78)" }}
           >
             A smooth process from pickup to delivery—built around visibility,
             reliability, and speed.
@@ -354,7 +369,10 @@ export default function About() {
               <motion.div
                 key={v.title}
                 className="group rounded-3xl p-7 transition"
-                style={cardStyle}
+                style={{
+                  ...lightCardStyle,
+                  border: "1px solid hsl(var(--primary) / 0.18)",
+                }}
                 initial={{ opacity: 0, y: 22 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -373,7 +391,7 @@ export default function About() {
                       height: 56,
                       background: v.iconBg,
                       color: v.iconFg,
-                      border: "1px solid hsl(var(--border) / 0.25)",
+                      border: "1px solid hsl(var(--primary-foreground) / 0.12)",
                     }}
                   >
                     <v.icon className="h-7 w-7" />
@@ -383,8 +401,8 @@ export default function About() {
                     aria-hidden
                     className="h-10 w-10 rounded-full grid place-items-center"
                     style={{
-                      background: "hsl(var(--background) / 0.35)",
-                      border: "1px solid hsl(var(--primary) / 0.25)",
+                      background: "hsl(var(--foreground) / 0.65)",
+                      border: "1px solid hsl(var(--primary-foreground) / 0.12)",
                       color: "var(--accent-teal)",
                     }}
                   >
@@ -394,14 +412,17 @@ export default function About() {
 
                 <div
                   className="mt-6 text-xl font-semibold"
-                  style={{ color: "var(--text-primary)" }}
+                  style={{ color: "hsl(var(--primary-foreground))" }}
                 >
                   {v.title}
                 </div>
 
                 <div
                   className="mt-3"
-                  style={{ color: "var(--text-tertiary)", lineHeight: 1.75 }}
+                  style={{
+                    color: "hsl(var(--primary-foreground) / 0.70)",
+                    lineHeight: 1.75,
+                  }}
                 >
                   {v.description}
                 </div>
@@ -423,11 +444,17 @@ export default function About() {
       </section>
 
       {/* COMMITMENTS */}
-      <section className="px-4 sm:px-6 lg:px-10">
+      <section
+        className="px-4 sm:px-6 lg:px-10"
+        style={{
+          background:
+            "linear-gradient(180deg, aliceblue 0%, aliceblue 82%, hsl(var(--background)) 100%)",
+        }}
+      >
         <div className="mx-auto max-w-7xl py-12 sm:py-16">
           <motion.h2
             className="text-center text-3xl sm:text-4xl font-semibold header"
-            style={{ color: "var(--text-primary)" }}
+            style={{ color: "hsl(var(--primary-foreground))" }}
             initial={{ opacity: 0, y: -18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -438,7 +465,7 @@ export default function About() {
 
           <p
             className="mx-auto mt-4 max-w-3xl text-center"
-            style={{ color: "var(--text-secondary)" }}
+            style={{ color: "hsl(var(--primary-foreground) / 0.78)" }}
           >
             The principles we refuse to compromise—no matter the distance, the
             package, or the destination.
@@ -450,7 +477,7 @@ export default function About() {
                 key={v.title}
                 className="group rounded-3xl p-7 transition"
                 style={{
-                  ...cardStyle,
+                  ...lightCardStyle,
                   border: "1px solid hsl(var(--primary) / 0.18)",
                 }}
                 initial={{ opacity: 0, y: 22 }}
@@ -470,7 +497,7 @@ export default function About() {
                     height: 56,
                     background: v.iconBg,
                     color: v.iconFg,
-                    border: "1px solid hsl(var(--border) / 0.25)",
+                    border: "1px solid hsl(var(--primary-foreground) / 0.12)",
                   }}
                 >
                   <v.icon className="h-7 w-7" />
@@ -478,14 +505,17 @@ export default function About() {
 
                 <div
                   className="mt-6 text-xl font-semibold"
-                  style={{ color: "var(--text-primary)" }}
+                  style={{ color: "hsl(var(--primary-foreground))" }}
                 >
                   {v.title}
                 </div>
 
                 <div
                   className="mt-3"
-                  style={{ color: "var(--text-tertiary)", lineHeight: 1.75 }}
+                  style={{
+                    color: "hsl(var(--primary-foreground) / 0.70)",
+                    lineHeight: 1.75,
+                  }}
                 >
                   {v.description}
                 </div>
@@ -495,7 +525,7 @@ export default function About() {
                   aria-hidden
                   style={{
                     background:
-                      "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.35), transparent)",
+                      "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.22), transparent)",
                     opacity: 0.8,
                   }}
                 />
