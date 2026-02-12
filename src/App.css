@@ -4,7 +4,7 @@
   --card: 222 47% 7%;
   --card-foreground: 210 40% 98%;
   --popover: 222 47% 8%;
-  --popover-foreground: 210 40% 98%;
+  --popover-foreground: 210 40% 9 8%;
   --primary: 187 92% 39%;
   --primary-foreground: 222 47% 5%;
   --secondary: 217 33% 15%;
@@ -139,7 +139,7 @@ body {
 
   /* Keep the same overlay vibe you had before */
   background-blend-mode: overlay;
-  background-color: #123f52;
+  background-color: #123f525e;
 }
 
 .home_bg_slide.is-active {

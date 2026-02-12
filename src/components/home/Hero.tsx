@@ -58,7 +58,7 @@ export default function Hero() {
           </div>
 
           <motion.h1
-            className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
+            className="mt-7 text-4xl sm:text-8xl font-semibold tracking-tight header"
             style={{ color: "var(--text-primary)" }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -72,7 +72,7 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p
-            className="mt-5 text-base sm:text-lg leading-relaxed"
+            className="mt-5 text-base font-extrabold sm:text-xl leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

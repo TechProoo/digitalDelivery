@@ -318,7 +318,7 @@ export default function Solutions() {
                       }}
                     >
                       <div
-                        className="grid place-items-center rounded-xl flex-shrink-0"
+                        className="grid place-items-center rounded-xl shrink-0"
                         style={{
                           width: 40,
                           height: 40,
@@ -426,7 +426,7 @@ export default function Solutions() {
                       }}
                     >
                       <ShieldCheck
-                        className="h-5 w-5 mt-0.5 flex-shrink-0"
+                        className="h-5 w-5 mt-0.5 shrink-0"
                         style={{ color: "var(--accent-teal)" }}
                       />
                       <p
@@ -539,7 +539,7 @@ export default function Solutions() {
                       }}
                     >
                       <CheckCircle2
-                        className="h-5 w-5 mt-0.5 flex-shrink-0"
+                        className="h-5 w-5 mt-0.5 shrink-0"
                         style={{ color: "hsl(var(--primary))" }}
                       />
                       <span

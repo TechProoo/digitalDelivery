@@ -49,7 +49,7 @@ function BulletList({ items }: { items: string[] }) {
       {items.map((t) => (
         <li key={t} className="flex gap-3">
           <span
-            className="mt-2 h-1.5 w-1.5 rounded-full flex-shrink-0"
+            className="mt-2 h-1.5 w-1.5 rounded-full shrink-0"
             style={{ background: "hsl(var(--primary))" }}
           />
           <span>{t}</span>
