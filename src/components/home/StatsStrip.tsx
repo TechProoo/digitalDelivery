@@ -60,15 +60,18 @@ export default function StatsStrip() {
   ];
 
   return (
-    <section className="px-4 sm:px-6 lg:px-10">
+    <section
+      className="px-4 sm:px-6 lg:px-10"
+      style={{ backgroundColor: "aliceblue" }}
+    >
       <div className="mx-auto max-w-7xl py-10 sm:py-12">
         <motion.div
           className="relative overflow-hidden rounded-3xl"
           style={{
             background:
-              "linear-gradient(180deg, hsl(var(--background) / 0.30), hsl(var(--background) / 0.65))",
-            border: "1px solid hsl(var(--primary) / 0.18)",
-            boxShadow: "0 30px 80px rgba(0,0,0,0.55)",
+              "linear-gradient(180deg, hsl(var(--foreground) / 0.55), hsl(var(--foreground) / 0.85))",
+            border: "1px solid hsl(var(--primary-foreground) / 0.12)",
+            boxShadow: "0 18px 50px hsl(var(--primary-foreground) / 0.12)",
             backdropFilter: "blur(18px)",
           }}
           initial={{ opacity: 0, y: 30 }}
@@ -81,7 +84,7 @@ export default function StatsStrip() {
             style={{
               width: 900,
               background:
-                "radial-gradient(closest-side, hsl(var(--primary) / 0.22), transparent 70%)",
+                "radial-gradient(closest-side, hsl(var(--primary) / 0.18), transparent 70%)",
               filter: "blur(12px)",
             }}
           />
@@ -102,7 +105,7 @@ export default function StatsStrip() {
                 <Counter value={s.value} duration={2} />
                 <motion.div
                   className="mt-3"
-                  style={{ color: "var(--text-tertiary)" }}
+                  style={{ color: "hsl(var(--primary-foreground) / 0.70)" }}
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}

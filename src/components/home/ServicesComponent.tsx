@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 
 const ServicesComponent = () => {
   const cardStyle: React.CSSProperties = {
-    background: "hsl(var(--card) / 0.50)",
-    border: "1px solid var(--border-soft)",
-    boxShadow: "var(--shadow-card)",
+    background: "hsl(var(--foreground) / 0.70)",
+    border: "1px solid hsl(var(--primary-foreground) / 0.12)",
+    boxShadow: "0 14px 38px hsl(var(--primary-foreground) / 0.12)",
     backdropFilter: "blur(12px)",
   };
 
@@ -54,16 +54,19 @@ const ServicesComponent = () => {
   ] as const;
 
   return (
-    <section className="px-4 sm:px-6 lg:px-10">
+    <section
+      className="px-4 sm:px-6 lg:px-10"
+      style={{ backgroundColor: "aliceblue" }}
+    >
       <div className="mx-auto max-w-7xl py-14 sm:py-18">
         <div className="mx-auto max-w-4xl text-center">
           <div className="flex justify-center">
             <motion.div
               className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold"
               style={{
-                background: "hsl(var(--card) / 0.55)",
-                border: "1px solid var(--border-soft)",
-                color: "hsl(var(--accent))",
+                background: "hsl(var(--foreground) / 0.65)",
+                border: "1px solid hsl(var(--primary-foreground) / 0.12)",
+                color: "hsl(var(--primary-foreground))",
                 backdropFilter: "blur(10px)",
               }}
               initial={{ opacity: 0, y: -30 }}
@@ -77,7 +80,7 @@ const ServicesComponent = () => {
 
           <motion.h2
             className="mt-7 text-4xl sm:text-6xl font-semibold tracking-tight header"
-            style={{ color: "var(--text-primary)" }}
+            style={{ color: "hsl(var(--primary-foreground))" }}
             initial={{ opacity: 0, y: -30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -89,7 +92,7 @@ const ServicesComponent = () => {
 
           <motion.p
             className="mt-5 text-base sm:text-lg leading-relaxed"
-            style={{ color: "var(--text-secondary)" }}
+            style={{ color: "hsl(var(--primary-foreground) / 0.78)" }}
             initial={{ opacity: 0, y: -30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -134,13 +137,13 @@ const ServicesComponent = () => {
 
               <h3
                 className="mt-7 text-2xl font-semibold"
-                style={{ color: "var(--text-primary)" }}
+                style={{ color: "hsl(var(--primary-foreground))" }}
               >
                 {s.title}
               </h3>
               <p
                 className="mt-4 leading-relaxed"
-                style={{ color: "var(--text-tertiary)" }}
+                style={{ color: "hsl(var(--primary-foreground) / 0.70)" }}
               >
                 {s.description}
               </p>
@@ -150,7 +153,7 @@ const ServicesComponent = () => {
                   <li
                     key={b}
                     className="flex items-center gap-3"
-                    style={{ color: "var(--text-tertiary)" }}
+                    style={{ color: "hsl(var(--primary-foreground) / 0.70)" }}
                   >
                     <span
                       className="inline-block rounded-full"
@@ -170,9 +173,9 @@ const ServicesComponent = () => {
                   to={"/dashboard/new-delivery"}
                   className="group flex w-full items-center justify-center gap-3 rounded-xl px-5 py-3 font-semibold"
                   style={{
-                    background: "hsl(var(--background) / 0.45)",
-                    border: "1px solid var(--border-soft)",
-                    color: "var(--text-primary)",
+                    background: "hsl(var(--foreground) / 0.65)",
+                    border: "1px solid hsl(var(--primary-foreground) / 0.12)",
+                    color: "hsl(var(--primary-foreground))",
                   }}
                   type="button"
                 >
