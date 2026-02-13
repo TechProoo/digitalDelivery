@@ -1306,6 +1306,13 @@ Please provide pricing for this shipment. Thank you!`;
                       Get real quotation on WhatsApp — this is just an estimated
                       quote.
                     </p>
+                    <p
+                      className="mt-2 text-sm leading-relaxed font-extrabold"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      Price may vary greatly depending on the value of the item
+                      being delivered.
+                    </p>
                   </div>
 
                   <button

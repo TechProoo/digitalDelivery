@@ -111,6 +111,26 @@ export default function Dashboard() {
     }
   };
 
+  const getTimelineStageColor = (status: ShipmentStatus) => {
+    switch (status) {
+      case ShipmentStatus.PENDING:
+        return "var(--accent-amber)";
+      case ShipmentStatus.QUOTED:
+        return "var(--accent-sky)";
+      case ShipmentStatus.ACCEPTED:
+        return "#8b5cf6";
+      case ShipmentStatus.PICKED_UP:
+        return "#ec4899";
+      case ShipmentStatus.IN_TRANSIT:
+        return "var(--text-primary)";
+      case ShipmentStatus.DELIVERED:
+        return "var(--status-delivered)";
+      case ShipmentStatus.CANCELLED:
+      default:
+        return "var(--text-secondary)";
+    }
+  };
+
   const STATUS_STEPS: ShipmentStatus[] = [
     ShipmentStatus.PENDING,
     ShipmentStatus.ACCEPTED,
@@ -171,6 +191,7 @@ export default function Dashboard() {
       const rank = statusRank(s.status);
       return {
         code: s.trackingId,
+        status: s.status,
         location: s.destinationLocation,
         est: formatDateTime(s.updatedAt ?? s.createdAt),
         progress: getProgressForStatus(s.status),
@@ -893,168 +914,176 @@ export default function Dashboard() {
             </div>
 
             <div className="space-y-4">
-              {shipments.map((shipment) => (
-                <div
-                  key={shipment.code}
-                  className="p-4 rounded-xl"
-                  style={{
-                    border: "1px solid var(--border-soft)",
-                    background: "rgba(0,0,0,0.2)",
-                  }}
-                >
-                  {/* Header */}
-                  <div className="md:flex space-y-5 items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                        style={{
-                          background: "rgba(244,162,97,0.12)",
-                        }}
-                      >
-                        <Package
-                          className="h-5 w-5"
-                          style={{ color: "var(--accent-amber)" }}
-                        />
-                      </div>
-                      <div className="min-w-0">
+              {shipments.map((shipment) => {
+                const stageColor = getTimelineStageColor(shipment.status);
+                return (
+                  <div
+                    key={shipment.code}
+                    className="p-4 rounded-xl"
+                    style={{
+                      border: "1px solid var(--border-soft)",
+                      background: "rgba(0,0,0,0.2)",
+                    }}
+                  >
+                    {/* Header */}
+                    <div className="md:flex space-y-5 items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
                         <div
-                          className="text-sm sm:text-base font-semibold"
-                          style={{ color: "var(--accent-amber)" }}
-                        >
-                          {shipment.code}
-                        </div>
-                        <div
-                          className="text-xs sm:text-sm flex items-center gap-1"
-                          style={{ color: "var(--text-secondary)" }}
-                        >
-                          <MapPin className="h-3 w-3 shrink-0" />
-                          <span className="truncate">{shipment.location}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-right shrink-0 ml-2">
-                      <div
-                        className="text-xs"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
-                        Est. Delivery
-                      </div>
-                      <div
-                        className="text-xs sm:text-sm font-semibold"
-                        style={{ color: "var(--text-primary)" }}
-                      >
-                        {shipment.est}
-                      </div>
-                      <div
-                        className="text-sm font-bold mt-1"
-                        style={{ color: "var(--accent-amber)" }}
-                      >
-                        {shipment.progress}%
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="mb-4">
-                    <div className="w-full h-2 rounded-full bg-[rgba(0,0,0,0.3)]">
-                      <div
-                        className="h-2 rounded-full transition-all"
-                        style={{
-                          width: `${shipment.progress}%`,
-                          background: "var(--accent-amber)",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Timeline - Desktop */}
-                  <div className="hidden sm:flex items-center justify-between text-center">
-                    {shipment.steps.map((step, idx) => (
-                      <div key={idx} className="flex-1">
-                        <div className="flex justify-center mb-2">
-                          <div
-                            className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
-                            style={{
-                              background: step.done
-                                ? "var(--accent-amber)"
-                                : "transparent",
-                              border: step.done
-                                ? "none"
-                                : "2px solid var(--border-soft)",
-                              color: step.done
-                                ? "white"
-                                : "var(--text-secondary)",
-                            }}
-                          >
-                            {idx === 0 ? (
-                              <Package className="h-4 w-4" />
-                            ) : idx === 1 ? (
-                              <CheckCircle className="h-4 w-4" />
-                            ) : idx === 2 ? (
-                              <Truck className="h-4 w-4" />
-                            ) : idx === 3 ? (
-                              <MapPin className="h-4 w-4" />
-                            ) : (
-                              <CheckCircle className="h-4 w-4" />
-                            )}
-                          </div>
-                        </div>
-                        <div
-                          className="text-xs font-medium"
+                          className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                           style={{
-                            color: step.done
-                              ? "var(--text-primary)"
-                              : "var(--text-secondary)",
+                            background: "rgba(244,162,97,0.12)",
                           }}
                         >
-                          {STATUS_LABELS[step.status]}
+                          <Package
+                            className="h-5 w-5"
+                            style={{ color: "var(--accent-amber)" }}
+                          />
                         </div>
-                        {step.date && (
+                        <div className="min-w-0">
                           <div
-                            className="text-xs mt-0.5"
+                            className="text-sm sm:text-base font-semibold"
+                            style={{ color: "var(--accent-amber)" }}
+                          >
+                            {shipment.code}
+                          </div>
+                          <div
+                            className="text-xs sm:text-sm flex items-center gap-1"
                             style={{ color: "var(--text-secondary)" }}
                           >
-                            {step.date}
+                            <MapPin className="h-3 w-3 shrink-0" />
+                            <span className="truncate">
+                              {shipment.location}
+                            </span>
                           </div>
-                        )}
+                        </div>
                       </div>
-                    ))}
-                  </div>
 
-                  {/* Timeline - Mobile */}
-                  <div className="sm:hidden space-y-2">
-                    {shipment.steps
-                      .filter((s) => s.done)
-                      .map((step, idx) => (
-                        <div key={idx} className="flex items-center gap-3">
-                          <div
-                            className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
-                            style={{ background: "var(--accent-amber)" }}
-                          >
-                            <CheckCircle className="h-3 w-3 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
+                      <div className="text-right shrink-0 ml-2">
+                        <div
+                          className="text-xs"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Est. Delivery
+                        </div>
+                        <div
+                          className="text-xs sm:text-sm font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {shipment.est}
+                        </div>
+                        <div
+                          className="text-sm font-bold mt-1"
+                          style={{ color: "var(--accent-amber)" }}
+                        >
+                          {shipment.progress}%
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="mb-4">
+                      <div className="w-full h-2 rounded-full bg-[rgba(0,0,0,0.3)]">
+                        <div
+                          className="h-2 rounded-full transition-all"
+                          style={{
+                            width: `${shipment.progress}%`,
+                            background: stageColor,
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Timeline - Desktop */}
+                    <div className="hidden sm:flex items-center justify-between text-center">
+                      {shipment.steps.map((step, idx) => {
+                        const stepColor = getTimelineStageColor(step.status);
+                        return (
+                          <div key={idx} className="flex-1">
+                            <div className="flex justify-center mb-2">
+                              <div
+                                className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
+                                style={{
+                                  background: step.done
+                                    ? stepColor
+                                    : "transparent",
+                                  border: step.done
+                                    ? "none"
+                                    : `2px solid ${stepColor}`,
+                                  color: step.done ? "white" : stepColor,
+                                }}
+                              >
+                                {idx === 0 ? (
+                                  <Package className="h-4 w-4" />
+                                ) : idx === 1 ? (
+                                  <CheckCircle className="h-4 w-4" />
+                                ) : idx === 2 ? (
+                                  <Truck className="h-4 w-4" />
+                                ) : idx === 3 ? (
+                                  <MapPin className="h-4 w-4" />
+                                ) : (
+                                  <CheckCircle className="h-4 w-4" />
+                                )}
+                              </div>
+                            </div>
                             <div
                               className="text-xs font-medium"
-                              style={{ color: "var(--text-primary)" }}
+                              style={{
+                                color: step.done
+                                  ? "var(--text-primary)"
+                                  : "var(--text-secondary)",
+                              }}
                             >
                               {STATUS_LABELS[step.status]}
                             </div>
                             {step.date && (
                               <div
-                                className="text-xs"
+                                className="text-xs mt-0.5"
                                 style={{ color: "var(--text-secondary)" }}
                               >
                                 {step.date}
                               </div>
                             )}
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
+                    </div>
+
+                    {/* Timeline - Mobile */}
+                    <div className="sm:hidden space-y-2">
+                      {shipment.steps
+                        .filter((s) => s.done)
+                        .map((step, idx) => (
+                          <div key={idx} className="flex items-center gap-3">
+                            <div
+                              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
+                              style={{
+                                background: getTimelineStageColor(step.status),
+                              }}
+                            >
+                              <CheckCircle className="h-3 w-3 text-white" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div
+                                className="text-xs font-medium"
+                                style={{ color: "var(--text-primary)" }}
+                              >
+                                {STATUS_LABELS[step.status]}
+                              </div>
+                              {step.date && (
+                                <div
+                                  className="text-xs"
+                                  style={{ color: "var(--text-secondary)" }}
+                                >
+                                  {step.date}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

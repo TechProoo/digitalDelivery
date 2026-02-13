@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import Alibaba from "../../assets/alibaba.jpg";
-import Aliexpress from "../../assets/aliexpress.jpg";
-import DHL from "../../assets/dhl.jpg";
+import Alibaba from "../../assets/alibaba.png";
+import Aliexpress from "../../assets/aliexpress.png";
+import DHL from "../../assets/dhl.png";
 import Maersk from "../../assets/maersk.jpg";
-import Fedex from "../../assets/fedex.jpg";
-import Amazon from "../../assets/amazon.jpg";
+import Fedex from "../../assets/fedex.png";
+import Amazon from "../../assets/amazon.png";
 
 export default function TrustedBy() {
   const brands = [
@@ -48,13 +48,13 @@ export default function TrustedBy() {
                 src={brand.logo}
                 alt={brand.name}
                 loading="lazy"
-                className="h-10 sm:h-12 w-auto object-contain"
-                style={{
-            
-                  // These logos are JPEGs with light boxes baked in.
-                  // Blend-mode reduces the visible "square" on dark backgrounds.
-              
-                }}
+                className="h-15 sm:h-15 w-auto object-contain"
+                style={
+                  {
+                    // These logos are JPEGs with light boxes baked in.
+                    // Blend-mode reduces the visible "square" on dark backgrounds.
+                  }
+                }
               />
             </motion.div>
           ))}
