@@ -250,69 +250,42 @@ const Resources = () => {
                   ease: "easeOut",
                 }}
               >
-                {item.cardVariant !== "text" && (
-                  <div className="relative">
-                    <img
-                      src={item.imageUrl}
-                      alt={item.title}
-                      className="h-52 w-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
+                <div className="relative">
+                  <img
+                    src={item.imageUrl || "/logo.png"}
+                    alt={item.title}
+                    className="h-52 w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
 
-                    <div className="absolute left-4 top-4 flex items-center gap-2">
-                      <span
-                        className="rounded-full px-3 py-1 text-xs font-semibold"
-                        style={{
-                          background: "hsl(var(--card) / 0.7)",
-                          border: "1px solid var(--border-soft)",
-                          color: "var(--accent-sky)",
-                          backdropFilter: "blur(10px)",
-                        }}
-                      >
-                        {item.category}
-                      </span>
-                      <span
-                        className="rounded-full px-3 py-1 text-xs font-semibold"
-                        style={{
-                          background: "hsl(var(--card) / 0.7)",
-                          border: "1px solid var(--border-soft)",
-                          color: "var(--accent-amber)",
-                          backdropFilter: "blur(10px)",
-                        }}
-                      >
-                        {item.type}
-                      </span>
-                    </div>
+                  <div className="absolute left-4 top-4 flex items-center gap-2">
+                    <span
+                      className="rounded-full px-3 py-1 text-xs font-semibold"
+                      style={{
+                        background: "hsl(var(--card) / 0.7)",
+                        border: "1px solid var(--border-soft)",
+                        color: "var(--accent-sky)",
+                        backdropFilter: "blur(10px)",
+                      }}
+                    >
+                      {item.category}
+                    </span>
+                    <span
+                      className="rounded-full px-3 py-1 text-xs font-semibold"
+                      style={{
+                        background: "hsl(var(--card) / 0.7)",
+                        border: "1px solid var(--border-soft)",
+                        color: "var(--accent-amber)",
+                        backdropFilter: "blur(10px)",
+                      }}
+                    >
+                      {item.type}
+                    </span>
                   </div>
-                )}
+                </div>
 
                 <div className="p-6">
-                  {item.cardVariant === "text" && (
-                    <div className="mb-4 flex items-center gap-2">
-                      <span
-                        className="rounded-full px-3 py-1 text-xs font-semibold"
-                        style={{
-                          background: "hsl(var(--card) / 0.65)",
-                          border: "1px solid var(--border-soft)",
-                          color: "var(--accent-sky)",
-                        }}
-                      >
-                        {item.category}
-                      </span>
-                      <span
-                        className="rounded-full px-3 py-1 text-xs font-semibold"
-                        style={{
-                          background: "hsl(var(--card) / 0.65)",
-                          border: "1px solid var(--border-soft)",
-                          color: "var(--accent-amber)",
-                        }}
-                      >
-                        {item.type}
-                      </span>
-                    </div>
-                  )}
-
                   <h3
                     className="text-lg font-bold leading-snug"
                     style={{ color: "var(--text-primary)" }}
