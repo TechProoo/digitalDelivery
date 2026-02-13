@@ -10,7 +10,13 @@ const Card = ({ image, title, description }: CardProps) => {
   return (
     <div className="card_cover md:w-65 sm:w-60 w-[320px] h-80 p-3 relative rounded-3xl">
       <div className="card_img w-full h-full ">
-        <img src={image} className="rounded-2xl object-cover" alt="" />
+        <img
+          src={image}
+          loading="lazy"
+          decoding="async"
+          className="rounded-2xl object-cover"
+          alt=""
+        />
       </div>
       <div className="absolute top-3 left-1">
         <div className="caed_icon_cover p-2">

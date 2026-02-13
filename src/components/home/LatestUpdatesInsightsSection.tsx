@@ -82,6 +82,8 @@ export default function LatestUpdatesInsightsSection() {
                   alt={a.title}
                   className="h-full w-full object-cover"
                   style={{ filter: "saturate(0.95)" }}
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div
                   className="absolute inset-0"

@@ -49,12 +49,7 @@ export default function TrustedBy() {
                 alt={brand.name}
                 loading="lazy"
                 className="h-15 sm:h-15 w-auto object-contain"
-                style={
-                  {
-                    // These logos are JPEGs with light boxes baked in.
-                    // Blend-mode reduces the visible "square" on dark backgrounds.
-                  }
-                }
+                decoding="async"
               />
             </motion.div>
           ))}

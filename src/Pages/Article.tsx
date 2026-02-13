@@ -137,6 +137,8 @@ export default function Article() {
               <img
                 src={article.imageUrl}
                 alt={article.title}
+                loading="lazy"
+                decoding="async"
                 className="h-full w-full object-cover"
               />
               <div

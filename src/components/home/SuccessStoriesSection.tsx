@@ -47,8 +47,7 @@ export default function SuccessStoriesSection() {
     <section
       className="px-4 sm:px-6 lg:px-10"
       style={{
-        background:
-          "linear-gradient(180deg, aliceblue 0%, aliceblue 100%)",
+        background: "linear-gradient(180deg, aliceblue 0%, aliceblue 100%)",
       }}
     >
       <div className="mx-auto max-w-7xl py-14 sm:py-18">
@@ -121,6 +120,8 @@ export default function SuccessStoriesSection() {
                   alt=""
                   className="h-full w-full object-cover"
                   style={{ filter: "saturate(0.95)" }}
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div
                   className="absolute inset-0"

@@ -41,6 +41,8 @@ const HowItWorksComponents = () => {
                     src={BoxImg}
                     alt="tracking"
                     className="w-8 h-8 object-contain"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div>

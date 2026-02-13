@@ -129,6 +129,8 @@ export default function SuccessStory() {
                   src={story.image}
                   alt=""
                   className="h-56 w-full object-cover sm:h-72"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
             </>

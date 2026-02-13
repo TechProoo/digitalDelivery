@@ -39,7 +39,9 @@ function typeIcon(resourceType: ResourceType) {
 }
 
 const Resources = () => {
-  const [activeCategory, setActiveCategory] = useState<"All" | ResourceCategory>("All");
+  const [activeCategory, setActiveCategory] = useState<
+    "All" | ResourceCategory
+  >("All");
   const [activeType, setActiveType] = useState<"All" | ResourceType>("All");
   const [query, setQuery] = useState("");
 
@@ -254,6 +256,8 @@ const Resources = () => {
                       src={item.imageUrl}
                       alt={item.title}
                       className="h-52 w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
 
                     <div className="absolute left-4 top-4 flex items-center gap-2">
