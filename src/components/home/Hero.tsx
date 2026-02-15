@@ -64,10 +64,9 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
           >
-            Maximize your logistics
-            <br />
+            Maximize every dollar in <br />
             <span style={{ color: "var(--accent-teal)" }}>
-              savings &amp; efficiency
+              your supply chain
             </span>
           </motion.h1>
 
@@ -78,8 +77,8 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
-            Harness Digital Logistics's AI-led enterprise suite of solutions
-            backed by industry data, technology, and hands-on partnership.
+            Streamlining global and local logistics with expert management to
+            ensure every shipment arrives with speed, safety, and precision.
           </motion.p>
 
           <motion.div

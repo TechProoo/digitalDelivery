@@ -26,7 +26,7 @@ export default function Solutions() {
         {
           label: "TMS & workflow automation",
           icon: Laptop,
-          note: "Standardize SOPs, approvals, and handoffs across teams.",
+          note: "Total control of your logistics in one simple dashboard.",
         },
         {
           label: "AI-assisted operations",

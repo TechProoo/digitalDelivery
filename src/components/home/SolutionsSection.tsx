@@ -34,56 +34,61 @@ export default function SolutionsSection() {
     () => [
       {
         title: "TMS Platform",
-        description: "Streamline operations end-to-end",
+        description: "Total control of your logistics in one simple dashboard",
         icon: Laptop,
         iconBg: "hsl(var(--primary) / 0.12)",
         iconFg: "hsl(var(--primary))",
       },
       {
         title: "3PL & 4PL",
-        description: "Managed logistics services",
+        description:
+          "Scalable logistics solutions tailored to your business size",
         icon: Boxes,
         iconBg: "hsl(var(--success) / 0.14)",
         iconFg: "hsl(var(--success))",
       },
       {
         title: "Cross-Border",
-        description: "International freight solutions",
+        description: "Your gateway to international markets and global trade",
         icon: Globe,
         iconBg: "hsl(var(--info) / 0.14)",
         iconFg: "hsl(var(--info))",
       },
       {
         title: "Intermodal",
-        description: "Multi-mode optimization",
+        description:
+          "Connecting sea, air, and land to reach any destination efficiently",
         icon: Train,
         iconBg: "hsl(var(--accent) / 0.14)",
         iconFg: "hsl(var(--accent))",
       },
       {
         title: "Over the Road",
-        description: "Full truckload & LTL",
+        description: " Fast and secure road transport across the country",
         icon: Truck,
         iconBg: "hsl(var(--warning) / 0.14)",
         iconFg: "hsl(var(--warning))",
       },
       {
         title: "End-to-End",
-        description: "Complete supply chain",
+        description:
+          "Direct delivery from our local hubs straight to your customer's door",
         icon: Settings2,
         iconBg: "hsl(var(--muted-foreground) / 0.12)",
         iconFg: "hsl(var(--foreground) / 0.7)",
       },
       {
         title: "SMB Freight",
-        description: "Small business solutions",
+        description:
+          "Flexible freight services designed to simplify logistics for growing enterprises",
         icon: PackageSearch,
         iconBg: "hsl(var(--info) / 0.10)",
         iconFg: "hsl(var(--info))",
       },
       {
-        title: "AI Technology",
-        description: "Intelligent automation",
+        title: "Industry Expertise",
+        description:
+          "Proven operational strategies applied to solve complex logistics challenges",
         icon: Cpu,
         iconBg: "hsl(var(--primary) / 0.10)",
         iconFg: "hsl(var(--primary))",
