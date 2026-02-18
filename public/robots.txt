@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://digital-delivery.netlify.app/sitemap.xml
+Sitemap: https://digitaldelivery.org/sitemap.xml
