@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
           <Link to="/" aria-label="Go to homepage">
-            <img src={Logo} className="w-30" alt="Digital Logistics" />
+            <img src={Logo} className="w-30" alt="Digital Delivery" />
           </Link>
           <p className="text-sm">
             Reliable logistics and shipping solutions tailored to your needs.
@@ -54,9 +54,9 @@ const Footer = () => {
           <h4 className="text-(--text-primary) font-semibold mb-2">Contact</h4>
           <a
             className="text-sm hover:underline"
-            href="mailto:support@DigitalLogistics.example"
+            href="mailto:support@DigitalDelivery.example"
           >
-            support@DigitalLogistics.example
+            support@DigitalDelivery.example
           </a>
           <a
             className="text-sm mt-2 block hover:underline"
@@ -70,7 +70,7 @@ const Footer = () => {
       <div className="border-t border-(--border-soft) mt-6">
         <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between text-sm text-(--text-tertiary)">
           <div>
-            © {new Date().getFullYear()} Digital Logistics. All rights reserved.
+            © {new Date().getFullYear()} Digital Delivery. All rights reserved.
           </div>
           <div className="mt-3 md:mt-0 flex items-center gap-2">
             <Link to="/privacy" className="hover:underline">

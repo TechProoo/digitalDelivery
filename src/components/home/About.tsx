@@ -67,7 +67,7 @@ export default function About() {
     {
       title: "Global Connectivity without Borders",
       description:
-        "Logistics is a puzzle of borders, regulations, and carriers. At Digital Logistics, we solve that puzzle for you. Our network spans globally, ensuring that whether your destination is a major city or a remote town, we have a reliable path to get it there.",
+        "Logistics is a puzzle of borders, regulations, and carriers. At Digital Delivery, we solve that puzzle for you. Our network spans globally, ensuring that whether your destination is a major city or a remote town, we have a reliable path to get it there.",
       icon: Users,
       iconBg: "hsl(var(--accent) / 0.14)",
       iconFg: "hsl(var(--accent))",
@@ -177,7 +177,7 @@ export default function About() {
                 transition={{ duration: 0.5, ease: "easeOut" }}
               >
                 <Sparkles className="h-4 w-4" />
-                About Us: Digital Logistics
+                About Us: Digital Delivery
               </motion.div>
 
               <motion.h1
@@ -201,7 +201,7 @@ export default function About() {
                 transition={{ duration: 0.6, delay: 0.16, ease: "easeOut" }}
               >
                 In an era where the world is more connected yet more demanding
-                than ever, Digital Logistics was born from a simple idea:
+                than ever, Digital Delivery was born from a simple idea:
                 shipping should be as fluid as the digital information we
                 exchange every day.
               </motion.p>
@@ -316,8 +316,8 @@ export default function About() {
               >
                 Whether you are a business scaling to international markets or
                 an individual sending a personal item to a loved one across an
-                ocean, Digital Logistics provides the bridge that makes the
-                world feel smaller and more accessible.
+                ocean, Digital Delivery provides the bridge that makes the world
+                feel smaller and more accessible.
               </p>
 
               {/* subtle divider */}
@@ -353,7 +353,7 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            The Digital Logistics Experience
+            The Digital Delivery Experience
           </motion.h2>
 
           <p
@@ -570,7 +570,7 @@ export default function About() {
                 style={{ color: "var(--text-tertiary)" }}
               >
                 Experience a world where logistics is no longer a chore, but a
-                competitive advantage. At Digital Logistics, we don't just move
+                competitive advantage. At Digital Delivery, we don't just move
                 boxes; we move your world forward.
               </p>
 

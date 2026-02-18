@@ -40,7 +40,7 @@ export default function SupportBot() {
     () => ({
       id: nowId(),
       role: "bot",
-      text: "Hi! I'm Digital Logistics Assistant. How can I help you today?",
+      text: "Hi! I'm Digital Delivery Assistant. How can I help you today?",
       timestamp: Date.now(),
       actions: [
         { label: "Track shipment", to: "/dashboard/track", kind: "primary" },

@@ -84,7 +84,7 @@ export default function ProcessSection() {
           >
             How{" "}
             <span style={{ color: "var(--accent-teal)" }}>
-              Digital Logistics
+              Digital Delivery
             </span>{" "}
             Works
           </motion.h2>

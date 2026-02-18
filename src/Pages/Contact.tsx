@@ -37,7 +37,7 @@ export default function Contact() {
       city: "Lagos, Nigeria",
       address: "33, adeola street, oluti, amuwo odofin",
       phone: "+2349010191502",
-      email: "support@digitalLogistics.com",
+      email: "support@DigitalDelivery.com",
     },
   ];
 
@@ -176,7 +176,7 @@ export default function Contact() {
                 className="mt-4 inline-block font-semibold"
                 style={{ color: "hsl(var(--success))" }}
               >
-                hello@digitallogistics.com
+                hello@digitaldelivery.com
               </a>
             </div>
           </div>

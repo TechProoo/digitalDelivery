@@ -53,8 +53,8 @@ const Cta = () => {
             className="mx-auto mt-5 max-w-3xl text-base sm:text-lg leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
           >
-            Join thousands of businesses that trust digitalLogistics for their freight
-            needs. Get started in minutes with our easy-to-use platform.
+            Join thousands of businesses that trust DigitalDelivery for their
+            freight needs. Get started in minutes with our easy-to-use platform.
           </p>
 
           <div className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-3">

@@ -83,7 +83,7 @@ const Signup = () => {
                   <div className="flex flex-col items-center">
                     <img className="w-30 m-auto" src={Logo} alt="" />
                     <h1 className="text-3xl text-center header -mt-2.5">
-                      Get Started with Digital Logistics
+                      Get Started with Digital Delivery
                     </h1>
                     <p className="text-center text-(--text-tertiary)">
                       Create your account to start shipping packages worldwide

@@ -146,12 +146,12 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
                   <img
                     src={Logo}
                     className="w-10 h-10"
-                    alt="Digital Logistics"
+                    alt="Digital Delivery"
                   />
                 </div>
                 <div className="min-w-0">
                   <div className="text-lg font-bold text-primary truncate">
-                    Digital Logistics
+                    Digital Delivery
                   </div>
                   <div className="text-xs text-muted-foreground truncate">
                     Logistics Platform
