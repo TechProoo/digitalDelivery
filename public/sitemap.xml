@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://digital-delivery.netlify.app/</loc></url>
-  <url><loc>https://digital-delivery.netlify.app/about</loc></url>
-  <url><loc>https://digital-delivery.netlify.app/services</loc></url>
-  <url><loc>https://digital-delivery.netlify.app/how-it-works</loc></url>
-  <url><loc>https://digital-delivery.netlify.app/resources</loc></url>
-  <url><loc>https://digital-delivery.netlify.app/articles</loc></url>
-  <url><loc>https://digital-delivery.netlify.app/support</loc></url>
-  <url><loc>https://digital-delivery.netlify.app/contact</loc></url>
+
+  <url>
+    <loc>https://digitaldelivery.org/</loc>
+  </url>
+
+  <url>
+    <loc>https://digitaldelivery.org/about</loc>
+  </url>
+
+  <url>
+    <loc>https://digitaldelivery.org/services</loc>
+  </url>
+
+  <url>
+    <loc>https://digitaldelivery.org/how-it-works</loc>
+  </url>
+
+  <url>
+    <loc>https://digitaldelivery.org/resources</loc>
+  </url>
+
+  <url>
+    <loc>https://digitaldelivery.org/articles</loc>
+  </url>
+
+  <url>
+    <loc>https://digitaldelivery.org/support</loc>
+  </url>
+
+  <url>
+    <loc>https://digitaldelivery.org/contact</loc>
+  </url>
+
 </urlset>
