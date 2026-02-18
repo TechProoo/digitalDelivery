@@ -36,6 +36,7 @@ interface FormData {
   length: string;
   width: string;
   height: string;
+  declaredValueNgn: string;
   serviceType: ServiceType | "";
   userWhatsApp: string;
   receiverWhatsApp: string;
@@ -62,6 +63,7 @@ export default function NewDelivery() {
     length: "",
     width: "",
     height: "",
+    declaredValueNgn: "",
     serviceType: "",
     userWhatsApp: "",
     receiverWhatsApp: "",
@@ -110,7 +112,12 @@ export default function NewDelivery() {
   };
 
   const canProceedStep2 = () => {
-    return formData.packageType && formData.weight && formData.serviceType;
+    return (
+      formData.packageType &&
+      formData.weight &&
+      formData.serviceType &&
+      formData.declaredValueNgn
+    );
   };
 
   const canProceedStep3 = () => {
@@ -283,6 +290,7 @@ export default function NewDelivery() {
 Type: ${formData.packageType}
 Weight: ${formData.weight} kg
 Dimensions: ${formData.length}×${formData.width}×${formData.height} cm
+Declared value: ₦${formData.declaredValueNgn}
 Service: ${serviceTypeLabel}
 
 📱 *MY CONTACT*
@@ -316,6 +324,13 @@ Please provide pricing for this shipment. Thank you!`;
     setSubmitError(null);
     setIsSubmitting(true);
     try {
+      const declaredValueNgn = (() => {
+        const raw = String(formData.declaredValueNgn ?? "").trim();
+        if (!raw) return undefined;
+        const n = Number.parseInt(raw, 10);
+        return Number.isFinite(n) && n >= 0 ? n : undefined;
+      })();
+
       const shipment = await shipmentsApi.create({
         serviceType: formData.serviceType as ServiceType,
         pickupLocation,
@@ -325,6 +340,7 @@ Please provide pricing for this shipment. Thank you!`;
         dimensions,
         phone: formData.userWhatsApp.trim(),
         receiverPhone: formData.receiverWhatsApp.trim(),
+        declaredValueNgn,
       });
 
       const estimateLine = estimate?.isReady
@@ -873,6 +889,39 @@ Please provide pricing for this shipment. Thank you!`;
                       }}
                     />
                   </div>
+                </div>
+
+                {/* Declared Item Value */}
+                <div className="mb-4 sm:mb-6">
+                  <label
+                    className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-2 uppercase"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    <Package className="h-3 w-3 sm:h-4 sm:w-4" />Declared Value (₦)
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    step={1}
+                    placeholder="e.g. 500000"
+                    value={formData.declaredValueNgn}
+                    onChange={(e) =>
+                      updateFormData("declaredValueNgn", e.target.value)
+                    }
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none text-sm sm:text-base"
+                    style={{
+                      background: "rgba(0,0,0,0.3)",
+                      border: "1px solid var(--border-soft)",
+                      color: "var(--text-primary)",
+                    }}
+                  />
+                  <p
+                    className="mt-2 text-xs sm:text-sm"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
+                    Used for risk/insurance consideration.
+                  </p>
                 </div>
 
                 {/* Service Type */}

@@ -141,6 +141,8 @@ export interface CreateShipmentRequest {
   dimensions: string;
   phone: string;
   receiverPhone?: string;
+  /** Declared item value in Nigerian Naira (whole number). Optional. */
+  declaredValueNgn?: number;
   /** Amount in Nigerian Naira (whole number). Optional; can be set later by admin. */
   amount?: number;
 }
@@ -313,7 +315,7 @@ export function isValidServiceType(value: string): value is ServiceType {
 // Check if status transition is valid
 export function isValidStatusTransition(
   currentStatus: ShipmentStatus,
-  newStatus: ShipmentStatus
+  newStatus: ShipmentStatus,
 ): boolean {
   return VALID_STATUS_TRANSITIONS[currentStatus].includes(newStatus);
 }
@@ -340,7 +342,7 @@ export function formatRoute(pickup: string, destination: string): string {
 
 // Convert Shipment with relations to list item
 export function shipmentToListItem(
-  shipment: ShipmentWithRelations
+  shipment: ShipmentWithRelations,
 ): ShipmentListItem {
   return {
     id: shipment.id,

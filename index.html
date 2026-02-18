@@ -10,7 +10,8 @@
       content="Digital Delivery is a technology-driven logistics partner offering true door-to-door global delivery with real-time tracking and reliable shipping."
     />
 
-    <link rel="canonical" href="https://digital-delivery.netlify.app/" />
+    <!-- Canonical -->
+    <link rel="canonical" href="https://digitaldelivery.org/" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -23,11 +24,8 @@
       property="og:description"
       content="Technology-driven logistics with true door-to-door global delivery, live updates, and reliable shipping."
     />
-    <meta property="og:url" content="https://digital-delivery.netlify.app/" />
-    <meta
-      property="og:image"
-      content="https://digital-delivery.netlify.app/logo.png"
-    />
+    <meta property="og:url" content="https://digitaldelivery.org/" />
+    <meta property="og:image" content="https://digitaldelivery.org/logo.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary" />
@@ -39,10 +37,7 @@
       name="twitter:description"
       content="Technology-driven logistics with true door-to-door global delivery, live updates, and reliable shipping."
     />
-    <meta
-      name="twitter:image"
-      content="https://digital-delivery.netlify.app/logo.png"
-    />
+    <meta name="twitter:image" content="https://digitaldelivery.org/logo.png" />
 
     <!-- Organization schema -->
     <script type="application/ld+json">
@@ -50,15 +45,16 @@
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "Digital Delivery",
-        "url": "https://digital-delivery.netlify.app/",
-        "logo": "https://digital-delivery.netlify.app/logo.png"
+        "url": "https://digitaldelivery.org/",
+        "logo": "https://digitaldelivery.org/logo.png"
       }
     </script>
 
+    <!-- Keep canonical/og:url in sync with the current route (optional, but safe) -->
     <script>
       (function () {
         try {
-          var origin = window.location.origin;
+          var origin = "https://digitaldelivery.org";
           var path = window.location.pathname || "/";
           var canonicalUrl = origin + path;
 
@@ -72,12 +68,14 @@
         }
       })();
     </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,700;1,800;1,900&family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap"
       rel="stylesheet"
     />
+
     <title>Digital Delivery | Door-to-Door Global Delivery</title>
   </head>
   <body>
