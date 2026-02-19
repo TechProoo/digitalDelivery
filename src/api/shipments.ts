@@ -14,7 +14,7 @@ export type CreateShipmentInput = Omit<CreateShipmentRequest, "customerId"> & {
 };
 
 export async function create(
-  input: CreateShipmentInput
+  input: CreateShipmentInput,
 ): Promise<ShipmentWithRelations> {
   try {
     return await apiClient.post("/shipments", input);
@@ -43,7 +43,7 @@ export async function findOne(id: string): Promise<ShipmentWithRelations> {
 }
 
 export async function findByTrackingId(
-  trackingId: string
+  trackingId: string,
 ): Promise<ShipmentWithRelations> {
   try {
     return await apiClient.get(`/shipments/tracking/${trackingId}`);
@@ -54,7 +54,7 @@ export async function findByTrackingId(
 
 export async function updateStatus(
   id: string,
-  input: UpdateShipmentStatusRequest
+  input: UpdateShipmentStatusRequest,
 ): Promise<ShipmentWithRelations> {
   try {
     return await apiClient.patch(`/shipments/${id}/status`, input);
@@ -65,7 +65,7 @@ export async function updateStatus(
 
 export async function addCheckpoint(
   id: string,
-  input: AddCheckpointRequest
+  input: AddCheckpointRequest,
 ): Promise<unknown> {
   try {
     return await apiClient.post(`/shipments/${id}/checkpoints`, input);
@@ -76,7 +76,7 @@ export async function addCheckpoint(
 
 export async function addNote(
   id: string,
-  input: AddNoteRequest
+  input: AddNoteRequest,
 ): Promise<unknown> {
   try {
     return await apiClient.post(`/shipments/${id}/notes`, input);
