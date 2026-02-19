@@ -152,8 +152,6 @@ export default function Dashboard() {
     try {
       const result = await shipmentsApi.list({ customerId });
       setShipmentsData(result);
-      console.log(result);
-      console.log(shipmentsData);
     } catch (err: any) {
       setShipmentsError(err?.message ?? "Failed to load shipments.");
       setShipmentsData([]);

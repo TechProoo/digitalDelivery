@@ -31,7 +31,6 @@ export function useChat() {
       | ChatResponse[]
       | undefined;
     if (Array.isArray(queue) && queue.length > 0) {
-      console.log("[useChat] draining message queue", queue.length);
       queue.forEach((m) =>
         window.dispatchEvent(
           new CustomEvent("dd:chat:response", { detail: m }),
@@ -51,7 +50,6 @@ export function useChat() {
 
   // Then attach socket listeners (attached once globally)
   useEffect(() => {
-
     // Only connect if not already connected
     if (!socket.connected) {
       socket.connect();
@@ -60,19 +58,15 @@ export function useChat() {
     // Attach listeners once globally to avoid duplicate handlers (React Strict Mode)
     if (!(window as any).__dd_listeners_attached) {
       (window as any).__dd_listeners_attached = true;
-      console.log("[useChat] attaching socket listeners");
 
       socket.on("connect", () => {
-        console.log("[useChat] socket connected");
         setConnected(true);
       });
       socket.on("disconnect", () => {
-        console.log("[useChat] socket disconnected");
         setConnected(false);
       });
 
       socket.on("chat:response", (data: ChatResponse) => {
-
         // Ensure a global in-memory queue exists to hold messages if no listeners yet
         (window as any).__dd_message_queue =
           (window as any).__dd_message_queue || [];
@@ -106,11 +100,9 @@ export function useChat() {
         ]);
       });
     } else {
-      console.log("[useChat] listeners already attached; skipping");
     }
 
     return () => {
-
       // Intentionally do not remove global listeners or disconnect here.
     };
   }, []);
