@@ -112,12 +112,7 @@ export default function NewDelivery() {
   };
 
   const canProceedStep2 = () => {
-    return (
-      formData.packageType &&
-      formData.weight &&
-      formData.serviceType &&
-      formData.declaredValueNgn
-    );
+    return formData.packageType && formData.weight && formData.serviceType;
   };
 
   const canProceedStep3 = () => {
@@ -290,7 +285,12 @@ export default function NewDelivery() {
 Type: ${formData.packageType}
 Weight: ${formData.weight} kg
 Dimensions: ${formData.length}×${formData.width}×${formData.height} cm
-Declared value: ₦${formData.declaredValueNgn}
+Declared value: ${
+      formData.declaredValueNgn.trim()
+        ? `₦${formData.declaredValueNgn}`
+        : "Not provided"
+    }
+
 Service: ${serviceTypeLabel}
 
 📱 *MY CONTACT*
@@ -897,7 +897,8 @@ Please provide pricing for this shipment. Thank you!`;
                     className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-2 uppercase"
                     style={{ color: "var(--text-secondary)" }}
                   >
-                    <Package className="h-3 w-3 sm:h-4 sm:w-4" />Declared Value (₦)
+                    <Package className="h-3 w-3 sm:h-4 sm:w-4" />
+                    Item Value (₦)
                   </label>
                   <input
                     type="number"
@@ -1357,10 +1358,10 @@ Please provide pricing for this shipment. Thank you!`;
                     </p>
                     <p
                       className="mt-2 text-sm leading-relaxed font-extrabold"
-                      style={{ color: "var(--text-secondary)" }}
+                      style={{ color: "#FF0000" }}
                     >
-                      Price may vary greatly depending on the value of the item
-                      being delivered.
+                      This is just an estimate. The WhatsApp quote may vary a
+                      lot once we confirm the item value.
                     </p>
                   </div>
 
