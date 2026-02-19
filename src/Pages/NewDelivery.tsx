@@ -1357,7 +1357,7 @@ Please provide pricing for this shipment. Thank you!`;
                       quote.
                     </p>
                     <p
-                      className="mt-2 text-sm leading-relaxed font-extrabold"
+                      className="mt-2 text-sm text-red-500 leading-relaxed font-extrabold"
                       style={{ color: "#FF0000" }}
                     >
                       This is just an estimate. The WhatsApp quote may vary a
