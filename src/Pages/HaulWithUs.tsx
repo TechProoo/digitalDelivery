@@ -22,7 +22,7 @@ import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
 import { driversApi } from "../api";
 
-type VehicleType = "VAN" | "BIKE";
+type VehicleType = "VAN" | "BIKE" | "LORRY" | "TRUCK";
 
 type FileKey =
   | "proofOfOwnership"
@@ -318,7 +318,7 @@ export default function HaulWithUs() {
   // Per-step validation
   const validateStep = (s: number): string | null => {
     if (s === 0) {
-      if (!vehicleType) return "Please select Vans or Bikes.";
+      if (!vehicleType) return "Please select a vehicle type.";
       if (!plateNumber.trim()) return "Plate number is required.";
       if (!files.proofOfOwnership) return "Proof of ownership is required.";
       if (!files.vehicleLicense) return "Vehicle license is required.";
@@ -671,6 +671,18 @@ export default function HaulWithUs() {
                           label: "Bike",
                           sub: "Motorcycle deliveries",
                           icon: <Bike className="h-6 w-6" />,
+                        },
+                        {
+                          type: "LORRY",
+                          label: "Lorry",
+                          sub: "Heavy-duty deliveries",
+                          icon: <Truck className="h-6 w-6" />,
+                        },
+                        {
+                          type: "TRUCK",
+                          label: "Truck",
+                          sub: "Long-haul deliveries",
+                          icon: <Truck className="h-6 w-6" />,
                         },
                       ] as const
                     ).map(({ type, label, sub, icon }) => {

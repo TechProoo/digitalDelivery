@@ -14,7 +14,7 @@ import FaqSection from "../components/home/FaqSection";
 import HomeBackgroundCarousel from "../components/home/HomeBackgroundCarousel";
 import Bg1 from "../assets/plane.jpg";
 import Bg2 from "../assets/road.png";
-import Bg3 from "../assets/door.jpg";
+import Bg3 from "../assets/door.png";
 import Bg4 from "../assets/cargo1.png";
 import { motion } from "framer-motion";
 
