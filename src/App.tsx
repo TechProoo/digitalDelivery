@@ -23,6 +23,7 @@ import SupportCategory from "./Pages/SupportCategory";
 import SuccessStory from "./Pages/SuccessStory";
 import Articles from "./Pages/Articles";
 import Article from "./Pages/Article";
+import HaulWithUs from "./Pages/HaulWithUs";
 import Privacy from "./Pages/Privacy";
 import Terms from "./Pages/Terms";
 import Security from "./Pages/Security";
@@ -62,6 +63,7 @@ function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/security" element={<Security />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/haul-with-us" element={<HaulWithUs />} />
         <Route path="/support/categories/:id" element={<SupportCategory />} />
         <Route path="/support/articles/:id" element={<SupportArticle />} />
         <Route path="/success-stories/:id" element={<SuccessStory />} />

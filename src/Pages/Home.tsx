@@ -12,10 +12,10 @@ import GlobalReachSection from "../components/home/GlobalReachSection";
 import LatestUpdatesInsightsSection from "../components/home/LatestUpdatesInsightsSection";
 import FaqSection from "../components/home/FaqSection";
 import HomeBackgroundCarousel from "../components/home/HomeBackgroundCarousel";
-import Bg1 from "../assets/plane.jpeg";
-import Bg2 from "../assets/road.jpg";
+import Bg1 from "../assets/plane.jpg";
+import Bg2 from "../assets/road.png";
 import Bg3 from "../assets/door.jpg";
-import Bg4 from "../assets/caro1.jpeg";
+import Bg4 from "../assets/cargo1.png";
 import { motion } from "framer-motion";
 
 const Home = () => {

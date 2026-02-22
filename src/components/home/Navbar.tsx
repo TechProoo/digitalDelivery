@@ -20,6 +20,7 @@ const Navbar = () => {
       { name: "Solutions", path: "/#solutions" },
       { name: "About", path: "/about" },
       { name: "Resources", path: "/resources" },
+      { name: "Haul With Us", path: "/haul-with-us" },
       { name: "Support", path: "/support" },
       { name: "Contact", path: "/contact" },
     ],
@@ -183,7 +184,7 @@ const Navbar = () => {
                 <ul className="space-y-1">
                   {navLinks.map((link, index) => (
                     <motion.li
-                      key={link.name}
+                      key={`${link.name}-${link.path}`}
                       initial={{ opacity: 0, x: 12 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 12 }}
@@ -282,7 +283,7 @@ const Navbar = () => {
             <div className="hidden lg:flex flex-1 justify-center">
               <ul className="flex items-center gap-8">
                 {navLinks.map((link) => (
-                  <li key={link.name}>
+                  <li key={`${link.name}-${link.path}`}>
                     <NavLink
                       to={link.path}
                       className={({ isActive }) =>

@@ -19,6 +19,20 @@ function Counter({
   const isInView = useInView(ref, { once: true });
   const count = useMotionValue(0);
 
+  // If the value contains a slash (e.g., "24/7"), treat it as a literal
+  // and don't try to parse/animate it as a numeric value.
+  if (value.includes("/")) {
+    return (
+      <motion.div
+        ref={ref}
+        className="text-4xl sm:text-5xl font-semibold tracking-tight"
+        style={{ color: "var(--accent-teal)" }}
+      >
+        {value}
+      </motion.div>
+    );
+  }
+
   // Extract number from value (e.g., "5M+" -> 5, "99.8%" -> 99.8)
   const numericValue = parseFloat(value.replace(/[^0-9.]/g, "")) || 0;
   const suffix = value.replace(/[0-9.]/g, "");
