@@ -36,7 +36,7 @@ export default function Contact() {
     {
       city: "Lagos, Nigeria",
       address: "33, adeola street, oluti, amuwo odofin",
-      phone: "+2349010191502",
+      phone: "+2348135699955",
       email: "support@DigitalDelivery.com",
     },
   ];

@@ -35,8 +35,11 @@ interface ManualQuoteRequest {
   destination: string;
   weightKg?: number;
   dimensionsCm?: { length: number; width: number; height: number };
+  volumeCbm?: number;
   containerType?: ManualContainerType;
+  distanceKm?: number;
   isExpress?: boolean;
+  freeText?: string;
 }
 
 interface Money {
@@ -66,7 +69,7 @@ const SERVICE_TO_MODE: Record<ServiceType, ManualMode> = {
   ROAD: "ground",
   AIR: "air",
   SEA: "ocean",
-  DOOR_TO_DOOR: "ground",
+  DOOR_TO_DOOR: "parcel",
 };
 
 function inferContainerType(
@@ -160,6 +163,16 @@ export default function NewDelivery() {
 
   // ── Validation ─────────────────────────────────────────────────────────────
 
+  const isSameLocation = () => {
+    const norm = (s: string) => s.trim().toLowerCase();
+    return (
+      norm(formData.originCity) === norm(formData.destCity) &&
+      norm(formData.originState) === norm(formData.destState) &&
+      norm(formData.originCountry) === norm(formData.destCountry) &&
+      norm(formData.originCity) !== ""
+    );
+  };
+
   const canProceedStep1 = () =>
     !!(
       formData.originStreet &&
@@ -170,7 +183,7 @@ export default function NewDelivery() {
       formData.destCity &&
       formData.destState &&
       formData.destCountry
-    );
+    ) && !isSameLocation();
 
   const canProceedStep2 = () =>
     !!(formData.packageType && formData.weight && formData.serviceType);
@@ -387,19 +400,18 @@ Please provide pricing for this shipment. Thank you!`;
       const w = parseFloat(formData.width);
       const h = parseFloat(formData.height);
 
+      const hasDims =
+        Number.isFinite(l) && l > 0 && Number.isFinite(w) && Number.isFinite(h);
+      const volumeCbm = hasDims ? (l * w * h) / 1_000_000 : undefined;
+
       const payload: ManualQuoteRequest = {
         mode: SERVICE_TO_MODE[st],
         origin: `${formData.originCity}, ${formData.originCountry}`,
         destination: `${formData.destCity}, ${formData.destCountry}`,
         weightKg:
           Number.isFinite(weightKg) && weightKg > 0 ? weightKg : undefined,
-        dimensionsCm:
-          Number.isFinite(l) &&
-          l > 0 &&
-          Number.isFinite(w) &&
-          Number.isFinite(h)
-            ? { length: l, width: w, height: h }
-            : undefined,
+        dimensionsCm: hasDims ? { length: l, width: w, height: h } : undefined,
+        volumeCbm,
         containerType: inferContainerType(formData.packageType),
         isExpress: st === "AIR" ? false : undefined,
       };
@@ -732,6 +744,22 @@ Please provide pricing for this shipment. Thank you!`;
                     </div>
                   </div>
                 </div>
+
+                {/* Same-location warning */}
+                {isSameLocation() && (
+                  <div
+                    className="flex items-center gap-2 mt-4 p-3 rounded-lg text-sm"
+                    style={{
+                      background: "rgba(239,68,68,0.12)",
+                      border: "1px solid rgba(239,68,68,0.3)",
+                      color: "#f87171",
+                    }}
+                  >
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    Origin and destination cannot be the same city. Please
+                    update your addresses.
+                  </div>
+                )}
 
                 <div className="flex justify-end mt-6 sm:mt-8">
                   <button

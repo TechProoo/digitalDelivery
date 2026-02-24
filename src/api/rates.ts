@@ -12,8 +12,11 @@ export interface ManualQuoteRequest {
   destination: string;
   weightKg?: number;
   dimensionsCm?: { length: number; width: number; height: number };
+  volumeCbm?: number;
   containerType?: ManualContainerType;
+  distanceKm?: number;
   isExpress?: boolean;
+  freeText?: string;
 }
 
 export interface Money {
