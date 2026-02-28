@@ -484,7 +484,7 @@ const Support = () => {
                 title: "Call Us",
                 description: "Speak directly with a support agent",
                 action: "+1 (800) 555-1234",
-                href: "tel:+18005551234",
+                href: "tel:+2348135699955",
                 border: true,
               },
               {
