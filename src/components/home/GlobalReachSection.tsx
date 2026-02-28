@@ -62,7 +62,7 @@ export default function GlobalReachSection() {
               We Power the
               <br />
               <span style={{ color: "var(--accent-teal)" }}>
-                Largest Networks
+                Largest Logistics Networks
               </span>{" "}
               in the
               <br />
