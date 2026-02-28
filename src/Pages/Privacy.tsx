@@ -495,7 +495,7 @@ export default function Privacy() {
                   <p className="mt-1 text-sm sm:text-base">
                     Email:{" "}
                     <span style={{ color: "hsl(var(--primary))" }}>
-                      support@yourdomain.com
+                      support@digitaldelivery.org
                     </span>
                     <br />
                     Subject:{" "}
@@ -504,7 +504,7 @@ export default function Privacy() {
 
                   <div className="mt-4 flex flex-col sm:flex-row gap-3">
                     <a
-                      href="mailto:support@yourdomain.com?subject=Privacy%20Request"
+                      href="mailto:support@digitaldelivery.org?subject=Privacy%20Request"
                       className="inline-flex items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold transition"
                       style={{
                         background: "hsl(var(--primary))",

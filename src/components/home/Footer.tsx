@@ -54,15 +54,15 @@ const Footer = () => {
           <h4 className="text-(--text-primary) font-semibold mb-2">Contact</h4>
           <a
             className="text-sm hover:underline"
-            href="mailto:support@DigitalDelivery.example"
+            href="mailto:support@digitaldelivery.org"
           >
-            support@DigitalDelivery.example
+            support@digitaldelivery.org
           </a>
           <a
             className="text-sm mt-2 block hover:underline"
-            href="tel:+15551234567"
+            href="tel:+2348135699955"
           >
-            +1 (555) 123-4567
+            +2348135699955
           </a>
         </div>
       </div>
