@@ -483,7 +483,7 @@ const Support = () => {
                 color: "hsl(var(--success))",
                 title: "Call Us",
                 description: "Speak directly with a support agent",
-                action: "+1 (800) 555-1234",
+                action: "+ 234 8135699955",
                 href: "tel:+2348135699955",
                 border: true,
               },
