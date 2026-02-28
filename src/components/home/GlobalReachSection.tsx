@@ -59,7 +59,7 @@ export default function GlobalReachSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             >
-              We Power One of the
+              We Power the
               <br />
               <span style={{ color: "var(--accent-teal)" }}>
                 Largest Networks
