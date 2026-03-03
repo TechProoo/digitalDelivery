@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Country, State } from "country-state-city";
 import { Sidebar } from "../components/dashboard/sidebar";
 import {
   MapPin,
@@ -156,8 +157,28 @@ export default function NewDelivery() {
     },
   ];
 
+  const allCountries = useMemo(() => Country.getAllCountries(), []);
+
+  const originStates = useMemo(() => {
+    const c = allCountries.find((x) => x.name === formData.originCountry);
+    return c ? State.getStatesOfCountry(c.isoCode) : [];
+  }, [formData.originCountry, allCountries]);
+
+  const destStates = useMemo(() => {
+    const c = allCountries.find((x) => x.name === formData.destCountry);
+    return c ? State.getStatesOfCountry(c.isoCode) : [];
+  }, [formData.destCountry, allCountries]);
+
   const updateFormData = (field: keyof FormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => {
+      const next = { ...prev, [field]: value };
+      // Reset state when country changes
+      if (field === "originCountry" && value !== prev.originCountry)
+        next.originState = "";
+      if (field === "destCountry" && value !== prev.destCountry)
+        next.destState = "";
+      return next;
+    });
     setBackendQuote(null); // clear stale estimate on every edit
   };
 
@@ -629,53 +650,114 @@ Please provide pricing for this shipment. Thank you!`;
                       </h3>
                     </div>
                     <div className="space-y-3 sm:space-y-4">
-                      {(
-                        [
-                          {
-                            field: "originStreet",
-                            label: "Street",
-                            placeholder: "e.g., 12 Harbor Road",
-                          },
-                          {
-                            field: "originCity",
-                            label: "City",
-                            placeholder: "e.g., Shanghai",
-                          },
-                          {
-                            field: "originState",
-                            label: "State",
-                            placeholder: "e.g., Guangdong",
-                          },
-                          {
-                            field: "originCountry",
-                            label: "Country",
-                            placeholder: "e.g., China",
-                          },
-                        ] as const
-                      ).map(({ field, label, placeholder }) => (
-                        <div key={field}>
-                          <label
-                            className="block text-xs sm:text-sm font-medium mb-2 uppercase"
-                            style={{ color: "var(--text-secondary)" }}
-                          >
-                            {label}
-                          </label>
-                          <input
-                            type="text"
-                            placeholder={placeholder}
-                            value={formData[field]}
-                            onChange={(e) =>
-                              updateFormData(field, e.target.value)
-                            }
-                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
-                            style={{
-                              background: "rgba(0,0,0,0.3)",
-                              border: "1px solid var(--border-soft)",
-                              color: "var(--text-primary)",
-                            }}
-                          />
-                        </div>
-                      ))}
+                      {/* Country */}
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Country
+                        </label>
+                        <select
+                          value={formData.originCountry}
+                          onChange={(e) =>
+                            updateFormData("originCountry", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                          }}
+                        >
+                          <option value="">Select country</option>
+                          {allCountries.map((c) => (
+                            <option key={c.isoCode} value={c.name}>
+                              {c.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      {/* State */}
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          State
+                        </label>
+                        <select
+                          value={formData.originState}
+                          disabled={!formData.originCountry}
+                          onChange={(e) =>
+                            updateFormData("originState", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                            opacity: formData.originCountry ? 1 : 0.5,
+                          }}
+                        >
+                          <option value="">
+                            {originStates.length
+                              ? "Select state"
+                              : "No states available"}
+                          </option>
+                          {originStates.map((s) => (
+                            <option key={s.isoCode} value={s.name}>
+                              {s.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      {/* City */}
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          City
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., Shanghai"
+                          value={formData.originCity}
+                          onChange={(e) =>
+                            updateFormData("originCity", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                          }}
+                        />
+                      </div>
+                      {/* Street */}
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Street
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., 12 Harbor Road"
+                          value={formData.originStreet}
+                          onChange={(e) =>
+                            updateFormData("originStreet", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -694,53 +776,114 @@ Please provide pricing for this shipment. Thank you!`;
                       </h3>
                     </div>
                     <div className="space-y-3 sm:space-y-4">
-                      {(
-                        [
-                          {
-                            field: "destStreet",
-                            label: "Street",
-                            placeholder: "e.g., 500 Sunset Blvd",
-                          },
-                          {
-                            field: "destCity",
-                            label: "City",
-                            placeholder: "e.g., Los Angeles",
-                          },
-                          {
-                            field: "destState",
-                            label: "State",
-                            placeholder: "e.g., California",
-                          },
-                          {
-                            field: "destCountry",
-                            label: "Country",
-                            placeholder: "e.g., United States",
-                          },
-                        ] as const
-                      ).map(({ field, label, placeholder }) => (
-                        <div key={field}>
-                          <label
-                            className="block text-xs sm:text-sm font-medium mb-2 uppercase"
-                            style={{ color: "var(--text-secondary)" }}
-                          >
-                            {label}
-                          </label>
-                          <input
-                            type="text"
-                            placeholder={placeholder}
-                            value={formData[field]}
-                            onChange={(e) =>
-                              updateFormData(field, e.target.value)
-                            }
-                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
-                            style={{
-                              background: "rgba(0,0,0,0.3)",
-                              border: "1px solid var(--border-soft)",
-                              color: "var(--text-primary)",
-                            }}
-                          />
-                        </div>
-                      ))}
+                      {/* Country */}
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Country
+                        </label>
+                        <select
+                          value={formData.destCountry}
+                          onChange={(e) =>
+                            updateFormData("destCountry", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                          }}
+                        >
+                          <option value="">Select country</option>
+                          {allCountries.map((c) => (
+                            <option key={c.isoCode} value={c.name}>
+                              {c.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      {/* State */}
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          State
+                        </label>
+                        <select
+                          value={formData.destState}
+                          disabled={!formData.destCountry}
+                          onChange={(e) =>
+                            updateFormData("destState", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                            opacity: formData.destCountry ? 1 : 0.5,
+                          }}
+                        >
+                          <option value="">
+                            {destStates.length
+                              ? "Select state"
+                              : "No states available"}
+                          </option>
+                          {destStates.map((s) => (
+                            <option key={s.isoCode} value={s.name}>
+                              {s.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      {/* City */}
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          City
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., Los Angeles"
+                          value={formData.destCity}
+                          onChange={(e) =>
+                            updateFormData("destCity", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                          }}
+                        />
+                      </div>
+                      {/* Street */}
+                      <div>
+                        <label
+                          className="block text-xs sm:text-sm font-medium mb-2 uppercase"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Street
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., 500 Sunset Blvd"
+                          value={formData.destStreet}
+                          onChange={(e) =>
+                            updateFormData("destStreet", e.target.value)
+                          }
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none transition-all text-sm sm:text-base"
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--border-soft)",
+                            color: "var(--text-primary)",
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

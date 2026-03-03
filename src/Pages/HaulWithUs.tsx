@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import {
+  AtSign,
   Bike,
   Car,
   CheckCircle2,
@@ -20,7 +21,7 @@ import {
 } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
-import { driversApi } from "../api";
+import { driversApi, r2Api } from "../api";
 
 type VehicleType = "VAN" | "BIKE" | "LORRY" | "TRUCK";
 
@@ -287,6 +288,8 @@ export default function HaulWithUs() {
 
   // Driver
   const [driverName, setDriverName] = useState("");
+  const [driverEmail, setDriverEmail] = useState("");
+  const [driverPhone, setDriverPhone] = useState("");
   const [driverAddress, setDriverAddress] = useState("");
 
   // Guarantor
@@ -311,6 +314,7 @@ export default function HaulWithUs() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null);
 
   const pickFile = (key: FileKey, file: File | null) =>
     setFiles((s) => ({ ...s, [key]: file }));
@@ -328,6 +332,10 @@ export default function HaulWithUs() {
     }
     if (s === 1) {
       if (!driverName.trim()) return "Driver name is required.";
+      if (!driverEmail.trim()) return "Driver email is required.";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(driverEmail.trim()))
+        return "Please enter a valid email address.";
+      if (!driverPhone.trim()) return "Driver phone number is required.";
       if (!driverAddress.trim()) return "Driver address is required.";
       if (!files.driversLicense) return "Driver's license is required.";
       if (!files.meansOfId) return "Means of ID is required.";
@@ -362,23 +370,72 @@ export default function HaulWithUs() {
   };
 
   const handleSubmit = async () => {
+    // Re-validate all steps before sending
+    for (let s = 0; s < 3; s++) {
+      const err = validateStep(s);
+      if (err) {
+        setSubmitError(err);
+        setStep(s);
+        return;
+      }
+    }
+
     setSubmitError(null);
     setSubmitting(true);
+    setUploadProgress(null);
+
     try {
-      const data = new FormData();
-      data.append("vehicleType", vehicleType);
-      data.append("plateNumber", plateNumber.trim());
-      data.append("driverName", driverName.trim());
-      data.append("driverAddress", driverAddress.trim());
-      data.append("guarantorName", guarantorName.trim());
-      data.append("guarantorAddress", guarantorAddress.trim());
-      data.append("guarantorPhone", guarantorPhone.trim());
-      data.append("guarantorNin", guarantorNin.trim());
-      (Object.keys(files) as FileKey[]).forEach((k) => {
-        const f = files[k];
-        if (f) data.append(k, f);
+      // ── 1. Upload files directly to R2 ──
+      const fileEntries = (
+        Object.entries(files) as [FileKey, File | null][]
+      ).filter(([, f]) => f !== null) as [FileKey, File][];
+
+      const totalFiles = fileEntries.length;
+      const uploadedKeys: Record<string, string> = {};
+
+      for (let i = 0; i < totalFiles; i++) {
+        const [key, file] = fileEntries[i];
+        setUploadProgress(`Uploading file ${i + 1} of ${totalFiles}…`);
+        const r2Key = await r2Api.uploadFileToR2(file, "drivers");
+        uploadedKeys[key] = r2Key;
+      }
+
+      // Map FileKey → DB column names
+      const FILE_KEY_TO_PATH: Record<FileKey, string> = {
+        proofOfOwnership: "proofOfOwnershipPath",
+        vehicleLicense: "vehicleLicensePath",
+        hackneyPermit: "hackneyPermitPath",
+        vehicleInsurance: "vehicleInsurancePath",
+        vehicleVideo: "vehicleVideoPath",
+        driversLicense: "driversLicensePath",
+        meansOfId: "meansOfIdPath",
+        driverFacePhoto: "driverFacePhotoPath",
+        driverFullBodyPhoto: "driverFullBodyPhotoPath",
+        guarantorMeansOfId: "guarantorMeansOfIdPath",
+      };
+
+      const pathFields: Record<string, string> = {};
+      for (const [fileKey, r2Key] of Object.entries(uploadedKeys)) {
+        const dbField = FILE_KEY_TO_PATH[fileKey as FileKey];
+        if (dbField) pathFields[dbField] = r2Key;
+      }
+
+      // ── 2. Submit application (JSON, no files) ──
+      setUploadProgress("Submitting application…");
+      await driversApi.submitApplication({
+        vehicleType,
+        plateNumber: plateNumber.trim(),
+        driverName: driverName.trim(),
+        driverEmail: driverEmail.trim(),
+        driverPhone: driverPhone.trim(),
+        driverAddress: driverAddress.trim(),
+        guarantorName: guarantorName.trim(),
+        guarantorAddress: guarantorAddress.trim(),
+        guarantorPhone: guarantorPhone.trim(),
+        guarantorNin: guarantorNin.trim(),
+        ...pathFields,
       });
-      await driversApi.submitApplication(data);
+
       setSubmitted(true);
     } catch (err: any) {
       const msg =
@@ -388,6 +445,7 @@ export default function HaulWithUs() {
       setSubmitError(String(msg));
     } finally {
       setSubmitting(false);
+      setUploadProgress(null);
     }
   };
 
@@ -396,6 +454,8 @@ export default function HaulWithUs() {
     { label: "Vehicle type", value: vehicleType || "—" },
     { label: "Plate number", value: plateNumber || "—" },
     { label: "Driver name", value: driverName || "—" },
+    { label: "Driver email", value: driverEmail || "—" },
+    { label: "Driver phone", value: driverPhone || "—" },
     { label: "Driver address", value: driverAddress || "—" },
     { label: "Guarantor name", value: guarantorName || "—" },
     { label: "Guarantor phone", value: guarantorPhone || "—" },
@@ -635,6 +695,20 @@ export default function HaulWithUs() {
                 </div>
               )}
 
+              {uploadProgress && !submitError && (
+                <div
+                  className="mb-6 rounded-2xl px-4 py-3 text-sm font-medium flex items-center gap-3"
+                  style={{
+                    background: "hsl(var(--primary) / 0.08)",
+                    border: "1px solid hsl(var(--primary) / 0.2)",
+                    color: "var(--accent-teal)",
+                  }}
+                >
+                  <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                  {uploadProgress}
+                </div>
+              )}
+
               {/* ── Step 0: Vehicle ── */}
               {step === 0 && (
                 <div className="slide-in space-y-6">
@@ -831,6 +905,36 @@ export default function HaulWithUs() {
                           value={driverName}
                           onChange={(e) => setDriverName(e.target.value)}
                           placeholder="Full name"
+                          className={`${inputBase} haul-input pl-10`}
+                        />
+                      </div>
+                    </Field>
+                    <Field label="Email address">
+                      <div className="relative">
+                        <AtSign
+                          className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4"
+                          style={{ color: "var(--text-tertiary)" }}
+                        />
+                        <input
+                          type="email"
+                          value={driverEmail}
+                          onChange={(e) => setDriverEmail(e.target.value)}
+                          placeholder="you@example.com"
+                          className={`${inputBase} haul-input pl-10`}
+                        />
+                      </div>
+                    </Field>
+                    <Field label="Phone number (WhatsApp)">
+                      <div className="relative">
+                        <Phone
+                          className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4"
+                          style={{ color: "var(--text-tertiary)" }}
+                        />
+                        <input
+                          type="tel"
+                          value={driverPhone}
+                          onChange={(e) => setDriverPhone(e.target.value)}
+                          placeholder="+2348135699955"
                           className={`${inputBase} haul-input pl-10`}
                         />
                       </div>
@@ -1109,7 +1213,7 @@ export default function HaulWithUs() {
                     {submitting ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        Submitting…
+                        {uploadProgress || "Submitting…"}
                       </>
                     ) : (
                       <>

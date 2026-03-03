@@ -1,10 +1,10 @@
 import { apiClient } from "./client";
 
-export async function submitApplication(form: FormData) {
-  return apiClient.post("/drivers/applications", form, {
-    headers: {
-      // Let Axios/browser set the correct multipart boundary
-      "Content-Type": "multipart/form-data",
-    },
-  });
+/**
+ * Submit a driver application.
+ * Files have already been uploaded to R2 — this sends JSON with
+ * text fields + R2 object keys for each document.
+ */
+export async function submitApplication(payload: Record<string, string>) {
+  return apiClient.post("/drivers/applications", payload);
 }
