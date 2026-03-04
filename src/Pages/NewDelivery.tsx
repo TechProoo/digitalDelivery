@@ -359,7 +359,7 @@ export default function NewDelivery() {
   // ── WhatsApp message ───────────────────────────────────────────────────────
 
   const buildWhatsAppMessage = (opts?: { trackingId?: string }) => {
-    const companyWhatsApp = "2349010191502";
+    const companyWhatsApp = "2348135699955";
     const serviceTypeLabel = formData.serviceType
       ? SERVICE_TYPE_LABELS[formData.serviceType]
       : "Not specified";
