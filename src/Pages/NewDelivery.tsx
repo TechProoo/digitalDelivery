@@ -427,8 +427,8 @@ Please provide pricing for this shipment. Thank you!`;
 
       const payload: ManualQuoteRequest = {
         mode: SERVICE_TO_MODE[st],
-        origin: `${formData.originCity}, ${formData.originCountry}`,
-        destination: `${formData.destCity}, ${formData.destCountry}`,
+        origin: `${formData.originCity}, ${formData.originState}, ${formData.originCountry}`,
+        destination: `${formData.destCity}, ${formData.destState}, ${formData.destCountry}`,
         weightKg:
           Number.isFinite(weightKg) && weightKg > 0 ? weightKg : undefined,
         dimensionsCm: hasDims ? { length: l, width: w, height: h } : undefined,
