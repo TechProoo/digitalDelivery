@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- Core pages -->
   <url>
     <loc>https://digitaldelivery.org/</loc>
     <changefreq>weekly</changefreq>
@@ -9,30 +10,97 @@
 
   <url>
     <loc>https://digitaldelivery.org/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://digitaldelivery.org/services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://digitaldelivery.org/solutions</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://digitaldelivery.org/how-it-works</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Service pages -->
+  <url>
+    <loc>https://digitaldelivery.org/shipping</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <url>
+    <loc>https://digitaldelivery.org/fulfilment</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://digitaldelivery.org/tracking</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Content pages -->
+  <url>
     <loc>https://digitaldelivery.org/resources</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
 
   <url>
     <loc>https://digitaldelivery.org/articles</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
 
+  <!-- Support & contact -->
   <url>
     <loc>https://digitaldelivery.org/support</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 
   <url>
     <loc>https://digitaldelivery.org/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Partner -->
+  <url>
+    <loc>https://digitaldelivery.org/haul-with-us</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Legal -->
+  <url>
+    <loc>https://digitaldelivery.org/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://digitaldelivery.org/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://digitaldelivery.org/security</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 
 </urlset>
