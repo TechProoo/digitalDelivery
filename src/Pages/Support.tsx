@@ -16,6 +16,7 @@ import {
 import Footer from "../components/home/Footer";
 import Navbar from "../components/home/Navbar";
 import { SUPPORT_CATEGORIES } from "../data/supportCategories";
+import SEO from "../components/SEO";
 
 const Support = () => {
   const [query, setQuery] = useState("");
@@ -112,6 +113,11 @@ const Support = () => {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title="Help & Support Centre"
+        description="Find answers to common questions about shipping, tracking, billing, and account management in the Digital Delivery Help Centre."
+        canonical="/support"
+      />
       <Navbar />
 
       {/* Hero */}

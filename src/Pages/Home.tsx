@@ -17,10 +17,16 @@ import Bg2 from "../assets/road.png";
 import Bg3 from "../assets/door.png";
 import Bg4 from "../assets/cargo1.png";
 import { motion } from "framer-motion";
+import SEO from "../components/SEO";
 
 const Home = () => {
   return (
     <div>
+      <SEO
+        title="Digital Delivery | International Logistics & Real-Time Shipment Tracking"
+        description="Nigeria-based international logistics company offering fast door-to-door shipping, real-time shipment tracking, customs clearance, and cross-border delivery worldwide."
+        canonical="/"
+      />
       <div className="home_container">
         <HomeBackgroundCarousel images={[Bg1, Bg2, Bg3, Bg4]} />
         <Navbar />

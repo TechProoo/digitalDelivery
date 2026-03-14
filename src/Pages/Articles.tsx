@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Clock, Search, Tag } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 
 import {
   ARTICLES,
@@ -55,6 +56,11 @@ export default function Articles() {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title="Logistics Blog & Insights"
+        description="Read the latest logistics news, shipping guides, and industry insights from the Digital Delivery team."
+        canonical="/articles"
+      />
       <Navbar />
 
       <section

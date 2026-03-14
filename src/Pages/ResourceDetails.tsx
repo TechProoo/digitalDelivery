@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
+import SEO from "../components/SEO";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
 import { getResourceById } from "../data/resources";
@@ -94,6 +95,18 @@ const ResourceDetails = () => {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title={resource.title}
+        description={resource.excerpt}
+        canonical={`/resources/${resource.id}`}
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": resource.title,
+          "author": { "@type": "Organization", "name": "Digital Delivery" },
+          "publisher": { "@type": "Organization", "name": "Digital Delivery" },
+        }}
+      />
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">

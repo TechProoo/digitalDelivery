@@ -8,6 +8,7 @@ import Footer from "../components/home/Footer";
 import { useState } from "react";
 // import { useAuth } from "@/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
+import SEO from "../components/SEO";
 
 const Services = () => {
   const navigate = useNavigate();
@@ -22,6 +23,11 @@ const Services = () => {
   return (
     <div className="">
       <div className="services_container">
+        <SEO
+          title="Logistics Services"
+          description="Explore Digital Delivery's logistics services — air freight, ocean freight, road transport, door-to-door shipping, and customs clearance for individuals and businesses."
+          canonical="/services"
+        />
         <Navbar />
         <div className="hero_container md:p-10 p-3">
           <div className="hero_text">

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 import { SUPPORT_ARTICLES } from "../data/supportArticles";
 import { getSupportCategoryById } from "../data/supportCategories";
 
@@ -66,6 +67,13 @@ const SupportCategoryPage = () => {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      {category && (
+        <SEO
+          title={`${category.title} – Support`}
+          description={category.description}
+          canonical={`/support/categories/${category.id}`}
+        />
+      )}
       <Navbar />
 
       {/* Hero */}

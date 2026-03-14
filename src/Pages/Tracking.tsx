@@ -3,6 +3,7 @@ import { Search, ShieldCheck, Timer, Route } from "lucide-react";
 import { useState } from "react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 
 export default function Tracking() {
   const [trackingNumber, setTrackingNumber] = useState("");
@@ -19,6 +20,11 @@ export default function Tracking() {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title="Track Your Shipment"
+        description="Track your Digital Delivery shipment in real time. Enter your tracking number for live status updates, current location, and estimated delivery time."
+        canonical="/tracking"
+      />
       <Navbar />
 
       <section

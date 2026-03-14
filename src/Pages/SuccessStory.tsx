@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 import { SUCCESS_STORIES, getSuccessStoryById } from "../data/successStories";
 
 function estimateReadingTimeMinutes(text: string) {
@@ -41,6 +42,14 @@ export default function SuccessStory() {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      {story && (
+        <SEO
+          title={story.title}
+          description={story.summary}
+          canonical={`/success-stories/${story.id}`}
+          ogType="article"
+        />
+      )}
       <Navbar />
 
       <section

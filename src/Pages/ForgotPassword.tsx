@@ -5,6 +5,7 @@ import Logo from "../assets/logo_2.png";
 import { useAuth } from "../auth/AuthContext";
 import { forgotPassword } from "../api/auth";
 import AppLoader from "../components/loader/AppLoader";
+import SEO from "../components/SEO";
 
 const ForgotPassword = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -48,6 +49,12 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen bg-(--bg-primary) grid grid-cols-12">
+      <SEO
+        title="Reset Password"
+        description="Reset your Digital Delivery account password."
+        canonical="/forgot-password"
+        noindex={true}
+      />
       <div className="md:col-span-6 min-h-screen hidden md:block">
         <div className="login_img min-h-screen"></div>
       </div>

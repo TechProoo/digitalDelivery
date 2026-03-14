@@ -6,6 +6,7 @@ import Logo from "../assets/logo_2.png";
 import { useAuth } from "../auth/AuthContext";
 import AppLoader from "../components/loader/AppLoader";
 import { clearAccessToken } from "../lib/authToken";
+import SEO from "../components/SEO";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -64,6 +65,12 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-(--bg-primary) grid grid-cols-12">
+      <SEO
+        title="Log In"
+        description="Log in to your Digital Delivery account to manage shipments, track packages, and access your dashboard."
+        canonical="/login"
+        noindex={true}
+      />
       <div className="md:col-span-6 min-h-screen hidden md:block">
         <div className="login_img min-h-screen"></div>
       </div>

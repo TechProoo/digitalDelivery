@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Boxes, ClipboardList, PackageCheck } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 
 export default function Fulfilment() {
   return (
@@ -9,6 +10,11 @@ export default function Fulfilment() {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title="Fulfilment Services"
+        description="End-to-end fulfilment services from Digital Delivery — warehousing, inventory management, pick & pack, and last-mile delivery for your e-commerce business."
+        canonical="/fulfilment"
+      />
       <Navbar />
 
       <section

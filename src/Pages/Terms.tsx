@@ -1,5 +1,6 @@
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 
 export default function Terms() {
   return (
@@ -7,6 +8,11 @@ export default function Terms() {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title="Terms of Service"
+        description="Digital Delivery's terms of service governing your use of our logistics platform, shipping services, and website."
+        canonical="/terms"
+      />
       <Navbar />
 
       <section

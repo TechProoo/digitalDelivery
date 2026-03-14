@@ -1,9 +1,17 @@
 import { Link, useLocation } from "react-router-dom";
+import SEO from "../components/SEO";
 
 const NotFound = () => {
   const location = useLocation();
 
   return (
+    <>
+      <SEO
+        title="Page Not Found"
+        description="The page you're looking for doesn't exist or has been moved. Return to Digital Delivery's homepage."
+        canonical="/404"
+        noindex={true}
+      />
     <div className="min-h-screen bg-(--bg-primary) flex items-center justify-center px-4">
       <div className="w-full max-w-lg rounded-2xl border border-(--border-soft) bg-(--bg-secondary) p-8 shadow-strong">
         <div className="text-center">
@@ -43,6 +51,7 @@ const NotFound = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 
 const LAST_UPDATED = "February 11, 2026";
 
@@ -65,6 +66,11 @@ export default function Privacy() {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title="Privacy Policy"
+        description="Digital Delivery's privacy policy — how we collect, use, and protect your personal data in accordance with applicable data protection laws."
+        canonical="/privacy"
+      />
       <Navbar />
 
       {/* HERO */}

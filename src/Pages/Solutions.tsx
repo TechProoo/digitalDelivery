@@ -1,6 +1,7 @@
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
 import Cta from "../components/home/Cta";
+import SEO from "../components/SEO";
 import {
   ArrowRight,
   Boxes,
@@ -154,6 +155,11 @@ export default function Solutions() {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title="Logistics Solutions"
+        description="Digital Delivery's logistics solutions power your supply chain — from transport management systems and AI-driven operations to real-time network visibility and fleet intelligence."
+        canonical="/solutions"
+      />
       <Navbar />
 
       {/* HERO */}

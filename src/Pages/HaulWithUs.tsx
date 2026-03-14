@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import SEO from "../components/SEO";
 import {
   AtSign,
   Bike,
@@ -397,6 +398,7 @@ export default function HaulWithUs() {
         const [key, file] = fileEntries[i];
         setUploadProgress(`Uploading file ${i + 1} of ${totalFiles}…`);
         const r2Key = await r2Api.uploadFileToR2(file, "drivers");
+
         uploadedKeys[key] = r2Key;
       }
 
@@ -469,6 +471,11 @@ export default function HaulWithUs() {
 
   return (
     <>
+      <SEO
+        title="Become a Driver Partner"
+        description="Join Digital Delivery's driver network. Register your vehicle and start earning by hauling local and international deliveries on your own schedule."
+        canonical="/haul-with-us"
+      />
       {/* Google fonts */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600&display=swap');

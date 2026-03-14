@@ -6,6 +6,7 @@ import Logo from "../assets/logo_2.png";
 import { useAuth } from "../auth/AuthContext";
 import AppLoader from "../components/loader/AppLoader";
 import { clearAccessToken } from "../lib/authToken";
+import SEO from "../components/SEO";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -70,6 +71,12 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen bg-(--bg-primary) grid grid-cols-12">
+      <SEO
+        title="Create Account"
+        description="Create your Digital Delivery account to start booking shipments, tracking packages, and managing deliveries."
+        canonical="/signup"
+        noindex={true}
+      />
       <div className="md:col-span-6 min-h-screen  hidden md:block">
         <div className="signup_img min-h-screen"></div>
       </div>

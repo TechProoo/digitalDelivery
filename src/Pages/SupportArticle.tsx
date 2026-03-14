@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, ExternalLink } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 import {
   SUPPORT_ARTICLES,
   getSupportArticleById,
@@ -46,6 +47,13 @@ const SupportArticle = () => {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      {article && (
+        <SEO
+          title={article.title}
+          description={article.summary}
+          canonical={`/support/articles/${article.id}`}
+        />
+      )}
       <Navbar />
 
       <section

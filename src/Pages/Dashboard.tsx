@@ -1,5 +1,6 @@
 import Footer from "../components/home/Footer";
 import { useEffect, useMemo, useState } from "react";
+import SEO from "../components/SEO";
 import Sidebar from "../components/dashboard/sidebar";
 import {
   Package,
@@ -519,6 +520,12 @@ export default function Dashboard() {
 
   return (
     <Sidebar>
+      <SEO
+        title="Dashboard"
+        description="Manage your Digital Delivery shipments, track packages, and view your account dashboard."
+        canonical="/dashboard"
+        noindex={true}
+      />
       <div
         className="min-h-screen p-4 sm:p-6 lg:p-8 pb-20 lg:pb-8"
         style={{ background: "var(--bg-primary)" }}

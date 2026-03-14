@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Country, State } from "country-state-city";
 import { Sidebar } from "../components/dashboard/sidebar";
+import SEO from "../components/SEO";
 import {
   MapPin,
   Package,
@@ -520,6 +521,12 @@ Please provide pricing for this shipment. Thank you!`;
 
   return (
     <Sidebar>
+      <SEO
+        title="New Delivery"
+        description="Create a new shipment with Digital Delivery."
+        canonical="/dashboard/new-delivery"
+        noindex={true}
+      />
       <div
         className="min-h-screen p-4 sm:p-6 lg:p-8"
         style={{ background: "var(--bg-primary)" }}

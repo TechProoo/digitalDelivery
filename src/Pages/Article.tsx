@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
-
+import SEO from "../components/SEO";
 import { ARTICLES, getArticleById } from "../data/articles";
 
 function formatDate(dateIso: string) {
@@ -36,6 +36,22 @@ export default function Article() {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      {article && (
+        <SEO
+          title={article.title}
+          description={article.excerpt}
+          canonical={`/articles/${article.id}`}
+          ogType="article"
+          schema={{
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": article.title,
+            "datePublished": article.date,
+            "author": { "@type": "Organization", "name": "Digital Delivery" },
+            "publisher": { "@type": "Organization", "name": "Digital Delivery" },
+          }}
+        />
+      )}
       <Navbar />
 
       <section

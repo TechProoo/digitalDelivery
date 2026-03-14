@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Sidebar } from "../components/dashboard/sidebar";
+import SEO from "../components/SEO";
 import {
   Search,
   Package,
@@ -331,6 +332,12 @@ export default function TrackPackage() {
 
   return (
     <Sidebar>
+      <SEO
+        title="Track Package"
+        description="Track your shipment in real time with Digital Delivery."
+        canonical="/dashboard/track"
+        noindex={true}
+      />
       <div
         className="min-h-screen p-4 sm:p-6 lg:p-8"
         style={{ background: "var(--bg-primary)" }}

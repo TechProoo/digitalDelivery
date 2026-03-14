@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 import {
   BookOpen,
   Clock,
@@ -68,6 +69,11 @@ const Resources = () => {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title="Logistics Resources & Guides"
+        description="Download whitepapers, guides, and case studies on international shipping, customs clearance, and supply chain management from Digital Delivery."
+        canonical="/resources"
+      />
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">

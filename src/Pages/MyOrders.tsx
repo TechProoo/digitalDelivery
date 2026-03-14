@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Sidebar } from "../components/dashboard/sidebar";
+import SEO from "../components/SEO";
 import {
   Package,
   Search,
@@ -568,6 +569,12 @@ export default function MyOrders() {
 
   return (
     <Sidebar>
+      <SEO
+        title="My Orders"
+        description="View and manage your Digital Delivery orders."
+        canonical="/dashboard/orders"
+        noindex={true}
+      />
       <div
         className="min-h-screen p-4 sm:p-6 lg:p-8"
         style={{ background: "var(--bg-primary)" }}

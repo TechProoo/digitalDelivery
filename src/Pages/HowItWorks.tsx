@@ -1,4 +1,5 @@
 import { Globe, Search, Users, Zap } from "lucide-react";
+import SEO from "../components/SEO";
 import Navbar from "../components/home/Navbar";
 import HowItWorksComponents from "../components/home/HowItWorksComponents";
 import Cta from "../components/home/Cta";
@@ -7,6 +8,11 @@ import Footer from "../components/home/Footer";
 const HowItWorks = () => {
   return (
     <section className="hiw_cover">
+      <SEO
+        title="How It Works"
+        description="See how Digital Delivery works — from booking your shipment and customs clearance to real-time tracking and door-to-door delivery. Simple, fast, and reliable."
+        canonical="/how-it-works"
+      />
       <div className="hiw_container">
         <Navbar />
         <div className="hero_container p-10">

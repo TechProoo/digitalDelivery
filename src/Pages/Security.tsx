@@ -1,5 +1,6 @@
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 
 export default function Security() {
   return (
@@ -7,6 +8,11 @@ export default function Security() {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title="Security"
+        description="Learn how Digital Delivery protects your account, data, and shipments with enterprise-grade security practices and encryption."
+        canonical="/security"
+      />
       <Navbar />
 
       <section

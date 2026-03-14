@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Globe, ShieldCheck, Truck } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 
 export default function Shipping() {
   return (
@@ -9,6 +10,11 @@ export default function Shipping() {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title="International Shipping"
+        description="Ship packages internationally with Digital Delivery. Fast, reliable door-to-door shipping with real-time tracking, customs clearance support, and competitive rates."
+        canonical="/shipping"
+      />
       <Navbar />
 
       <section

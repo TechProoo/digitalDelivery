@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Building2, Clock, Headset, Mail, MapPin, Phone } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import Footer from "../components/home/Footer";
+import SEO from "../components/SEO";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -46,6 +47,11 @@ export default function Contact() {
       className="min-h-screen"
       style={{ background: "hsl(var(--background))" }}
     >
+      <SEO
+        title="Contact Us"
+        description="Get in touch with Digital Delivery. Contact our Lagos office or support team for shipping quotes, logistics inquiries, and customer service."
+        canonical="/contact"
+      />
       <Navbar />
 
       {/* Hero */}

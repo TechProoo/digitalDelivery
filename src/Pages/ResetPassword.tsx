@@ -11,6 +11,7 @@ import Logo from "../assets/logo_2.png";
 import { useAuth } from "../auth/AuthContext";
 import { resetPassword } from "../api/auth";
 import AppLoader from "../components/loader/AppLoader";
+import SEO from "../components/SEO";
 
 function getTokenFromLocation(location: ReturnType<typeof useLocation>) {
   const qsToken = new URLSearchParams(location.search).get("token");
@@ -83,6 +84,13 @@ const ResetPassword = () => {
   };
 
   return (
+    <>
+      <SEO
+        title="Reset Password"
+        description="Reset your Digital Delivery account password."
+        canonical="/reset-password"
+        noindex={true}
+      />
     <div className="min-h-screen bg-(--bg-primary) grid grid-cols-12">
       <div className="md:col-span-6 min-h-screen hidden md:block">
         <div className="login_img min-h-screen"></div>
@@ -222,6 +230,7 @@ const ResetPassword = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
