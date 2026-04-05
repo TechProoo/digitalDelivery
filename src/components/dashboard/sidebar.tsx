@@ -406,7 +406,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
               )}
             </button>
             <h1
-              className="text-xl font-semibold"
+              className="text-xl font-semibold hidden lg:block"
               style={{ color: "var(--text-primary)" }}
             >
               Dashboard
@@ -416,15 +416,33 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
           <div className="flex-1"></div>
 
           <div className="flex items-center gap-2">
+            <NavLink
+              to="/dashboard"
+              className="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+              style={{
+                backgroundColor: "var(--bg-tertiary)",
+                color: "var(--text-primary)",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(46,196,182,0.12)"; e.currentTarget.style.color = "var(--accent-teal)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "var(--bg-tertiary)"; e.currentTarget.style.color = "var(--text-primary)"; }}
+            >
+              Dashboard
+            </NavLink>
             <button
-              className="p-2 rounded-lg hover:bg-accent transition-colors"
+              className="px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors"
               aria-label="Logout"
               onClick={handleLogout}
+              style={{
+                backgroundColor: "rgba(239,68,68,0.08)",
+                color: "var(--status-failed)",
+                border: "none",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(239,68,68,0.15)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(239,68,68,0.08)"; }}
             >
-              <LogOut
-                className="h-5 w-5"
-                style={{ color: "var(--text-primary)" }}
-              />
+              <LogOut className="h-4 w-4" />
+              Logout
             </button>
           </div>
         </header>

@@ -248,9 +248,18 @@ export default function MyOrders() {
     });
   };
 
-  const formatNairaAmount = (amount: number | null | undefined) => {
+  const formatNairaAmount = (amount: number | null | undefined, currency?: string) => {
     if (amount == null || amount <= 0) return "Pending";
-    return `₦${amount.toLocaleString("en-NG")}`;
+    const cur = currency || "NGN";
+    try {
+      return new Intl.NumberFormat("en", {
+        style: "currency",
+        currency: cur,
+        maximumFractionDigits: 0,
+      }).format(amount);
+    } catch {
+      return `${cur} ${amount.toLocaleString()}`;
+    }
   };
 
   const loadOrders = async (customerId: string) => {
@@ -325,7 +334,7 @@ export default function MyOrders() {
         service,
         status,
         date: formatShortDate(shipment.createdAt),
-        amount: formatNairaAmount(shipment.amount),
+        amount: formatNairaAmount(shipment.amount, (shipment as any).currency),
         amountValue: Number(shipment.amount ?? 0),
         estimatedDelivery: "—",
         trackingNumber: shipment.trackingId,

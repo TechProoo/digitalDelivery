@@ -9,6 +9,10 @@ export const ShipmentStatus = {
   ACCEPTED: "ACCEPTED",
   PICKED_UP: "PICKED_UP",
   IN_TRANSIT: "IN_TRANSIT",
+  HANDED_OFF: "HANDED_OFF",
+  IN_AIR: "IN_AIR",
+  AT_SEA: "AT_SEA",
+  ARRIVED_HUB: "ARRIVED_HUB",
   DELIVERED: "DELIVERED",
   CANCELLED: "CANCELLED",
 } as const;
@@ -68,7 +72,9 @@ export interface Shipment {
   phone: string;
   receiverPhone: string | null;
   amount: number;
+  currency: string;
   customerId: string;
+  driverId: string | null;
   serviceType: ServiceType;
   status: ShipmentStatus;
   pickupLocation: string;
@@ -141,10 +147,12 @@ export interface CreateShipmentRequest {
   dimensions: string;
   phone: string;
   receiverPhone?: string;
-  /** Declared item value in Nigerian Naira (whole number). Optional. */
+  /** Declared item value (whole number). Optional. */
   declaredValueNgn?: number;
-  /** Amount in Nigerian Naira (whole number). Optional; can be set later by admin. */
+  /** Amount (whole number). Optional; can be set later by admin. */
   amount?: number;
+  /** ISO 4217 currency code. Defaults to NGN if omitted. */
+  currency?: string;
 }
 
 // Update shipment status request
@@ -175,6 +183,10 @@ export const STATUS_LABELS: Record<ShipmentStatus, string> = {
   [ShipmentStatus.ACCEPTED]: "Accepted",
   [ShipmentStatus.PICKED_UP]: "Picked Up",
   [ShipmentStatus.IN_TRANSIT]: "In Transit",
+  [ShipmentStatus.HANDED_OFF]: "Handed Off",
+  [ShipmentStatus.IN_AIR]: "In Air",
+  [ShipmentStatus.AT_SEA]: "At Sea",
+  [ShipmentStatus.ARRIVED_HUB]: "Arrived at Hub",
   [ShipmentStatus.DELIVERED]: "Delivered",
   [ShipmentStatus.CANCELLED]: "Cancelled",
 };
@@ -213,6 +225,26 @@ export const STATUS_COLORS: Record<
     text: "var(--status-delivered)",
     border: "var(--status-delivered)",
   },
+  [ShipmentStatus.HANDED_OFF]: {
+    bg: "rgba(249, 115, 22, 0.12)",
+    text: "#f97316",
+    border: "#f97316",
+  },
+  [ShipmentStatus.IN_AIR]: {
+    bg: "rgba(14, 165, 233, 0.12)",
+    text: "#0ea5e9",
+    border: "#0ea5e9",
+  },
+  [ShipmentStatus.AT_SEA]: {
+    bg: "rgba(37, 99, 235, 0.12)",
+    text: "#2563eb",
+    border: "#2563eb",
+  },
+  [ShipmentStatus.ARRIVED_HUB]: {
+    bg: "rgba(20, 184, 166, 0.12)",
+    text: "#14b8a6",
+    border: "#14b8a6",
+  },
   [ShipmentStatus.CANCELLED]: {
     bg: "rgba(0, 0, 0, 0.12)",
     text: "var(--status-failed)",
@@ -236,7 +268,19 @@ export const VALID_STATUS_TRANSITIONS: Record<
     ShipmentStatus.CANCELLED,
   ],
   [ShipmentStatus.IN_TRANSIT]: [
+    ShipmentStatus.HANDED_OFF,
     ShipmentStatus.DELIVERED,
+    ShipmentStatus.CANCELLED,
+  ],
+  [ShipmentStatus.HANDED_OFF]: [
+    ShipmentStatus.IN_AIR,
+    ShipmentStatus.AT_SEA,
+    ShipmentStatus.CANCELLED,
+  ],
+  [ShipmentStatus.IN_AIR]: [ShipmentStatus.ARRIVED_HUB],
+  [ShipmentStatus.AT_SEA]: [ShipmentStatus.ARRIVED_HUB],
+  [ShipmentStatus.ARRIVED_HUB]: [
+    ShipmentStatus.PICKED_UP,
     ShipmentStatus.CANCELLED,
   ],
   [ShipmentStatus.DELIVERED]: [], // Terminal state

@@ -54,3 +54,14 @@ export const socket = io(computeSocketUrl(), {
   transports: ["websocket"],
   autoConnect: false,
 });
+
+/** Socket for live delivery tracking — connects to /delivery namespace */
+export function createTrackingSocket() {
+  const baseUrl = computeSocketUrl().replace(/\/chat$/, "");
+  return io(`${baseUrl}/delivery`, {
+    transports: ["websocket", "polling"],
+    autoConnect: true,
+    reconnection: true,
+    reconnectionDelay: 2000,
+  });
+}

@@ -46,7 +46,7 @@ interface ManualQuoteRequest {
 
 interface Money {
   amount: number;
-  currency: "NGN";
+  currency: string;
 }
 
 interface BackendQuote {
@@ -98,6 +98,7 @@ interface FormData {
   height: string;
   declaredValueNgn: string;
   serviceType: ServiceType | "";
+  currency: string;
   userWhatsApp: string;
   receiverWhatsApp: string;
 }
@@ -131,9 +132,21 @@ export default function NewDelivery() {
     height: "",
     declaredValueNgn: "",
     serviceType: "",
+    currency: "NGN",
     userWhatsApp: "",
     receiverWhatsApp: "",
   });
+
+  const supportedCurrencies = [
+    { code: "NGN", label: "₦ NGN – Nigerian Naira", symbol: "₦" },
+    { code: "USD", label: "$ USD – US Dollar", symbol: "$" },
+    { code: "GBP", label: "£ GBP – British Pound", symbol: "£" },
+    { code: "EUR", label: "€ EUR – Euro", symbol: "€" },
+    { code: "CAD", label: "$ CAD – Canadian Dollar", symbol: "CA$" },
+    { code: "GHS", label: "₵ GHS – Ghanaian Cedi", symbol: "₵" },
+    { code: "KES", label: "KSh KES – Kenyan Shilling", symbol: "KSh" },
+    { code: "ZAR", label: "R ZAR – South African Rand", symbol: "R" },
+  ];
 
   const packageTypes = [
     { id: "parcel", label: "Parcel", icon: Package },
@@ -188,10 +201,11 @@ export default function NewDelivery() {
   const isSameLocation = () => {
     const norm = (s: string) => s.trim().toLowerCase();
     return (
+      norm(formData.originStreet) === norm(formData.destStreet) &&
       norm(formData.originCity) === norm(formData.destCity) &&
       norm(formData.originState) === norm(formData.destState) &&
       norm(formData.originCountry) === norm(formData.destCountry) &&
-      norm(formData.originCity) !== ""
+      norm(formData.originStreet) !== ""
     );
   };
 
@@ -303,14 +317,16 @@ export default function NewDelivery() {
     const high = roundTo(estimatedTotal * 1.15, 500);
 
     const formatNgn = (value: number) => {
+      const cur = formData.currency || "NGN";
       try {
-        return new Intl.NumberFormat("en-NG", {
+        return new Intl.NumberFormat("en", {
           style: "currency",
-          currency: "NGN",
+          currency: cur,
           maximumFractionDigits: 0,
         }).format(value);
       } catch {
-        return `₦${value.toFixed(0)}`;
+        const sym = supportedCurrencies.find((c) => c.code === cur)?.symbol ?? cur;
+        return `${sym}${value.toFixed(0)}`;
       }
     };
 
@@ -343,19 +359,24 @@ export default function NewDelivery() {
     formData.packageType,
   ]);
 
-  // ── Shared NGN formatter for backend values ────────────────────────────────
+  // ── Shared currency formatter ────────────────────────────────────────────
 
-  const formatNgn = (amount: number) => {
+  const formatAmount = (amount: number) => {
+    const cur = formData.currency || "NGN";
     try {
-      return new Intl.NumberFormat("en-NG", {
+      return new Intl.NumberFormat("en", {
         style: "currency",
-        currency: "NGN",
+        currency: cur,
         maximumFractionDigits: 0,
       }).format(amount);
     } catch {
-      return `₦${amount.toFixed(0)}`;
+      const sym = supportedCurrencies.find((c) => c.code === cur)?.symbol ?? cur;
+      return `${sym}${amount.toFixed(0)}`;
     }
   };
+
+  // Keep backward compatible alias
+  const formatNgn = formatAmount;
 
   // ── WhatsApp message ───────────────────────────────────────────────────────
 
@@ -387,7 +408,7 @@ export default function NewDelivery() {
 Type: ${formData.packageType}
 Weight: ${formData.weight} kg
 Dimensions: ${formData.length}×${formData.width}×${formData.height} cm
-Declared value: ${formData.declaredValueNgn.trim() ? `₦${formData.declaredValueNgn}` : "Not provided"}
+Declared value: ${formData.declaredValueNgn.trim() ? `${supportedCurrencies.find((c) => c.code === formData.currency)?.symbol ?? formData.currency}${formData.declaredValueNgn}` : "Not provided"}
 
 Service: ${serviceTypeLabel}${estimateLine}
 
@@ -478,6 +499,7 @@ Please provide pricing for this shipment. Thank you!`;
         phone: formData.userWhatsApp.trim(),
         receiverPhone: formData.receiverWhatsApp.trim(),
         declaredValueNgn,
+        currency: formData.currency,
       });
 
       const { whatsappUrl } = buildWhatsAppMessage({
@@ -906,7 +928,7 @@ Please provide pricing for this shipment. Thank you!`;
                     }}
                   >
                     <AlertCircle className="h-4 w-4 shrink-0" />
-                    Origin and destination cannot be the same city. Please
+                    Origin and destination cannot be the same address. Please
                     update your addresses.
                   </div>
                 )}
@@ -1051,13 +1073,37 @@ Please provide pricing for this shipment. Thank you!`;
                   ))}
                 </div>
 
+                {/* Currency */}
+                <div className="mb-4 sm:mb-6">
+                  <label
+                    className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-2 uppercase"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    <Package className="h-3 w-3 sm:h-4 sm:w-4" /> Currency
+                  </label>
+                  <select
+                    value={formData.currency}
+                    onChange={(e) => updateFormData("currency", e.target.value)}
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg outline-none text-sm sm:text-base"
+                    style={{
+                      background: "rgba(0,0,0,0.3)",
+                      border: "1px solid var(--border-soft)",
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {supportedCurrencies.map((c) => (
+                      <option key={c.code} value={c.code}>{c.label}</option>
+                    ))}
+                  </select>
+                </div>
+
                 {/* Declared Value */}
                 <div className="mb-4 sm:mb-6">
                   <label
                     className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-2 uppercase"
                     style={{ color: "var(--text-secondary)" }}
                   >
-                    <Package className="h-3 w-3 sm:h-4 sm:w-4" /> Item Value (₦)
+                    <Package className="h-3 w-3 sm:h-4 sm:w-4" /> Item Value ({supportedCurrencies.find((c) => c.code === formData.currency)?.symbol ?? formData.currency})
                   </label>
                   <input
                     type="number"

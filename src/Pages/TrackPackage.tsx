@@ -23,12 +23,14 @@ import {
   STATUS_LABELS,
   SERVICE_TYPE_LABELS,
 } from "../types/shipment";
+import LiveTrackingMap from "../components/tracking/LiveTrackingMap";
 import type { ShipmentWithRelations } from "../types/shipment";
 import { shipmentsApi } from "../api";
 
 interface TrackingData {
   trackingNumber: string;
   status: ShipmentStatus;
+  driverId: string | null;
   currentLocation: string;
   origin: string;
   destination: string;
@@ -102,6 +104,7 @@ function toTrackingData(shipment: ShipmentWithRelations): TrackingData {
   return {
     trackingNumber: shipment.trackingId,
     status: shipment.status,
+    driverId: shipment.driverId ?? null,
     currentLocation:
       latestCheckpoint?.location ??
       (shipment.status === ShipmentStatus.DELIVERED
@@ -131,6 +134,7 @@ const sampleTrackingData: { [key: string]: TrackingData } = {
   "DD-2024-001": {
     trackingNumber: "DD-2024-001",
     status: ShipmentStatus.IN_TRANSIT,
+    driverId: null,
     currentLocation: "Port Harcourt Hub",
     origin: "Lagos, Nigeria",
     destination: "Abuja, Nigeria",
@@ -188,6 +192,7 @@ const sampleTrackingData: { [key: string]: TrackingData } = {
   "DD-2024-002": {
     trackingNumber: "DD-2024-002",
     status: ShipmentStatus.DELIVERED,
+    driverId: null,
     currentLocation: "Delivered",
     origin: "Shanghai, China",
     destination: "Lagos, Nigeria",
@@ -875,6 +880,16 @@ export default function TrackPackage() {
                 </div>
               </div>
             </div>
+
+            {/* Live Tracking Map — shown when shipment is in transit */}
+            {trackingData.status === ShipmentStatus.IN_TRANSIT && (
+              <LiveTrackingMap
+                driverId={trackingData.driverId}
+                pickupLocation={trackingData.origin}
+                dropoffLocation={trackingData.destination}
+                status={trackingData.status}
+              />
+            )}
 
             {/* Package Details & Timeline Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
