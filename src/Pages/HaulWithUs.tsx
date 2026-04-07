@@ -38,6 +38,8 @@ type FileKey =
   | "driverFullBodyPhoto"
   | "guarantorMeansOfId";
 
+const MAX_VIDEO_UPLOAD_BYTES = 50 * 1024 * 1024;
+
 // ─── File Drop Field ──────────────────────────────────────────────────────────
 
 function FileField(props: {
@@ -317,8 +319,15 @@ export default function HaulWithUs() {
   const [submitted, setSubmitted] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string | null>(null);
 
-  const pickFile = (key: FileKey, file: File | null) =>
+  const pickFile = (key: FileKey, file: File | null) => {
+    if (key === "vehicleVideo" && file && file.size > MAX_VIDEO_UPLOAD_BYTES) {
+      setSubmitError("Vehicle video must be 50 MB or less.");
+      return;
+    }
+
+    setSubmitError(null);
     setFiles((s) => ({ ...s, [key]: file }));
+  };
 
   // Per-step validation
   const validateStep = (s: number): string | null => {
@@ -871,7 +880,7 @@ export default function HaulWithUs() {
                       label="1-minute video of vehicle"
                       required
                       accept="video/*"
-                      hint="MP4, MOV — max 100 MB"
+                      hint="MP4, MOV — max 50 MB"
                       icon={<Video className="h-4 w-4" />}
                       file={files.vehicleVideo}
                       onPick={(f) => pickFile("vehicleVideo", f)}

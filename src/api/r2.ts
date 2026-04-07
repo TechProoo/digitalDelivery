@@ -13,6 +13,7 @@ export async function presignUpload(
   folder: string,
   filename: string,
   contentType: string,
+  fileSize: number,
 ): Promise<PresignResult> {
   // The frontend apiClient response interceptor already unwraps the
   // { success, data } envelope, so the resolved value IS the inner data.
@@ -20,6 +21,7 @@ export async function presignUpload(
     folder,
     filename,
     contentType,
+    fileSize,
   })) as unknown as PresignResult;
   return data;
 }
@@ -37,6 +39,7 @@ export async function uploadFileToR2(
     folder,
     file.name,
     file.type || "application/octet-stream",
+    file.size,
   );
 
   // PUT directly to R2 (no auth header — the presigned URL is self-authenticating)

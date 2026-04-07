@@ -7,7 +7,11 @@ import React, {
 } from "react";
 import { authApi } from "../api";
 import type { ApiError } from "../api";
-import { clearAccessToken, setAccessToken } from "../lib/authToken";
+import {
+  clearAccessToken,
+  getAccessToken,
+  setAccessToken,
+} from "../lib/authToken";
 
 function isUnauthorized(err: unknown): boolean {
   return Boolean(err) && typeof err === "object" && (err as any).status === 401;
@@ -42,6 +46,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refresh = async () => {
     setError(null);
+
+    const token = getAccessToken();
+    if (!token) {
+      setUser(null);
+      return;
+    }
 
     try {
       const result = await authApi.me();
@@ -128,7 +138,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       register,
       logout,
     }),
-    [user, isLoading, error]
+    [user, isLoading, error],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

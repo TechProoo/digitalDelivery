@@ -248,7 +248,10 @@ export default function MyOrders() {
     });
   };
 
-  const formatNairaAmount = (amount: number | null | undefined, currency?: string) => {
+  const formatNairaAmount = (
+    amount: number | null | undefined,
+    currency?: string,
+  ) => {
     if (amount == null || amount <= 0) return "Pending";
     const cur = currency || "NGN";
     try {

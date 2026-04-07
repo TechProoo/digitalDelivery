@@ -325,7 +325,8 @@ export default function NewDelivery() {
           maximumFractionDigits: 0,
         }).format(value);
       } catch {
-        const sym = supportedCurrencies.find((c) => c.code === cur)?.symbol ?? cur;
+        const sym =
+          supportedCurrencies.find((c) => c.code === cur)?.symbol ?? cur;
         return `${sym}${value.toFixed(0)}`;
       }
     };
@@ -370,7 +371,8 @@ export default function NewDelivery() {
         maximumFractionDigits: 0,
       }).format(amount);
     } catch {
-      const sym = supportedCurrencies.find((c) => c.code === cur)?.symbol ?? cur;
+      const sym =
+        supportedCurrencies.find((c) => c.code === cur)?.symbol ?? cur;
       return `${sym}${amount.toFixed(0)}`;
     }
   };
@@ -1092,7 +1094,9 @@ Please provide pricing for this shipment. Thank you!`;
                     }}
                   >
                     {supportedCurrencies.map((c) => (
-                      <option key={c.code} value={c.code}>{c.label}</option>
+                      <option key={c.code} value={c.code}>
+                        {c.label}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -1103,7 +1107,11 @@ Please provide pricing for this shipment. Thank you!`;
                     className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-2 uppercase"
                     style={{ color: "var(--text-secondary)" }}
                   >
-                    <Package className="h-3 w-3 sm:h-4 sm:w-4" /> Item Value ({supportedCurrencies.find((c) => c.code === formData.currency)?.symbol ?? formData.currency})
+                    <Package className="h-3 w-3 sm:h-4 sm:w-4" /> Item Value (
+                    {supportedCurrencies.find(
+                      (c) => c.code === formData.currency,
+                    )?.symbol ?? formData.currency}
+                    )
                   </label>
                   <input
                     type="number"
