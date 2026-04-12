@@ -61,8 +61,27 @@ interface DriverPosition {
   timestamp: number;
 }
 
-/* ── Lagos fallback center ── */
-const LAGOS_CENTER: [number, number] = [6.5244, 3.3792];
+/* ── Nigeria center fallback ── */
+const NIGERIA_CENTER: [number, number] = [9.082, 8.6753];
+
+/* ── Geocode an address string via Nominatim ── */
+async function geocode(address: string): Promise<[number, number] | null> {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?${new URLSearchParams({
+        q: address,
+        format: "json",
+        limit: "1",
+      })}`,
+      { headers: { "User-Agent": "DigitalDelivery/1.0" } },
+    );
+    const data = await res.json();
+    if (data.length > 0) {
+      return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+    }
+  } catch {}
+  return null;
+}
 
 export default function LiveTrackingMap({
   driverId,
@@ -73,8 +92,19 @@ export default function LiveTrackingMap({
   const [driverPos, setDriverPos] = useState<DriverPosition | null>(null);
   const [connected, setConnected] = useState(false);
   const socketRef = useRef<Socket | null>(null);
+  const [pickupCoords, setPickupCoords] = useState<[number, number] | null>(null);
+  const [dropoffCoords, setDropoffCoords] = useState<[number, number] | null>(null);
 
   const isTracking = status === "IN_TRANSIT" && !!driverId;
+
+  // Geocode pickup and dropoff addresses
+  useEffect(() => {
+    if (!isTracking) return;
+    geocode(pickupLocation).then(setPickupCoords);
+    // Small delay to respect Nominatim rate limit (1 req/sec)
+    const t = setTimeout(() => geocode(dropoffLocation).then(setDropoffCoords), 1100);
+    return () => clearTimeout(t);
+  }, [isTracking, pickupLocation, dropoffLocation]);
 
   // Connect to socket and listen for driver location
   useEffect(() => {
@@ -133,7 +163,7 @@ export default function LiveTrackingMap({
 
   const mapCenter: [number, number] = driverPos
     ? [driverPos.lat, driverPos.lng]
-    : LAGOS_CENTER;
+    : pickupCoords || NIGERIA_CENTER;
 
   return (
     <div style={{ borderRadius: 12, overflow: "hidden", border: "1px solid var(--border-soft, #e2e8f0)", position: "relative" }}>
@@ -202,14 +232,19 @@ export default function LiveTrackingMap({
           </>
         )}
 
-        {/* Pickup marker — use Lagos center as placeholder since we don't have geocoded coords */}
-        <Marker position={LAGOS_CENTER} icon={pickupIcon}>
-          <Popup><b>Pickup:</b> {pickupLocation}</Popup>
-        </Marker>
+        {/* Pickup marker — only shown once address is geocoded */}
+        {pickupCoords && (
+          <Marker position={pickupCoords} icon={pickupIcon}>
+            <Popup><b>Pickup:</b> {pickupLocation}</Popup>
+          </Marker>
+        )}
 
-        <Marker position={[LAGOS_CENTER[0] - 0.02, LAGOS_CENTER[1] + 0.02]} icon={dropoffIcon}>
-          <Popup><b>Dropoff:</b> {dropoffLocation}</Popup>
-        </Marker>
+        {/* Dropoff marker — only shown once address is geocoded */}
+        {dropoffCoords && (
+          <Marker position={dropoffCoords} icon={dropoffIcon}>
+            <Popup><b>Dropoff:</b> {dropoffLocation}</Popup>
+          </Marker>
+        )}
       </MapContainer>
     </div>
   );
